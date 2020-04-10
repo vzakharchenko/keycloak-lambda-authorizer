@@ -1,4 +1,5 @@
 import fs from 'fs';
+import jsonwebtoken from 'jsonwebtoken';
 import { getAuthentication } from '../../common/authorizerUtil';
 import { handler } from '../../../index';
 
@@ -11,12 +12,28 @@ function getKeycloakJSON() {
   }));
 }
 
+function getToken(event) {
+  const { headers } = event;
+  const tokenString = headers ? headers.Authorization : null;
+  if (!tokenString) {
+    throw new Error('Expected \'event.authorizationToken\' parameter to be set');
+  }
+  const match = tokenString.match(/^Bearer (.*)$/);
+  if (!match || match.length < 2) {
+    throw new Error(`Invalid Authorization token - '${tokenString}' does not match 'Bearer .*'`);
+  }
+  const tokenStringValue = match[1];
+  return jsonwebtoken.decode(tokenStringValue);
+}
+
+
 export function hello(event, context, callback) {
+  const token = getToken(event);
   callback(null, {
     statusCode: 200,
     body: JSON.stringify(
       {
-        message: 'Your function executed successfully!',
+        message: `Hi ${token.preferred_username}. Your function executed successfully!`,
       },
     ),
   });

@@ -65,19 +65,6 @@ async function verifyToken(token, options) {
   }
 }
 
-// function parseArn(lambdaArn) {
-//   const arn = { ...lambdaArn };
-//   const split = lambdaArn.split('/');
-//   // eslint-disable-next-line prefer-destructuring
-//   arn.apiId = split[0];
-//   // eslint-disable-next-line prefer-destructuring
-//   arn.stage = split[1];
-//   // eslint-disable-next-line prefer-destructuring
-//   arn.httpVerb = split[2];
-//   arn.resource = `/${split.subarray(3, split.length)}`;
-//   return arn;
-// }
-
 export async function adapter(event,
   keycloakJson,
   options = {}) {

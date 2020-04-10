@@ -1,0 +1,30 @@
+version: 2 # use CircleCI 2.0
+jobs:
+  build:
+    working_directory: ~/dynamic-orm # directory where steps will run
+
+    docker: # run the steps with Docker
+      - image: circleci/openjdk:11.0.2 # ...with this image as the primary container; this is where all `steps` will run
+
+    steps: # a collection of executable commands
+
+      - checkout # check out source code to working directory
+
+      - run:
+          name: build source
+          command: npm i
+      - run:
+          name: lint
+          command: npm run lint
+      - run:
+          name: build example/keycloak-authorizer serverless
+          command: cd example/keycloak-authorizer/serverless && npm i
+      - run:
+          name: lint example/keycloak-authorizer serverless
+          command: cd example/keycloak-authorizer/serverless && npm run lint
+      - run:
+          name: build example/keycloak-authorizer ui
+          command: cd example/keycloak-authorizer/ui && npm i
+      - run:
+          name: lint example/keycloak-authorizer ui
+          command: cd example/keycloak-authorizer/ui && npm run lint

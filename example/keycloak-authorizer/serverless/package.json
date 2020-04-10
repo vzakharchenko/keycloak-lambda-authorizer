@@ -6,7 +6,9 @@
   "scripts": {
     "build": "NODE_ENV=production webpack --config webpack.config.babel.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "offline": "SLS_DEBUG=* serverless offline --host 0.0.0.0 --httpPort 3003 --dontPrintOutput"
+    "offline": "SLS_DEBUG=* serverless offline --host 0.0.0.0 --httpPort 3003 --dontPrintOutput",
+    "lint": "eslint --quiet --ext .js handler.js",
+    "lint:fix": "eslint --fix --quiet --ext .js handler.js"
   },
   "author": "vzakharchenko",
   "license": "Apache-2.0",
@@ -25,6 +27,9 @@
     "serverless-offline": "^6.1.4",
     "serverless-webpack": "^5.3.1",
     "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.11",
+    "eslint": "*",
+    "eslint-config-airbnb": "*",
+    "eslint-plugin-import": "*"
   }
 }

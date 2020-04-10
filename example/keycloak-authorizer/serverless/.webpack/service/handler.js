@@ -10836,7 +10836,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 function getKeycloakJSON() {
   return new Promise(function (resolve, reject) {
-    fs__WEBPACK_IMPORTED_MODULE_0___default.a.readFile("".concat(__dirname, "/keycloak.json"), "utf8", function (err, data) {
+    fs__WEBPACK_IMPORTED_MODULE_0___default.a.readFile("".concat(__dirname, "/keycloak.json"), 'utf8', function (err, data) {
       if (err) reject(err);else resolve(JSON.parse(data));
     });
   });
@@ -10894,7 +10894,7 @@ function auth(event, context, callback) {
       callback(null, res);
     })["catch"](function (e) {
       console.error('getAuthentication error', e);
-      callback("Unauthorized");
+      callback('Unauthorized');
     });
   })["catch"](function (e) {
     console.error('getAuthentication error', e);

@@ -1,0 +1,12 @@
+{
+  "realm": "lambda-authorizer",
+  "auth-server-url": "http://localhost:8090/auth",
+  "ssl-required": "external",
+  "resource": "lambda",
+  "verify-token-audience": true,
+  "credentials": {
+    "secret": "772decbe-0151-4b08-8171-bec6d097293b"
+  },
+  "confidential-port": 0,
+  "policy-enforcer": {}
+}

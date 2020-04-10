@@ -1,0 +1,30 @@
+{
+  "name": "keycloak-authorizer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "build": "NODE_ENV=production webpack --config webpack.config.babel.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "offline": "SLS_DEBUG=* serverless offline --host 0.0.0.0 --httpPort 3003 --dontPrintOutput"
+  },
+  "author": "vzakharchenko",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-proposal-decorators": "^7.6.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
+    "@babel/plugin-transform-async-to-generator": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.6.2",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-es2015": "^7.0.0-beta.53",
+    "@babel/register": "^7.6.2",
+    "babel-loader": "^8.1.0",
+    "progress-bar-webpack-plugin": "^2.1.0",
+    "serverless": "^1.67.3",
+    "serverless-offline": "^6.1.4",
+    "serverless-webpack": "^5.3.1",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
+  }
+}

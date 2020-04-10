@@ -1,0 +1,46 @@
+{
+  "name": "keycloak-lambda-authorizer",
+  "version": "0.0.1",
+  "description": "Keycloak adapter for aws Lambda",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint --quiet --ext .js index.js && eslint --quiet --ext .js src",
+    "lint:fix": "eslint --fix --quiet --ext .js index.js && eslint --fix --quiet --ext .js src",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "keycloak",
+    "lambda",
+    "authorizer",
+    "oidc",
+    "Keycloak Authorization Services",
+    "Keycloak authorization"
+  ],
+  "eslintConfig": {
+    "plugins": [],
+    "extends": "airbnb/base",
+    "rules": {
+      "no-undef": 0,
+      "import/extensions": 0,
+      "import/prefer-default-export": 0,
+      "import/no-extraneous-dependencies": 0,
+      "react/jsx-indent": 0
+    }
+  },
+  "author": "vzakharchenko",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.9.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-plugin-import": "^2.20.2"
+  },
+  "dependencies": {
+    "aws-arn-parser": "^1.0.1",
+    "axios": "^0.19.2",
+    "copy-webpack-plugin": "^5.1.1",
+    "get-keycloak-public-key": "^1.0.3",
+    "jsonwebtoken": "^8.5.1",
+    "node-cache": "^5.1.0"
+  }
+}

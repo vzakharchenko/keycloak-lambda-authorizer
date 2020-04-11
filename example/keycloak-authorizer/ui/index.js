@@ -47,27 +47,35 @@ async function clientToRPTExchange(request) {
   const token = JSON.parse(request.session['keycloak-token']).access_token;
   const tokenUrl = `${keycloak.config.authServerUrl}/realms/${keycloak.config.realm}/protocol/openid-connect/token`;
   const data = 'grant_type=urn:ietf:params:oauth:grant-type:uma-ticket&response_include_resource_name=false&audience=lambda';
-  const response = await sendData(tokenUrl,
-    'POST',
-    data,
-    {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    });
-  return JSON.parse(response);
+  try {
+    const response = await sendData(tokenUrl,
+      'POST',
+      data,
+      {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      });
+    return JSON.parse(response);
+  } catch (e) {
+    throw new Error(e);
+  }
 }
 
 
-app.post('/', keycloak.protect(), async (request, response) => {
-  const lambdaJWT = await clientToRPTExchange(request);
-  res = await fetchData(process.env.LAMBDA_URL, 'GET', {
-    Authorization: `Bearer ${lambdaJWT.access_token}`,
-  });
-  renderUI(request, response, JSON.parse(res).message);
+app.post('/', keycloak.protect(), keycloak.enforcer(['uiResource']), async (request, response) => {
+  try {
+    const lambdaJWT = await clientToRPTExchange(request);
+    res = await fetchData(process.env.LAMBDA_URL, 'GET', {
+      Authorization: `Bearer ${lambdaJWT.access_token}`,
+    });
+    renderUI(request, response, JSON.parse(res).message);
+  } catch (e) {
+    renderUI(request, response, e);
+  }
 });
 
 
-app.get('/', keycloak.protect(), (request, response) => {
+app.get('/', keycloak.protect(), keycloak.enforcer(['uiResource']), (request, response) => {
   renderUI(request, response, '');
 });
 

@@ -1,0 +1,13 @@
+{
+  "name": "keycloak-authorizer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "cd serverless && npm i && cd ../ui && npm i",
+    "serverless": "cd serverless && npm run offline",
+    "ui": "cd ui && npm run start"
+  },
+  "author": "vzakharchenko",
+  "license": "Apache-2.0"
+}

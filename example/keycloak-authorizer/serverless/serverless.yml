@@ -34,8 +34,6 @@ provider:
   runtime: nodejs12.x
   region: us-east-1
   timeout: 30
-  #  role: lambdaRole
-  role: arn:aws:iam::759723922107:role/IndustryNetwork-dev-us-east-1-lambdaRole
 
 
 functions:

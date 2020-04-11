@@ -1,7 +1,7 @@
 import fs from 'fs';
 import jsonwebtoken from 'jsonwebtoken';
 import { getAuthentication } from '../../common/authorizerUtil';
-import { handler } from '../../../index';
+import { awsHandler } from '../../../index';
 
 function getKeycloakJSON() {
   return new Promise(((resolve, reject) => {
@@ -12,9 +12,9 @@ function getKeycloakJSON() {
   }));
 }
 
+
 function getToken(event) {
-  const { headers } = event;
-  const tokenString = headers ? headers.Authorization : null;
+  const tokenString = event.authorizationToken || event.headers.Authorization;
   if (!tokenString) {
     throw new Error('Expected \'event.authorizationToken\' parameter to be set');
   }
@@ -41,24 +41,51 @@ export function hello(event, context, callback) {
 
 export async function auth0(event) {
   const keycloakJSON = await getKeycloakJSON();
-  const token = await handler(event, keycloakJSON, {
-    enforce: { enabled: true, resource: 'LambdaResource123' },
+  const token = await awsHandler(event, keycloakJSON, {
+    enforce: {
+      enabled: true,
+      resource: {
+        name: 'LambdaResource',
+        uri: 'LambdaResource123',
+        matchingUri: true,
+      },
+    },
   });
-  return token.decoded.payload;
+  return token.payload;
+}
+
+function getDecodedToken(event) {
+  try {
+    return getToken(event);
+  } catch (e) {
+    return null;
+  }
 }
 
 export function auth(event, context, callback) {
-  auth0(event).then((jwt) => {
-    getAuthentication(jwt)
-      .then((res) => {
-        callback(null, res);
-      })
-      .catch((e) => {
-        console.error('getAuthentication error', e);
-        callback('Unauthorized');
-      });
-  }).catch((e) => {
-    console.error('getAuthentication error', e);
-    callback('Unauthorized');
-  });
+  const token = getDecodedToken(event);
+  if (token) {
+    auth0(event).then((jwt) => {
+      getAuthentication(jwt, 'Allow')
+        .then((res) => {
+          callback(null, res);
+        })
+        .catch((e) => {
+          console.error('getAuthentication error', e);
+          callback('Unauthorized');
+        });
+    }).catch((e) => {
+      console.error('auth0 error', e);
+      getAuthentication(token, 'Deny')
+        .then((res) => {
+          callback(null, res);
+        })
+        .catch((e1) => {
+          console.error('getAuthentication error', e1);
+          callback('Unauthorized');
+        });
+    });
+  } else {
+    callback('Unauthorized'); // Invalid Token. 401 error
+  }
 }

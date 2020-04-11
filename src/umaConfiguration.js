@@ -17,16 +17,15 @@ async function getUma2Configuration(options) {
 
 async function getResource(uma2Config,
   options, resource) {
-  let resources = options.cache.get('resource', resource);
+  let resources = options.cache.get('resource', JSON.stringify(resource));
   if (!resources) {
-    const resourceName = encodeURIComponent(resource);
-    const resourceRegistrationEndpoint = `${uma2Config.resource_registration_endpoint}?name=${resourceName}&uri=${resourceName}&matchingUri=true`;
+    const resourceRegistrationEndpoint = `${uma2Config.resource_registration_endpoint}?name=${resource.name}&uri=${resource.uri}&matchingUri=${!!resource.matchingUri}&owner=${resource.owner}&type=${resource.type}&scope=${resource.scope}&deep=${resource.deep}&first=${resource.first}&max=${resource.max}`;
     const jwt = await clientAuthentication(uma2Config, options);
     const res = await fetchData(resourceRegistrationEndpoint, 'GET', {
       Authorization: `Bearer ${jwt.access_token}`, // client authorizer
     });
     resources = JSON.parse(res);
-    options.cache.put('resource', resource, resources);
+    options.cache.put('resource', JSON.stringify(resource), resources);
   }
   return resources;
 }
@@ -45,18 +44,18 @@ async function matchResource(uma2Config,
     resources = resources.concat(await getResource(uma2Config, options, permissions[i]));
   }
   const resource = resources.filter((resId) => {
-    const { authorization } = token.decoded.payload;
+    const { authorization } = token.payload;
     return authorization && authorization.permissions && authorization
       .permissions.find((p) => p.rsid === resId);
   });
-  if (!resource && resource.length !== permissions.length) {
+  if (!resource || resource.length !== permissions.length) {
     throw new Error('Access is denied');
   }
 }
 
 export async function enforce(token, options) {
   if (options.enforce.role) {
-    const role = token.decoded.payload.realm_access.roles.find(
+    const role = token.payload.realm_access.roles.find(
       (r) => r === options.enforce.role,
     );
     if (!role) {

@@ -8,6 +8,8 @@ export function put(region, key, value) {
     defaultCache.set(key, value);
   } else if (region === 'uma2-configuration') {
     defaultCache.set(key, value);
+  } else if (region === 'client_credentials') {
+    defaultCache.set(key, value);
   } else if (region === 'resource') {
     resourceCache.set(key, value);
   } else {
@@ -19,6 +21,8 @@ export function get(region, key) {
   if (region === 'publicKey') {
     return defaultCache.get(key);
   } if (region === 'uma2-configuration') {
+    return defaultCache.get(key);
+  } if (region === 'client_credentials') {
     return defaultCache.get(key);
   } if (region === 'resource') {
     return resourceCache.get(key);

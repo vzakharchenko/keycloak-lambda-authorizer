@@ -1,13 +1,11 @@
 import fs from 'fs';
 
-const policyDocumentFilename = 'policyDocument.json';
-
-function getPolicyDocument() {
+function getPolicyDocument(name) {
     try {
-        return JSON.parse(fs.readFileSync(`${__dirname}/${policyDocumentFilename}`, 'utf8'));
+        return JSON.parse(fs.readFileSync(`${__dirname}/policy${name}Document.json`, 'utf8'));
     } catch (e) {
         if (e.code === 'ENOENT') {
-            console.error(`Expected ${policyDocumentFilename} to be included in Lambda deployment package`);
+            console.error(`Expected policy${name}Document.json to be included in Lambda deployment package`);
             // fallthrough
         }
         throw e;
@@ -45,11 +43,11 @@ async function getUserInfo(jwt) {
     return user;
 }
 
-export async function getAuthentication(jwt) {
+export async function getAuthentication(jwt,name) {
     const userInfo = await getUserInfo(jwt);
     return {
       principalId: userInfo.principalId,
-      policyDocument: getPolicyDocument(),
+      policyDocument: getPolicyDocument(name),
       context: userInfo,
     }
 }

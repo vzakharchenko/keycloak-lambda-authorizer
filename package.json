@@ -12,6 +12,7 @@
     "keycloak",
     "lambda",
     "authorizer",
+    "custom-authorizer",
     "adapter",
     "oidc",
     "Keycloak Authorization Services",

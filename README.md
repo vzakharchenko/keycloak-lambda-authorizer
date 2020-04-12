@@ -1,4 +1,5 @@
-[![CircleCI](https://circleci.com/gh/vzakharchenko/keycloak-lambda-authorizer.svg?style=svg)](https://circleci.com/gh/vzakharchenko/keycloak-lambda-authorizer)
+[![CircleCI](https://circleci.com/gh/vzakharchenko/keycloak-lambda-authorizer.svg?style=svg)](https://circleci.com/gh/vzakharchenko/keycloak-lambda-authorizer)  
+[![npm version](https://badge.fury.io/js/keycloak-lambda-authorizer.svg)](https://badge.fury.io/js/keycloak-lambda-authorizer)  
 
 # Description
 Implementation [Keycloak](https://www.keycloak.org/) adapter for aws Lambda
@@ -61,7 +62,7 @@ export function authorizer(event, context, callback) {
 # Configuration
 
 ## Json structure:
-```json
+```javascript
 {
    "cache":"defaultCache",
    "logger":console,
@@ -111,7 +112,7 @@ export function authorizer(event, context, callback) {
 ```
 ## Resource Structure:
 
-```json
+```javascript
 {
    "name":"",
    "uri":"",
@@ -216,7 +217,7 @@ export function authorizer(event, context, callback) {
 
 ###  - RSA Keys Structure
 
-```json
+```javascript
 {
    "privateKey":{
       "key":"privateKey",

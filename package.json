@@ -15,6 +15,12 @@
     "custom-authorizer",
     "adapter",
     "oidc",
+    "jwt",
+    "client assertion",
+    "oauth",
+    "oauth 2.0",
+    "draft-ietf-oauth-jwt-bearer",
+    "oauth-jwt-bearer",
     "Keycloak Authorization Services",
     "Keycloak authorization"
   ],
@@ -42,6 +48,10 @@
     "copy-webpack-plugin": "^5.1.1",
     "get-keycloak-public-key": "^1.0.3",
     "jsonwebtoken": "^8.5.1",
-    "node-cache": "^5.1.0"
+    "jws": "^4.0.0",
+    "node-cache": "^5.1.0",
+    "node-forge": "^0.9.1",
+    "rsa-pem-to-jwk": "^1.1.3",
+    "uuid": "^7.0.3"
   }
 }

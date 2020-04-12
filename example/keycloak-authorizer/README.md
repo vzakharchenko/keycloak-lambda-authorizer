@@ -13,17 +13,31 @@ sh bin/standalone.sh  -c standalone.xml -b 0.0.0.0 -Djboss.bind.address.manageme
 ```
 Open the Keycloak admin console, click on Add Realm, click on import 'Select file', select example-realm-export.json and click Create.
 
-## 2. Run Serverless offline
+## 2. Run Serverless offline (Client Id and Secret credential Type)
 
-```
+```bash
 cd serverless
 npm i
 npm run offline
 ```
+Client Credentials:  
+![Keycloak Admin Console 2020-04-12 13-00-52](../../docs/Keycloak%20Admin%20Console%202020-04-12%2013-00-52.png)
+
+## 2. Run Serverless offline (Client jwt credential Type)
+```bash
+cd serverless-jwks
+npm i
+npm run offline
+```
+
+Client Credentials:  
+![Keycloak Admin Console 2020-04-12 12-58-57](../../docs/Keycloak%20Admin%20Console%202020-04-12%2012-58-57.png)
+
+
 
 ## 3. Run UI locally
 
-```
+```bash
 cd ui
 npm i
 npm run start
@@ -36,11 +50,12 @@ npm run start
 
 users:
 
-| User  | password | UI Permission | Lambda Permission |
-|:------|:---------|:--------------|:------------------|
-| user  | user     | X             | X                 |
-| user2 | user2    | X             | -                 |
-| user3 | user3    | -             | -                 |
+| User      | password  | UI Permission | Lambda Permission | Lambda-JWKS Permission |
+|:----------|:----------|:--------------|:------------------|:-----------------------|
+| user      | user      | X             | X                 | X                      |
+| user-jwks | user-jwks | X             | -                 | X                      |
+| user2     | user2     | X             | -                 | -                      |
+| user3     | user3     | -             | -                 | -                      |
 
 Permissions:
 
@@ -51,10 +66,23 @@ Permissions:
 
 ## 5. Results
 
-| User  | Result                                                                                                 | Description                                         |
-|:------|:-------------------------------------------------------------------------------------------------------|:----------------------------------------------------|
-| User  | ![Express handlebars 2020-04-11 11-35-42](../../docs/Express%20handlebars%202020-04-11%2011-35-42.png) | All Access                                          |
-| User2 | ![Express handlebars 2020-04-11 22-45-33](../../docs/Express%20handlebars%202020-04-11%2022-45-33.png) | Has access to UI but does not have access to Lambda |
-| User3 | ![localhost3001+2020-04-11+22-47-30](../../docs/localhost3001%2B2020-04-11%2B22-47-30.png)             | Does not have access to UI and Lambda               |
+| User      | Result                                                                                                 | Description                                           |
+|:----------|:-------------------------------------------------------------------------------------------------------|:------------------------------------------------------|
+| User      | ![Express handlebars 2020-04-12 12-54-06](../../docs/Express%20handlebars%202020-04-12%2012-54-06.png) | All Access                                            |
+| user-jwks | ![Express handlebars 2020-04-12 12-56-22](../../docs/Express%20handlebars%202020-04-12%2012-56-22.png) | lambda-jwks only                                      |
+| User2     | ![Express handlebars 2020-04-11 22-45-33](../../docs/Express%20handlebars%202020-04-12%2012-57-43.png) | Has access to UI but does not have access to Lambda`s |
+| User3     | ![localhost3001+2020-04-11+22-47-30](../../docs/localhost3001%2B2020-04-11%2B22-47-30.png)             | Does not have access to UI and Lambda`s               |
 
+## 6. Deploy to cloud
 
+```bash
+cd serverless
+npm i
+serverless deploy
+```
+
+```bash
+cd serverless-jwks
+npm i
+serverless deploy
+```

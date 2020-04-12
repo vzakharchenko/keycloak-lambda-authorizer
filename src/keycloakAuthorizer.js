@@ -106,6 +106,7 @@ export async function adapter(tokenString,
   }
   // const lambdaArn = awsParser(event.methodArn);
   const newOptions = {
+    keys:options.keys,
     logger: options.logger || console,
     keycloakJson,
     cache: options.cache || defaultCache,

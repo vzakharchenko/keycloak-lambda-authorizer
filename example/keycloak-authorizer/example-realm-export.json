@@ -50,7 +50,25 @@
       "realmRoles": [ "uma_authorization", "uiRole" ],
       "clientRoles": {
         "account": ["view-profile", "manage-account"],
-        "lambda": ["LambdaRole"]
+        "lambda": ["LambdaRole"],
+        "lambda-jwks": ["LambdaJwksRole"]
+      }
+    },
+    {
+      "username" : "user-jwks",
+      "enabled": true,
+      "email" : "example-user-jwks@lambda-example",
+      "firstName": "Lambda-JWKS",
+      "lastName": "User",
+      "credentials" : [
+        { "type" : "password",
+          "value" : "user-jwks" }
+      ],
+      "realmRoles": [ "uma_authorization", "uiRole" ],
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"],
+        "lambda": [],
+        "lambda-jwks": ["LambdaJwksRole"]
       }
     },
     {
@@ -66,7 +84,8 @@
       "realmRoles": [ "uma_authorization", "uiRole"  ],
       "clientRoles": {
         "account": ["view-profile", "manage-account"],
-        "lambda": []
+        "lambda": [],
+        "lambda-jwks": []
       }
     },
     {
@@ -374,6 +393,24 @@
           "composite": false,
           "clientRole": true,
           "containerId": "c424b101-7c5c-4837-9b7f-f1600e14973e",
+          "attributes": {}
+        }
+      ],
+      "lambda-jwks": [
+        {
+          "id": "58f7d766-33ef-4355-b6a4-4077fa66c990",
+          "name": "LambdaJwksRole",
+          "composite": false,
+          "clientRole": true,
+          "containerId": "2426d543-7a42-49a2-b995-9bf6a323993d",
+          "attributes": {}
+        },
+        {
+          "id": "fcc1e2dd-6d87-4eb9-8648-4024a66767a8",
+          "name": "uma_protection",
+          "composite": false,
+          "clientRole": true,
+          "containerId": "2426d543-7a42-49a2-b995-9bf6a323993d",
           "attributes": {}
         }
       ],
@@ -954,6 +991,181 @@
           },
           {
             "id": "ab017517-43d4-4e3c-97d0-6cc5057ddd9a",
+            "name": "lambdaPermission",
+            "type": "resource",
+            "logic": "POSITIVE",
+            "decisionStrategy": "UNANIMOUS",
+            "config": {
+              "resources": "[\"LambdaResource\"]",
+              "applyPolicies": "[\"lambdaPolicy\"]"
+            }
+          }
+        ],
+        "scopes": []
+      }
+    },
+    {
+      "id": "2426d543-7a42-49a2-b995-9bf6a323993d",
+      "clientId": "lambda-jwks",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "clientAuthenticatorType": "client-jwt",
+      "secret": "**********",
+      "redirectUris": [
+        "*"
+      ],
+      "webOrigins": [],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "authorizationServicesEnabled": true,
+      "publicClient": false,
+      "frontchannelLogout": false,
+      "protocol": "openid-connect",
+      "attributes": {
+        "saml.assertion.signature": "false",
+        "saml.multivalued.roles": "false",
+        "saml.force.post.binding": "false",
+        "saml.encrypt": "false",
+        "use.jwks.url": "true",
+        "saml.server.signature": "false",
+        "saml.server.signature.keyinfo.ext": "false",
+        "exclude.session.state.from.auth.response": "false",
+        "jwks.url": "http://localhost:3004/dev/cert",
+        "saml_force_name_id_format": "false",
+        "saml.client.signature": "false",
+        "tls.client.certificate.bound.access.tokens": "false",
+        "saml.authnstatement": "false",
+        "display.on.consent.screen": "false",
+        "saml.onetimeuse.condition": "false"
+      },
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": true,
+      "nodeReRegistrationTimeout": -1,
+      "protocolMappers": [
+        {
+          "id": "cba46afb-bf4c-43dc-bdb0-ed638764e694",
+          "name": "Client IP Address",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usersessionmodel-note-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.session.note": "clientAddress",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "clientAddress",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "id": "c2f8bf61-f5d5-4821-b406-97c352f27ef2",
+          "name": "Client Host",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usersessionmodel-note-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.session.note": "clientHost",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "clientHost",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "id": "66b14e41-11d1-4418-a92a-5b2fcaf57c83",
+          "name": "Client ID",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usersessionmodel-note-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.session.note": "clientId",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "clientId",
+            "jsonType.label": "String"
+          }
+        }
+      ],
+      "defaultClientScopes": [
+        "web-origins",
+        "role_list",
+        "profile",
+        "roles",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access"
+      ],
+      "authorizationSettings": {
+        "allowRemoteResourceManagement": true,
+        "policyEnforcementMode": "ENFORCING",
+        "resources": [
+          {
+            "name": "LambdaResource",
+            "ownerManagedAccess": false,
+            "displayName": "Lambda Resource",
+            "attributes": {},
+            "_id": "ac5e0562-9fb3-4fe7-b0eb-ff318171c579",
+            "uris": [
+              "LambdaResource123"
+            ]
+          },
+          {
+            "name": "Default Resource",
+            "type": "urn:lambda-jwks:resources:default",
+            "ownerManagedAccess": false,
+            "attributes": {},
+            "_id": "baf3d408-0be2-44bc-a3fb-db057467d138",
+            "uris": [
+              "/*"
+            ]
+          }
+        ],
+        "policies": [
+          {
+            "id": "c38595b8-cf2b-4712-ab9f-4c8977fbfc9e",
+            "name": "Default Policy",
+            "description": "A policy that grants access only for users within this realm",
+            "type": "js",
+            "logic": "POSITIVE",
+            "decisionStrategy": "AFFIRMATIVE",
+            "config": {
+              "code": "// by default, grants any permission associated with this policy\n$evaluation.grant();\n"
+            }
+          },
+          {
+            "id": "37f2591c-952e-40b6-ae1e-f253f7117ef8",
+            "name": "lambdaPolicy",
+            "type": "role",
+            "logic": "POSITIVE",
+            "decisionStrategy": "UNANIMOUS",
+            "config": {
+              "roles": "[{\"id\":\"lambda-jwks/LambdaJwksRole\",\"required\":true}]"
+            }
+          },
+          {
+            "id": "76155ef5-84cf-4f0e-8241-7b4b94f1937f",
+            "name": "Default Permission",
+            "description": "A permission that applies to the default resource type",
+            "type": "resource",
+            "logic": "POSITIVE",
+            "decisionStrategy": "UNANIMOUS",
+            "config": {
+              "defaultResourceType": "urn:lambda-jwks:resources:default",
+              "applyPolicies": "[\"Default Policy\"]"
+            }
+          },
+          {
+            "id": "be8e1618-5150-4eaf-9d73-0116ed3a2c88",
             "name": "lambdaPermission",
             "type": "resource",
             "logic": "POSITIVE",

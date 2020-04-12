@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "LAMBDA_URL=http://0.0.0.0:3003/dev/hello node index.js",
+    "start": "LAMBDA_URL=http://localhsot:3003/dev/hello;LAMBDA_JWKS_URL=http://localhsot:3004/dev/hello node index.js",
     "lint": "eslint --quiet --ext .js index.js",
     "lint:fix": "eslint --fix --quiet --ext .js index.js",
     "test": "echo \"Error: no test specified\" && exit 1"

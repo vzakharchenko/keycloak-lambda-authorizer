@@ -1,16 +1,30 @@
-  <form action="/" method="post">
+
 <table border="1">
     <caption>Invoke Lambda</caption>
     <tr>
         <th>Lambda url</th>
+        <th>Client Name</th>
+        <th>Credential Type</th>
         <th>Invoke Lambda</th>
         <th>Lambda Response</th>
     </tr>
+      <form action="/lambda" method="post">
     <tr>
         <td>{{host}}</td>
+        <td>lambda</td>
+        <td>Client Id and Secret</td>
         <td><input type="submit" value="Invoke"></td>
         <td>{{status}}</td>
     </tr>
+     </form>
+      <form action="/lambdaJwks" method="post">
+    <tr>
+        <td>{{hostJwks}}</td>
+        <td>lambda-jwks</td>
+        <td>Signed jwt</td>
+        <td><input type="submit" value="Invoke"></td>
+        <td>{{statusJwks}}</td>
+    </tr>
+     </form>
 </table>
 
-            </form>

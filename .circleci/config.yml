@@ -1,7 +1,7 @@
 version: 2 # use CircleCI 2.0
 jobs:
   build:
-    working_directory: ~/dynamic-orm # directory where steps will run
+    working_directory: ~/keycloak-lambda-authorizer # directory where steps will run
 
     docker: # run the steps with Docker
       - image: circleci/node:12.16.1 # ...with this image as the primary container; this is where all `steps` will run
@@ -22,6 +22,12 @@ jobs:
       - run:
           name: lint example/keycloak-authorizer serverless
           command: cd example/keycloak-authorizer/serverless && npm run lint
+      - run:
+          name: build example/keycloak-authorizer serverless-jwks
+          command: cd example/keycloak-authorizer/serverless-jwks && npm i
+      - run:
+          name: lint example/keycloak-authorizer serverless-jwks
+          command: cd example/keycloak-authorizer/serverless-jwks && npm run lint
       - run:
           name: build example/keycloak-authorizer ui
           command: cd example/keycloak-authorizer/ui && npm i

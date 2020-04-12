@@ -10,7 +10,7 @@
     "deploy": "serverless deploy --aws-profile aws-home",
     "lint": "eslint --quiet --ext .js handler.js",
     "lint:fix": "eslint --fix --quiet --ext .js handler.js",
-    "postinstall": "cd ../../.. && npm i && npm link && cd example/keycloak-authorizer/serverless && npm link keycloak-lambda-authorizer"
+    "postinstall": "cd ../../.. && npm link && cd example/keycloak-authorizer/serverless && npm link keycloak-lambda-authorizer"
   },
   "author": "vzakharchenko",
   "license": "Apache-2.0",

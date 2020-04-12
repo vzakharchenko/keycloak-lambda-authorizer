@@ -2,12 +2,11 @@
   "realm": "lambda-authorizer",
   "auth-server-url": "http://localhost:8090/auth",
   "ssl-required": "external",
-  "resource": "lambda",
+  "resource": "ui",
   "verify-token-audience": true,
   "credentials": {
-    "secret": "772decbe-0151-4b08-8171-bec6d097293b"
+    "secret": "ddfb7637-6f8b-4ca8-98f5-90af1801198a"
   },
-  "use-resource-role-mappings": true,
   "confidential-port": 0,
   "policy-enforcer": {}
 }

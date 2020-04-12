@@ -14,5 +14,5 @@ export async function lambdaAdapter(tokenString, keycloakJson,
 }
 
 export function jwksUrl(publicKey) {
-  return jwksUrlResponse(publicKey)
+  return jwksUrlResponse(publicKey);
 }

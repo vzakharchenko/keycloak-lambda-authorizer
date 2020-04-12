@@ -7,7 +7,8 @@
     "build": "cd serverless && npm i && cd ../ui && npm i",
     "serverless": "cd serverless && npm run offline",
     "serverless-jwks": "cd serverless-jwks && npm run offline",
-    "ui": "cd ui && npm run start"
+    "ui": "cd ui && npm run start",
+    "lint:fix": "cd serverless-jwks && npm run lint:fix && cd ../serverless && npm run lint:fix && cd ../ui && npm run lint:fix"
   },
   "author": "vzakharchenko",
   "license": "Apache-2.0"

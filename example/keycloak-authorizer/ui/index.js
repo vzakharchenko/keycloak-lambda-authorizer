@@ -8,10 +8,10 @@ const { fetchData, sendData } = require('./restCalls');
 
 const app = express();
 const memoryStore = new session.MemoryStore();
-const state ={
-  status:'',
-  status_jwks:''
-}
+const state = {
+  status: '',
+  statusJwks: '',
+};
 
 app.use(session({
   secret: 'mySecret',
@@ -40,19 +40,21 @@ app.set('view engine', '.hbs');
 
 app.set('views', path.join(__dirname, 'views'));
 
-function renderUI(request, response, status,status_jwks) {
+function renderUI(request, response, status, statusJwks) {
   state.status = status;
-  state.status_jwks = status_jwks;
+  state.statusJwks = statusJwks;
   response.render('home', {
-    status, host: process.env.LAMBDA_URL,
-    status_jwks, host_jwks: process.env.LAMBDA_JWKS_URL,
+    status,
+    host: process.env.LAMBDA_URL,
+    statusJwks,
+    hostJwks: process.env.LAMBDA_JWKS_URL,
   });
 }
 
 async function clientToRPTExchange(request, clientId) {
   const token = JSON.parse(request.session['keycloak-token']).access_token;
   const tokenUrl = `${keycloak.config.authServerUrl}/realms/${keycloak.config.realm}/protocol/openid-connect/token`;
-  const data = 'grant_type=urn:ietf:params:oauth:grant-type:uma-ticket&response_include_resource_name=false&audience='+clientId;
+  const data = `grant_type=urn:ietf:params:oauth:grant-type:uma-ticket&response_include_resource_name=false&audience=${clientId}`;
   try {
     const response = await sendData(tokenUrl,
       'POST',
@@ -74,9 +76,9 @@ app.post('/lambda', keycloak.protect(), keycloak.enforcer(['uiResource']), async
     res = await fetchData(process.env.LAMBDA_URL, 'GET', {
       Authorization: `Bearer ${lambdaJWT.access_token}`,
     });
-    renderUI(request, response, JSON.parse(res).message,state.status_jwks);
+    renderUI(request, response, JSON.parse(res).message, state.statusJwks);
   } catch (e) {
-    renderUI(request, response, e,state.status_jwks);
+    renderUI(request, response, e, state.statusJwks);
   }
 });
 
@@ -86,15 +88,15 @@ app.post('/lambdaJwks', keycloak.protect(), keycloak.enforcer(['uiResource']), a
     res = await fetchData(process.env.LAMBDA_JWKS_URL, 'GET', {
       Authorization: `Bearer ${lambdaJWT.access_token}`,
     });
-    renderUI(request, response,state.status, JSON.parse(res).message);
+    renderUI(request, response, state.status, JSON.parse(res).message);
   } catch (e) {
-    renderUI(request, response,state.status, e);
+    renderUI(request, response, state.status, e);
   }
 });
 
 
 app.get('/', keycloak.protect(), keycloak.enforcer(['uiResource']), (request, response) => {
-  renderUI(request, response, '','');
+  renderUI(request, response, '', '');
 });
 
 const server = app.listen(3001, () => {

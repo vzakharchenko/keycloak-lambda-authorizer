@@ -1,22 +1,22 @@
 const jsonwebtoken = require('jsonwebtoken');
 const jws = require('jws');
-const uuid =require('uuid/v4');
+const uuid = require('uuid/v4');
 
 const { sendData } = require('./utils/restCalls');
-const {getKeycloakUrl} = require("./utils/restCalls");
+const { getKeycloakUrl } = require('./utils/restCalls');
 
 function isExpired(options, token) {
   const clockTimestamp = Math.floor(Date.now() / 1000);
   return clockTimestamp < token.exp - 30;
 }
- const clientJWT = (payload, option) => new Promise((resolve,reject) => {
+const clientJWT = (payload, option) => new Promise((resolve, reject) => {
   jws.createSign({
     header: { alg: 'RS256', typ: 'RSA' },
     privateKey: option.keys.privateKey,
     payload,
   }).on('done', (signature) => {
     resolve(signature);
-  }).on('error', e => {
+  }).on('error', (e) => {
     option.logger.log(`error:${e}`);
     reject(e);
   });
@@ -36,18 +36,18 @@ function createJWS(options) {
 
 async function clientIdAuthorization(options) {
   let authorization = `client_id=${options.keycloakJson.resource}`;
-  if (options.keycloakJson.credentials && options.keycloakJson.credentials.secret){
-    const secret = options.keycloakJson.credentials.secret;
-    if (secret){
-       authorization +=`&client_secret=${secret}`;
+  if (options.keycloakJson.credentials && options.keycloakJson.credentials.secret) {
+    const { secret } = options.keycloakJson.credentials;
+    if (secret) {
+      authorization += `&client_secret=${secret}`;
     }
   } else
-  if (options.keys && options.keys.privateKey){
-    authorization += `&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_assertion=${await clientJWT(createJWS(options),options)}`;
+  if (options.keys && options.keys.privateKey) {
+    authorization += `&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_assertion=${await clientJWT(createJWS(options), options)}`;
   } else {
-    throw new Error('Unsupported Credential Type')
+    throw new Error('Unsupported Credential Type');
   }
-return authorization;
+  return authorization;
 }
 
 export async function clientAuthentication(uma2Config, options) {

@@ -1,7 +1,7 @@
 version: 2 # use CircleCI 2.0
 jobs:
   build:
-    working_directory: ~/dynamic-orm # directory where steps will run
+    working_directory: ~/keycloak-lambda-authorizer # directory where steps will run
 
     docker: # run the steps with Docker
       - image: circleci/node:12.16.1 # ...with this image as the primary container; this is where all `steps` will run

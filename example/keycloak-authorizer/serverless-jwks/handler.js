@@ -43,13 +43,13 @@ export function hello(event, context, callback) {
 export async function auth0(event) {
   const keycloakJSON = await getKeycloakJSON();
   const token = await awsHandler(event, keycloakJSON, {
-    keys:{
-      privateKey:{
+    keys: {
+      privateKey: {
         key: privateKey,
       },
-      publicKey:{
+      publicKey: {
         key: publicKey,
-      }
+      },
     },
     enforce: {
       enabled: true,

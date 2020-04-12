@@ -9,8 +9,7 @@
     "offline": "SLS_DEBUG=* serverless offline --host 0.0.0.0 --httpPort 3003 --lambdaPort=3019 --dontPrintOutput",
     "deploy": "serverless deploy --aws-profile aws-home",
     "lint": "eslint --quiet --ext .js handler.js",
-    "lint:fix": "eslint --fix --quiet --ext .js handler.js",
-    "postinstall": "cd ../../.. && npm link && cd example/keycloak-authorizer/serverless && npm link keycloak-lambda-authorizer"
+    "lint:fix": "eslint --fix --quiet --ext .js handler.js"
   },
   "author": "vzakharchenko",
   "license": "Apache-2.0",

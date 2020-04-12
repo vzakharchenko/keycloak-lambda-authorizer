@@ -10,8 +10,7 @@
     "keys": "openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -subj \"/C=US/ST=Denial/L=Springfield/O=Dis/CN=lambda-jwks\" -keyout ../../resources/server.key -out ../../resources/server.crt",
     "deploy": "serverless deploy --aws-profile aws-home",
     "lint": "eslint --quiet --ext .js handler.js",
-    "lint:fix": "eslint --fix --quiet --ext .js handler.js rsaUtils.js",
-    "postinstall": "cd ../../.. && npm link && cd example/keycloak-authorizer/serverless-jwks && npm link keycloak-lambda-authorizer"
+    "lint:fix": "eslint --fix --quiet --ext .js handler.js rsaUtils.js"
   },
   "author": "vzakharchenko",
   "license": "Apache-2.0",

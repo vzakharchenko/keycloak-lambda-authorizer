@@ -18,9 +18,11 @@ Open the Keycloak admin console, click on Add Realm, click on import 'Select fil
 ```
 
 ### 6.1 Deploy Lambda`s
+
 ```bash
 cd serverless
 npm i
+cd ../../.. && npm link && cd example/keycloak-authorizer/serverless && npm link keycloak-lambda-authorizer
 npm run offline
 ```
 Client Credentials:  
@@ -30,6 +32,7 @@ Client Credentials:
 ```bash
 cd serverless-jwks
 npm i
+cd ../../.. && npm link && cd example/keycloak-authorizer/serverless && npm link keycloak-lambda-authorizer
 npm run offline
 ```
 
@@ -136,6 +139,7 @@ example/resources/keycloak.json
 ```bash
 cd serverless
 npm i
+cd ../../.. && npm link && cd example/keycloak-authorizer/serverless-jwks && npm link keycloak-lambda-authorizer
 serverless deploy
 ```
 ![lambda1](../../docs/lambda1.png)
@@ -144,6 +148,7 @@ serverless deploy
 ```bash
 cd serverless-jwks
 npm i
+cd ../../.. && npm link && cd example/keycloak-authorizer/serverless-jwks && npm link keycloak-lambda-authorizer
 serverless deploy
 ```
 ![lambda2](../../docs/lambda2.png)

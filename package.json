@@ -3,10 +3,20 @@
   "version": "0.1.2",
   "description": "Keycloak adapter for aws Lambda",
   "main": "index.js",
+  "homepage": "https://github.com/vzakharchenko/keycloak-lambda-authorizer",
+  "url": "https://github.com/vzakharchenko/keycloak-lambda-authorizer",
+  "bugs": {
+    "url": "https://github.com/vzakharchenko/keycloak-lambda-authorizer/issues",
+    "email": "vaszakharchenko@gmail.com"
+  },
   "scripts": {
     "lint": "eslint --quiet --ext .js index.js && eslint --quiet --ext .js src",
     "lint:fix": "eslint --fix --quiet --ext .js index.js && eslint --fix --quiet --ext .js src",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/vzakharchenko/keycloak-lambda-authorizer.git"
   },
   "keywords": [
     "keycloak",

@@ -61,7 +61,7 @@ export function authorizer(event, context, callback) {
 
 # Configuration
 
-## Json structure:
+## Option structure:
 ```javascript
 {
    "cache":"defaultCache",

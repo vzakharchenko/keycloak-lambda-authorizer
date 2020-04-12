@@ -9,7 +9,8 @@
     "offline": "SLS_DEBUG=* serverless offline --host 0.0.0.0 --httpPort 3003 --lambdaPort=3019 --dontPrintOutput",
     "deploy": "serverless deploy --aws-profile aws-home",
     "lint": "eslint --quiet --ext .js handler.js",
-    "lint:fix": "eslint --fix --quiet --ext .js handler.js"
+    "lint:fix": "eslint --fix --quiet --ext .js handler.js",
+    "postinstall": "cd ../../.. && npm i && npm link && cd example/keycloak-authorizer/serverless && npm link keycloak-lambda-authorizer"
   },
   "author": "vzakharchenko",
   "license": "Apache-2.0",
@@ -23,14 +24,19 @@
     "@babel/preset-es2015": "^7.0.0-beta.53",
     "@babel/register": "^7.6.2",
     "babel-loader": "^8.1.0",
+    "@babel/runtime": "^7.9.2",
+    "copy-webpack-plugin": "*",
+    "eslint": "*",
+    "eslint-config-airbnb": "*",
+    "eslint-plugin-import": "*",
     "progress-bar-webpack-plugin": "^2.1.0",
     "serverless": "*",
     "serverless-offline": "*",
     "serverless-webpack": "*",
     "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11",
-    "eslint": "*",
-    "eslint-config-airbnb": "*",
-    "eslint-plugin-import": "*"
+    "webpack-cli": "^3.3.11"
+  },
+  "dependencies": {
+    "keycloak-lambda-authorizer": "*"
   }
 }

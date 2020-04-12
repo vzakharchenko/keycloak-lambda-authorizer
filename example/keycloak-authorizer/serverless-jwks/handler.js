@@ -1,7 +1,7 @@
 import fs from 'fs';
 import jsonwebtoken from 'jsonwebtoken';
-import { getAuthentication } from '../../common/authorizerUtil';
-import { awsHandler, jwksUrl } from '../../../index';
+import { awsHandler, jwksUrl } from 'keycloak-lambda-authorizer';
+import { getAuthentication } from '../serverless/authorizerUtil';
 import { publicKey, privateKey } from './rsaUtils';
 
 function getKeycloakJSON() {

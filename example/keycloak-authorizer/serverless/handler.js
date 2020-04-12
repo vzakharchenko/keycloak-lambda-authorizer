@@ -1,7 +1,8 @@
 import fs from 'fs';
 import jsonwebtoken from 'jsonwebtoken';
-import { getAuthentication } from '../../common/authorizerUtil';
-import { awsHandler } from '../../../index';
+import { awsHandler } from 'keycloak-lambda-authorizer';
+
+import { getAuthentication } from './authorizerUtil';
 
 function getKeycloakJSON() {
   return new Promise(((resolve, reject) => {

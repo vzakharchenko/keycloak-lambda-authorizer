@@ -1,6 +1,6 @@
 {
   "name": "keycloak-lambda-authorizer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Keycloak adapter for aws Lambda",
   "main": "index.js",
   "scripts": {
@@ -38,6 +38,8 @@
   "author": "vzakharchenko",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.9.0",
+    "@babel/runtime": "^7.9.2",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-plugin-import": "^2.20.2"

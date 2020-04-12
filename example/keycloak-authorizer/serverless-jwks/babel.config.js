@@ -3,13 +3,18 @@ module.exports = function (api) {
 
   const presets = [
     [
-      "@babel/preset-env",
-    ]
+      '@babel/preset-env',
+      {
+        targets: {
+          esmodules: true,
+        },
+      },
+    ],
   ];
   const plugins = [
     ['@babel/transform-runtime', {
       helpers: false,
-      regenerator: false,
+      regenerator: true,
     }],
     ['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true }],
     ['@babel/plugin-proposal-object-rest-spread'],

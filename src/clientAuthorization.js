@@ -1,6 +1,6 @@
 const jsonwebtoken = require('jsonwebtoken');
 const jws = require('jws');
-const uuid = require('uuid/v4');
+const { v4 } = require('uuid');
 
 const { sendData } = require('./utils/restCalls');
 const { getKeycloakUrl } = require('./utils/restCalls');
@@ -26,7 +26,7 @@ function createJWS(options) {
   const timeLocal = new Date().getTime();
   const timeSec = Math.floor(timeLocal / 1000);
   return {
-    jti: uuid(),
+    jti: v4(),
     sub: options.keycloakJson.resource,
     aud: `${getKeycloakUrl(options.keycloakJson)}/realms/${options.keycloakJson.realm}`,
     exp: timeSec + 30,

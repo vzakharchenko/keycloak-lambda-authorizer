@@ -15,6 +15,9 @@ Open the Keycloak admin console, click on Add Realm, click on import 'Select fil
 
 ## 2. Run Serverless offline (Client Id and Secret credential Type)
 
+```
+
+### 6.1 Deploy Lambda`s
 ```bash
 cd serverless
 npm i
@@ -74,15 +77,79 @@ Permissions:
 | User3     | ![localhost3001+2020-04-11+22-47-30](../../docs/localhost3001%2B2020-04-11%2B22-47-30.png)             | Does not have access to UI and Lambda`s               |
 
 ## 6. Deploy to cloud
+### 6.1 Run Keycloak with ngrok
+```console
+ngrok http 8080 
+```
+![vzakharchenko14-32-39](../../docs/vzakharchenko14-32-39.png)
+### 6.2 Modify keycloak.json with a new host
 
+example/keycloak-authorizer/ui/keycloak.json
+```json
+{
+  "realm": "lambda-authorizer",
+  "auth-server-url": "https://fe0e04b8.ngrok.io/auth",
+  "ssl-required": "external",
+  "resource": "ui",
+  "verify-token-audience": true,
+  "credentials": {
+    "secret": "ddfb7637-6f8b-4ca8-98f5-90af1801198a"
+  },
+  "confidential-port": 0,
+  "policy-enforcer": {}
+}
+```
+
+example/resources/keycloak.json
+```json
+{
+  "realm": "lambda-authorizer",
+  "auth-server-url": "https://fe0e04b8.ngrok.io/auth",
+  "ssl-required": "external",
+  "resource": "lambda",
+  "verify-token-audience": true,
+  "credentials": {
+    "secret": "772decbe-0151-4b08-8171-bec6d097293b"
+  },
+  "confidential-port": 0,
+  "policy-enforcer": {}
+}
+```
+example/resources/keycloak.json
+```json
+{
+  "realm": "lambda-authorizer",
+  "auth-server-url": "https://fe0e04b8.ngrok.io/auth",
+  "ssl-required": "external",
+  "resource": "lambda-jwks",
+  "verify-token-audience": true,
+  "credentials": {
+  },
+  "use-resource-role-mappings": true,
+  "confidential-port": 0,
+  "policy-enforcer": {}
+}
+```
+
+### 6.1 Deploy Lambda`s
+- deploy serverless
 ```bash
 cd serverless
 npm i
 serverless deploy
 ```
+![lambda1](../../docs/lambda1.png)
 
+- deploy serverless-jwks
 ```bash
 cd serverless-jwks
 npm i
 serverless deploy
+```
+![lambda2](../../docs/lambda2.png)
+### 6.3 set JWKS Url on Keycloak
+![Keycloak Admin Console 2020-04-12 14-55-07](../../docs/Keycloak%20Admin%20Console%202020-04-12%2014-55-07.png)
+### 6.4 Run UI locally pointing to remote lambdas
+```bash
+LAMBDA_URL=https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/dev/hello LAMBDA_JWKS_URL=https://yyyyyyyyyy.execute-api.us-east-1.amazonaws.com/dev/hello node index.js
 ```

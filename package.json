@@ -1,6 +1,6 @@
 {
   "name": "keycloak-lambda-authorizer",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Keycloak adapter for aws Lambda",
   "main": "index.js",
   "scripts": {

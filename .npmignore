@@ -10,6 +10,7 @@
 config.gypi
 CVS
 npm-debug.log
+example/*
 .circleci/*
 .idea/*
 package-lock.json

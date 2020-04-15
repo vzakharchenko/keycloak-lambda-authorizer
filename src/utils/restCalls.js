@@ -1,7 +1,6 @@
 const fetch = require('axios');
 
-
-export async function fetchData(url, method = 'GET', headers) {
+async function fetchData(url, method = 'GET', headers) {
   const ret = await fetch({
     url,
     method,
@@ -13,7 +12,7 @@ export async function fetchData(url, method = 'GET', headers) {
   return ret.data;
 }
 
-export async function sendData(url, method = 'POST', data, headers) {
+async function sendData(url, method = 'POST', data, headers) {
   const ret = await fetch({
     url,
     method,
@@ -26,8 +25,14 @@ export async function sendData(url, method = 'POST', data, headers) {
   return ret.data;
 }
 
-export function getKeycloakUrl(keycloakJson) {
+function getKeycloakUrl(keycloakJson) {
   const keycloakJsonElement = keycloakJson['auth-server-url'];
   return keycloakJsonElement.slice(keycloakJsonElement.length - 1) === '/'
     ? keycloakJsonElement.slice(0, -1) : keycloakJsonElement;
 }
+
+module.exports = {
+  fetchData,
+  sendData,
+  getKeycloakUrl,
+};

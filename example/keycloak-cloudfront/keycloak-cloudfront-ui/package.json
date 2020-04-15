@@ -1,0 +1,30 @@
+{
+  "name": "keycloak-cloudfront-ui",
+  "version": "0.1.4",
+  "description": "cloudfront ui module for keycloak-lambda-authorizer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vzakharchenko/keycloak-lambda-authorizer.git"
+  },
+  "keywords": [
+    "keycloak-lambda-authorizer"
+  ],
+  "author": "vzakharchenko",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/vzakharchenko/keycloak-lambda-authorizer/issues"
+  },
+  "homepage": "https://github.com/vzakharchenko/keycloak-lambda-authorizer#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "js-cookie": "^2.2.1",
+    "jsonwebtoken": "^8.5.1"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.9.0"
+  }
+}

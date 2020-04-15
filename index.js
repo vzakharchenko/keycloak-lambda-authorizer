@@ -1,18 +1,7 @@
-const { adapter, awsAdapter } = require('./src/keycloakAuthorizer');
-const { jwksUrlResponse } = require('./src/Jwks');
+const apigateway = require('./src/apigateway/apigateway');
+const adapter = require('./src/adapter/adapter');
+const lamdaEdge = require('./src/edge/lamdaEdge');
 
-export async function awsHandler(event, keycloakJson,
-  options) {
-  const ret = await awsAdapter(event, keycloakJson, options);
-  return ret;
-}
-
-export async function lambdaAdapter(tokenString, keycloakJson,
-  options) {
-  const ret = await adapter(tokenString, keycloakJson, options);
-  return ret;
-}
-
-export function jwksUrl(publicKey) {
-  return jwksUrlResponse(publicKey);
-}
+module.exports = {
+  apigateway, adapter, lamdaEdge,
+};

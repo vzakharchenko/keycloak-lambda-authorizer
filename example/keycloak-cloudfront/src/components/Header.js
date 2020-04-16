@@ -7,7 +7,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import { AccountCircle } from '@material-ui/icons';
-import { getDecodedTenantToken, getTenants } from 'keycloak-cloudfront-ui';
+import { getDecodedTenantToken, getTenants } from 'keycloak-lambda-cloudfront-ui';
 
 function useStyles() {
   return makeStyles((theme) => ({

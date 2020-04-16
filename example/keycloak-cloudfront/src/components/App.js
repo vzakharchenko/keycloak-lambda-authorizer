@@ -12,7 +12,7 @@ import {
   getTenantCookie,
   getTenantCookieValue,
   getTenants,
-} from 'keycloak-cloudfront-ui';
+} from 'keycloak-lambda-cloudfront-ui';
 
 export default
 class App extends React.Component {

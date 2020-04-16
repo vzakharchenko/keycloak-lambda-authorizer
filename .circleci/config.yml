@@ -34,3 +34,10 @@ jobs:
       - run:
           name: lint example/keycloak-authorizer ui
           command: cd example/keycloak-authorizer/ui && npm run lint
+
+      - run:
+          name: build example/keycloak-cloudfront cloudfront
+          command: cd example/keycloak-cloudfront && npm i
+      - run:
+          name: lint example/keycloak-cloudfront cloudfront
+          command: cd example/keycloak-cloudfront && npm run lint

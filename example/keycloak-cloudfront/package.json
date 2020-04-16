@@ -55,7 +55,7 @@
     "axios": "^0.19.2",
     "browserify": "^16.5.1",
     "js-cookie": "^2.2.1",
-    "keycloak-cloudfront-ui": "./keycloak-cloudfront-ui",
+    "keycloak-lambda-cloudfront-ui": "^0.1.4",
     "mobx-utils": "^5.5.7",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

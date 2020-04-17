@@ -8,10 +8,10 @@ async function lambdaEdgeRouter(event, context, sessionManager, callback) {
   const records = event.Records;
   const options = lambdaEdgeOptions(sessionManager);
   if (records && records[0] && records[0].cf) {
-    const { request } = records[0].cf;
+    const { request, config } = records[0].cf;
     const route = getRoute(request, options);
     try {
-      await route.handle(request, (error, response) => {
+      await route.handle(request, config, (error, response) => {
         updateResponse(request, response);
         callback(error, response);
       }, options);

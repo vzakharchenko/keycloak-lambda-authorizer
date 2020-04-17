@@ -24,12 +24,20 @@ function transformRequest(req) {
       value: headerValue,
     }];
   });
+  headers.referer = [
+    {
+      key: 'Referer',
+      value: `http://${req.headers.host}`,
+    },
+  ];
   return {
+    localhost: true,
     Records: [
       {
         cf: {
           config: {
             distributionId: 'EXAMPLE',
+            eventType: 'local-request',
           },
           request: {
             uri: urlQuery.uri,

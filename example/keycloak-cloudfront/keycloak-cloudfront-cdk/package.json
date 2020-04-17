@@ -1,0 +1,21 @@
+{
+  "name": "keycloak-cloudfront-cdk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "cdk:bootstrap": "cdk -v bootstrap --profile=aws-pd",
+    "build": "cd ../lambda-edge-example && npm i && npm run link:dep && npm run build && cd .. && npm i && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "vzakharchenko",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@aws-cdk/aws-cloudfront": "^1.32.2",
+    "@aws-cdk/aws-dynamodb": "^1.32.2",
+    "@aws-cdk/aws-lambda": "^1.32.2",
+    "@aws-cdk/aws-s3": "^1.32.2",
+    "@aws-cdk/aws-s3-deployment": "^1.32.2",
+    "@aws-cdk/core": "^1.32.2"
+  }
+}

@@ -10,8 +10,8 @@
     "email": "vaszakharchenko@gmail.com"
   },
   "scripts": {
-    "lint": "eslint --quiet --ext .js index.js && eslint --quiet --ext .js src",
-    "lint:fix": "eslint --fix --quiet --ext .js index.js && eslint --fix --quiet --ext .js src",
+    "lint": "eslint --quiet --ext .js index.js && eslint --quiet --ext .js src keycloak-cloudfront-dynamodb/DynamoDbSessionStorage.js",
+    "lint:fix": "eslint --fix --quiet --ext .js index.js && eslint --fix --quiet --ext .js  src keycloak-cloudfront-dynamodb/DynamoDbSessionStorage.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,6 +22,9 @@
     "keycloak",
     "lambda",
     "authorizer",
+    "cloudfront",
+    "lambda:edge",
+    "aws",
     "custom-authorizer",
     "adapter",
     "oidc",

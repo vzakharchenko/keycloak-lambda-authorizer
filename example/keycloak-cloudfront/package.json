@@ -6,8 +6,8 @@
   "scripts": {
     "build": "NODE_ENV=production webpack --bail --config webpack.config.babel.js",
     "start": "webpack-dev-server --config webpack.config.babel.js",
-    "lint": "eslint --quiet --ext .js lambdaEdgeProxy.js && eslint --quiet --ext .js src lambda-edge-example/index.js lambda-edge-example/src ",
-    "lint:fix": "eslint --fix --quiet --ext .js lambdaEdgeProxy.js && eslint --fix --quiet --ext .js src lambda-edge-example/index.js lambda-edge-example/src ",
+    "lint": "eslint --quiet --ext .js lambdaEdgeProxy.js && eslint --quiet --ext .js src lambda-edge-example/index.js lambda-edge-example/src keycloak-cloudfront-cdk/index.js",
+    "lint:fix": "eslint --fix --quiet --ext .js lambdaEdgeProxy.js && eslint --fix --quiet --ext .js src lambda-edge-example/index.js lambda-edge-example/src keycloak-cloudfront-cdk/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "vzakharchenko",
@@ -31,6 +31,7 @@
     "@babel/preset-react": "^7.9.4",
     "@babel/register": "^7.9.0",
     "@material-ui/styles": "^4.9.10",
+    "aws-sdk": "^2.657.0",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-dynamic-import-node": "^2.3.0",

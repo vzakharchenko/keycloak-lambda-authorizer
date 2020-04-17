@@ -1,19 +1,16 @@
+const { getUrl } = require('../utils/restCalls');
 
 function getHostHeader(request) {
-  return request.headers.host[0].value;
+  return request.headers.referer[0].value;
 }
 
 function isLocalhost(request) {
   const hostHeaderValue = getHostHeader(request);
-  return hostHeaderValue.startsWith('localhost');
+  return hostHeaderValue.startsWith('http://localhost');
 }
 
 function getHostUrl(request) {
-  const hostHeaderValue = getHostHeader(request);
-  if (hostHeaderValue.startsWith('localhost')) {
-    return `http://${hostHeaderValue}`;
-  }
-  return `https://${hostHeaderValue}`;
+  return getUrl(getHostHeader(request));
 }
 
 function updateResponse(request, response) {
@@ -33,4 +30,5 @@ module.exports = {
   updateResponse,
   getHostUrl,
   tenantName,
+  isLocalhost,
 };

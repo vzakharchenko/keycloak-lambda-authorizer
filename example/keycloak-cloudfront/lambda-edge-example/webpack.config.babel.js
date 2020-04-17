@@ -36,8 +36,6 @@ const config = {
     new ProgressBarPlugin(),
   ],
   resolve: {
-    alias:
-        {'keycloak-lambda-authorizer':'../../..'},
     modules: [
       path.join(__dirname, 'src'),
       'node_modules',

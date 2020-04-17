@@ -25,14 +25,19 @@ async function sendData(url, method = 'POST', data, headers) {
   return ret.data;
 }
 
+function getUrl(url) {
+  return url.slice(url.length - 1) === '/'
+    ? url.slice(0, -1) : url;
+}
+
 function getKeycloakUrl(keycloakJson) {
   const keycloakJsonElement = keycloakJson['auth-server-url'];
-  return keycloakJsonElement.slice(keycloakJsonElement.length - 1) === '/'
-    ? keycloakJsonElement.slice(0, -1) : keycloakJsonElement;
+  return getUrl(keycloakJsonElement);
 }
 
 module.exports = {
   fetchData,
   sendData,
   getKeycloakUrl,
+  getUrl,
 };

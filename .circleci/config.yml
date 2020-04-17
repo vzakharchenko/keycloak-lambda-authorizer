@@ -18,13 +18,13 @@ jobs:
           command: npm run lint
       - run:
           name: build example/keycloak-authorizer serverless
-          command: cd example/keycloak-authorizer/serverless && npm i
+          command: cd example/keycloak-authorizer/serverless && npm i && npm run build
       - run:
           name: lint example/keycloak-authorizer serverless
           command: cd example/keycloak-authorizer/serverless && npm run lint
       - run:
           name: build example/keycloak-authorizer serverless-jwks
-          command: cd example/keycloak-authorizer/serverless-jwks && npm i
+          command: cd example/keycloak-authorizer/serverless-jwks && npm i && npm run build
       - run:
           name: lint example/keycloak-authorizer serverless-jwks
           command: cd example/keycloak-authorizer/serverless-jwks && npm run lint
@@ -36,8 +36,14 @@ jobs:
           command: cd example/keycloak-authorizer/ui && npm run lint
 
       - run:
+          name: build example/keycloak-cloudfront cloudfront-cdk
+          command: cd example/keycloak-cloudfront/keycloak-cloudfront-cdk && npm i
+      - run:
+          name: build example/keycloak-cloudfront lambda-edge-example
+          command: cd example/keycloak-cloudfront/lambda-edge-example && npm i && npm run build
+      - run:
           name: build example/keycloak-cloudfront cloudfront
-          command: cd example/keycloak-cloudfront && npm i
+          command: cd example/keycloak-cloudfront && npm i && npm run build
       - run:
           name: lint example/keycloak-cloudfront cloudfront
           command: cd example/keycloak-cloudfront && npm run lint

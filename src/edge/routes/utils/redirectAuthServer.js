@@ -1,23 +1,28 @@
 const cookie = require('cookie');
 
 const { getCookie, clearCookies } = require('../../../utils/cookiesUtils');
-const { getActiveToken, decodeAccessToken } = require('../../../utils/TokenUtils');
-const { getNonce } = require('./nonce');
 
+const { getActiveToken, decodeAccessToken } = require('../../../utils/TokenUtils');
 const { getKeycloakUrl } = require('../../../utils/restCalls');
-const { getHostUrl, tenantName } = require('../../lambdaEdgeUtils');
+
+const { getHostUrl, tenantName, signState } = require('../../lambdaEdgeUtils');
 
 function buildUri(request) {
   return request.uri + (request.querystring ? `?${request.querystring}` : '');
 }
 
+function updateLoginLink(loginPage, options) {
+  if (options.updateLoginPage && options.updateLoginPage instanceof Function) {
+    return options.updateLoginPage(loginPage);
+  }
+  return loginPage;
+}
+
 // eslint-disable-next-line import/prefer-default-export
-function redirectToKeycloak(request, options, url) {
+async function redirectToKeycloak(request, options, url) {
   const host = getHostUrl(request);
   const { keycloakJson } = options;
   options.logger.debug('Redirecting to OIDC provider.');
-  const n = getNonce();
-  const nonce = n[0];
   let state = url || buildUri(request);
   if (
     !state.includes('#')
@@ -27,19 +32,17 @@ function redirectToKeycloak(request, options, url) {
   ) {
     state = '/';
   }
+
+  const jwt = await signState(state, options);
   const headers = {
     location: [{
       key: 'Location',
-      value: `${getKeycloakUrl(keycloakJson)}/realms/${keycloakJson.realm}/protocol/openid-connect/auth?client_id=${keycloakJson.resource}&redirect_uri=${encodeURIComponent(`${host}/${keycloakJson.realm}/${keycloakJson.resource}/callback`)}&state=${encodeURIComponent(state)}&response_type=code&scope=openid&nonce=${nonce}`,
+      value: updateLoginLink(
+        `${getKeycloakUrl(keycloakJson)}/realms/${keycloakJson.realm}/protocol/openid-connect/auth?client_id=${keycloakJson.resource}&redirect_uri=${encodeURIComponent(`${host}/${keycloakJson.realm}/${keycloakJson.resource}/callback`)}&state=${encodeURIComponent(jwt)}&response_type=code&scope=openid`,
+        options,
+      ),
     }],
     'set-cookie': [
-      {
-        key: 'Set-Cookie',
-        value: cookie.serialize('NONCE', n[1], {
-          path: '/',
-          httpOnly: true,
-        }),
-      },
       {
         key: 'Set-Cookie',
         value: cookie.serialize('SESSION_TOKEN', '', {
@@ -57,28 +60,21 @@ function redirectToKeycloak(request, options, url) {
   };
 }
 
-function responseWithKeycloakRedirectToLoginPage(request, options, callback) {
-  logger.debug('Redirecting to OIDC provider.');
-  const n = getNonce();
-  const nonce = n[0];
+async function responseWithKeycloakRedirectToLoginPage(request, options, callback) {
+  console.debug('Redirecting to OIDC provider.');
   const state = buildUri(request);
+  const jwt = await signState(state, options);
   const host = getHostUrl(request);
   const { keycloakJson } = options;
   const response = {
     status: '200',
     statusDescription: 'OK',
     body: JSON.stringify({
-      location: `${getKeycloakUrl(keycloakJson)}/realms/${keycloakJson.realm}/protocol/openid-connect/auth?client_id=${keycloakJson.resource}&redirect_uri=${encodeURIComponent(`${host}/${keycloakJson.realm}/${keycloakJson.resource}/callback`)}&state=${encodeURIComponent(state)}&response_type=code&scope=openid&nonce=${nonce}`,
+      location: updateLoginLink(`${getKeycloakUrl(keycloakJson)}/realms/${keycloakJson.realm}/protocol/openid-connect/auth?client_id=${keycloakJson.resource}&redirect_uri=${encodeURIComponent(`${host}/${keycloakJson.realm}/${keycloakJson.resource}/callback`)}&state=${encodeURIComponent(jwt)}&response_type=code&scope=openid`,
+        options),
     }),
     headers: {
       'set-cookie': [
-        {
-          key: 'Set-Cookie',
-          value: cookie.serialize('NONCE', n[1], {
-            path: '/',
-            httpOnly: true,
-          }),
-        },
         {
           key: 'Set-Cookie',
           value: cookie.serialize(tenantName(keycloakJson), '', {
@@ -103,13 +99,13 @@ async function checkToken(request, callback, options,
     const sessionString = cookieHeader.session;
     const sessionTokenString = cookieHeader.sessionToken;
     if (!await options.sessionManager.checkSession(sessionString)) {
-      callback(null, redirectToKeycloakAction(request, options));
+      callback(null, await redirectToKeycloakAction(request, options));
     } else {
       try {
         const token = await getActiveToken(sessionString, sessionTokenString, options,
           refreshTokenHandler);
         if (!token) {
-          callback(null, redirectToKeycloakAction(request, options));
+          callback(null, await redirectToKeycloakAction(request, options));
         }
         return {
           access_token: token,
@@ -123,7 +119,7 @@ async function checkToken(request, callback, options,
       }
     }
   } else {
-    callback(null, redirectToKeycloakAction(request, options));
+    callback(null, await redirectToKeycloakAction(request, options));
   }
   return null;
 }

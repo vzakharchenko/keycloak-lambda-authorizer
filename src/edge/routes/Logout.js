@@ -36,13 +36,6 @@ async function tenantLogout(request, options) {
             expires: new Date(2671200000),
           }),
         },
-        {
-          key: 'Set-Cookie',
-          value: cookie.serialize('NONCE', '', {
-            path: '/',
-            expires: new Date(2671200000),
-          }),
-        },
       ],
     },
   };

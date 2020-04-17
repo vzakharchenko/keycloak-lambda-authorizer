@@ -1,6 +1,6 @@
 const qs = require('querystring');
 const cookie = require('cookie');
-const { getHostUrl, tenantName } = require('../lambdaEdgeUtils');
+const { getHostUrl, tenantName, validateState } = require('../lambdaEdgeUtils');
 const { getTokenByCode, exchangeRPT } = require('../../clientAuthorization');
 const { decodeAccessToken } = require('../../utils/TokenUtils');
 const { getCookie } = require('../../utils/cookiesUtils');
@@ -9,6 +9,7 @@ async function callbackHandler(request, options, callback) {
   const { sessionManager } = options;
   const host = getHostUrl(request);
   const queryDict = qs.parse(request.querystring);
+
   options.logger.debug('Callback received');
   if (queryDict.error) {
     let error = '';
@@ -36,21 +37,29 @@ async function callbackHandler(request, options, callback) {
     }
 
     options.route.unauthorized(
-      error, errorDescription, errorUri, host, callback,
+      error, errorDescription, errorUri, request, callback,
     );
     return;
   }
   if (!queryDict.code) {
     options.route.unauthorized(
-      'No Code Found', '', '', host, callback,
+      'No Code Found', '', '', request, callback,
     );
     return;
   }
-  const { code } = queryDict;
-  const state = queryDict.state || '/';
+
 
   let response;
   try {
+    const decodedState = await validateState(queryDict.state, options);
+    if (!decodedState) {
+      options.logger.error('State validation failed');
+      options.route.internalServerError(request, callback);
+      return;
+    }
+    const { code } = queryDict;
+    const state = decodedState.s || '/';
+
     let tokenJson = await getTokenByCode(code, host, options);
     let accessToken = decodeAccessToken(tokenJson);
     if (options.enforce.enabled && !options.enforce.role) {
@@ -95,13 +104,6 @@ async function callbackHandler(request, options, callback) {
             value: cookie.serialize('KEYCLOAK_AWS_SESSION', sessionJWT, {
               path: '/',
               expires: new Date(sessionJWTDecode.exp * 1000),
-            }),
-          },
-          {
-            key: 'Set-Cookie',
-            value: cookie.serialize('NONCE', '', {
-              path: '/',
-              expires: new Date(2671200000),
             }),
           },
           {

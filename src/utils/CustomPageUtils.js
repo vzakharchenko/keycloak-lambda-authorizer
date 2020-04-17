@@ -1,4 +1,3 @@
-const cookie = require('cookie');
 const { getCookies } = require('./cookiesUtils');
 const { getHostUrl } = require('../edge/lambdaEdgeUtils');
 
@@ -33,13 +32,6 @@ function unauthorized(
     body: page,
     headers: getCookies(request, {
       'set-cookie': [
-        {
-          key: 'Set-Cookie',
-          value: cookie.serialize('NONCE', '', {
-            path: '/',
-            expires: new Date(2671200000),
-          }),
-        },
       ],
     }),
   };
@@ -70,13 +62,6 @@ function internalServerError(request, callback) {
     body: page,
     headers: getCookies(request, {
       'set-cookie': [
-        {
-          key: 'Set-Cookie',
-          value: cookie.serialize('NONCE', '', {
-            path: '/',
-            expires: new Date(2671200000),
-          }),
-        },
       ],
     }),
   };

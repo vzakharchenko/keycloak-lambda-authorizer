@@ -54,6 +54,7 @@ function lambdaEdgeRouteOptions(options, keycloakJson) {
   return {
     ...commonOptions(options, keycloakJson),
     ...{
+      updateLoginPage: options.updateLoginPage || function (url) { return url; },
       route: {
         unauthorized: route.unauthorized || unauthorized,
         internalServerError: route.unauthorized || internalServerError,

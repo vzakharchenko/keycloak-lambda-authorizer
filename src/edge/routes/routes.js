@@ -115,5 +115,5 @@ module.exports = {
   addUnProtected,
   addProtected,
   addJwksEndpoint,
-  isRequest
+  isRequest,
 };

@@ -63,7 +63,7 @@ async function signState(state, options) {
   const timeLocal = new Date().getTime();
   const timeSec = Math.floor(timeLocal / 1000);
   const payload = {
-    s: '/sdfsdfsdfsdfsdfsdfdsfsdfsdfsdfsdf/sdfsdfsdfsdf/sdfsdfsdfsdfsdf/sdfsdfsdf',
+    s: state,
     n: tenantName(options.keycloakJson),
     exp: timeSec + 600,
   };

@@ -87,7 +87,7 @@ class KeycloakCloudFrontExampleStack extends cdk.Stack {
       viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
       defaultRootObject: 'index.html',
     });
-    s3Deployment.BucketDeployment(this, `BucketDeployment ${bucket}`, {
+    new s3Deployment.BucketDeployment(this, `BucketDeployment ${bucket}`, {
       destinationBucket: bucket,
       role,
       distribution: frontWebDistribution,
@@ -98,5 +98,5 @@ class KeycloakCloudFrontExampleStack extends cdk.Stack {
   }
 }
 const app = new cdk.App();
-KeycloakCloudFrontExampleStack(app, `example-${bucketName}`);
+new KeycloakCloudFrontExampleStack(app, `example-${bucketName}`);
 app.synth();

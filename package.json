@@ -24,6 +24,7 @@
     "authorizer",
     "cloudfront",
     "lambda:edge",
+    "lambda@edge",
     "aws",
     "custom-authorizer",
     "adapter",

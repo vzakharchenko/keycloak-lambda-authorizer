@@ -4,7 +4,8 @@
 # Description
 Implementation [Keycloak](https://www.keycloak.org/) adapter for aws Lambda
 ## Features
-- 
+- supports AWS API Gateway, AWS Cloudfront with Lambda@Edge
+- works with non amazon services.
 - validate expiration of JWT token
 - validate JWS signature
 - supports "clientId/secret" and "client-jwt" credential types
@@ -367,7 +368,7 @@ export async function authorization(event, context, callback) {
 import { lamdaEdge } from 'keycloak-lambda-authorizer';
 import { SessionManager } from 'keycloak-lambda-authorizer/src/edge/storage/SessionManager';
 import { LocalSessionStorage } from 'keycloak-lambda-authorizer/src/edge/storage/localSessionStorage';
-import { DynamoDbSessionStorage } from 'keycloak-lambda-authorizer/src/edge/storage/DynamoDbSessionStorage';
+import { DynamoDbSessionStorage } from 'keycloak-cloudfront-dynamodb/DynamoDbSessionStorage';
 import { isLocalhost } from 'keycloak-lambda-authorizer/src/edge/lambdaEdgeUtils';
 
 const privateKey = ...;
@@ -386,4 +387,110 @@ export async function authorization(event, context, callback) {
 }
 ```
 
+## 4. Custom Url Handler 
 
+```javascript
+import { lamdaEdge } from 'keycloak-lambda-authorizer';
+import { SessionManager } from 'keycloak-lambda-authorizer/src/edge/storage/SessionManager';
+import { LocalSessionStorage } from 'keycloak-lambda-authorizer/src/edge/storage/localSessionStorage';
+import { DynamoDbSessionStorage } from 'keycloak-cloudfront-dynamodb/DynamoDbSessionStorage';
+import { isLocalhost } from 'keycloak-lambda-authorizer/src/edge/lambdaEdgeUtils';
+
+const privateKey = ...;
+const publicKey = ...;
+
+lamdaEdge.routes.addRoute({
+      isRoute: (request) => isRequest(request, '/someUrl'),
+      handle: async (request, config, callback) => {
+        const response=... ;
+         YOUR LOGIC
+        callback(null, response);
+      },
+ });
+
+// eslint-disable-next-line import/prefer-default-export
+export async function authorization(event, context, callback) {
+  await lamdaEdge.lambdaEdgeRouter(event, context, new SessionManager(isLocalhost()? new LocalSessionStorage(): new DynamoDbSessionStorage({ region: 'us-east-1' },'teablename'), {
+    keys: {
+      privateKey,
+      publicKey,
+    },
+  }), callback);
+}
+```
+
+## 5. Custom Url Handler with Lambda:Edge [EventType](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-event-structure.html)
+
+
+```javascript
+import { lamdaEdge } from 'keycloak-lambda-authorizer';
+import { SessionManager } from 'keycloak-lambda-authorizer/src/edge/storage/SessionManager';
+import { LocalSessionStorage } from 'keycloak-lambda-authorizer/src/edge/storage/localSessionStorage';
+import { DynamoDbSessionStorage } from 'keycloak-cloudfront-dynamodb/DynamoDbSessionStorage';
+import { isLocalhost } from 'keycloak-lambda-authorizer/src/edge/lambdaEdgeUtils';
+
+const privateKey = ...;
+const publicKey = ...;
+
+lamdaEdge.routes.addRoute({
+      isRoute: (request) => isRequest(request, '/someUrl'),
+      handle: async (request, config, callback) => {
+        if (config.eventType === 'viewer-request') { // original-request, origin-response, viewer-request, viewer-response, local-request
+            const response=... ;
+            YOUR LOGIC
+            callback(null, response);
+        } else {
+            callback(null, request);
+        }
+      },
+ });
+
+// eslint-disable-next-line import/prefer-default-export
+export async function authorization(event, context, callback) {
+  await lamdaEdge.lambdaEdgeRouter(event, context, new SessionManager(isLocalhost()? new LocalSessionStorage(): new DynamoDbSessionStorage({ region: 'us-east-1' },'teablename'), {
+    keys: {
+      privateKey,
+      publicKey,
+    },
+  }), callback);
+}
+```
+
+# Implementation For Custom Service or non amazon cloud
+
+```javascript
+import { adapter } from 'keycloak-lambda-authorizer';
+
+const keycloakJson = {
+   "realm": "lambda-authorizer",
+   "auth-server-url": "http://localhost:8090/auth",
+   "ssl-required": "external",
+   "resource": "lambda",
+   "verify-token-audience": true,
+   "credentials": {
+     "secret": "772decbe-0151-4b08-8171-bec6d097293b"
+   },
+   "confidential-port": 0,
+   "policy-enforcer": {}
+}
+
+async function handler(request,response) {
+  const authorization = request.headers.Authorization;
+  const match = authorization.match(/^Bearer (.*)$/);
+  if (!match || match.length < 2) {
+    throw new Error(`Invalid Authorization token - '${authorization}' does not match 'Bearer .*'`);
+  }
+  const jwtToken =  match[1];
+  await adapter(jwtToken,keycloakJson, {
+                                        enforce: {
+                                          enabled: true,
+                                          resource: {
+                                            name: 'SOME_RESOURCE',
+                                            uri: 'RESOURCE_URI',
+                                            matchingUri: true,
+                                          },
+                                        },
+                                      });
+...
+}
+```

@@ -12,7 +12,7 @@ jobs:
 
       - run:
           name: build source
-          command: npm i
+          command: npm i && cd keycloak-cloudfront-dynamodb && npm i
       - run:
           name: lint
           command: npm run lint

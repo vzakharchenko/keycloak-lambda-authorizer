@@ -1,6 +1,6 @@
 import fs from 'fs';
 import jsonwebtoken from 'jsonwebtoken';
-import { awsHandler } from 'keycloak-lambda-authorizer';
+import { apigateway } from 'keycloak-lambda-authorizer';
 
 import { getAuthentication } from './authorizerUtil';
 
@@ -42,7 +42,7 @@ export function hello(event, context, callback) {
 
 export async function auth0(event) {
   const keycloakJSON = await getKeycloakJSON();
-  const token = await awsHandler(event, keycloakJSON, {
+  const token = await apigateway.awsHandler(event, keycloakJSON, {
     enforce: {
       enabled: true,
       resource: {

@@ -1,28 +1,10 @@
 const jsonwebtoken = require('jsonwebtoken');
+
 const KeyCloakCerts = require('get-keycloak-public-key');
 const { getKeycloakUrl } = require('./utils/restCalls');
 const { enforce } = require('./umaConfiguration');
-const defaultCache = require('./cache/NodeCacheImpl');
+const { commonOptions } = require('./utils/optionsUtils');
 
-
-const defaultEnforcer = {
-  enable: false,
-  role: '',
-  resource: null,
-  resources: [],
-};
-
-const defaultResource = {
-  name: '',
-  uri: '',
-  owner: '',
-  type: '',
-  scope: '',
-  matchingUri: false,
-  deep: false,
-  first: -1,
-  max: -1,
-};
 
 async function getKeyFromKeycloak(options, kid) {
   let publicKey = options.cache.get('publicKey', kid);
@@ -87,32 +69,14 @@ function decodeToken(tokenString) {
   return token;
 }
 
-function updateEnforcer(enforcer) {
-  const newEnforcer = { ...defaultEnforcer, ...enforcer };
-  if (newEnforcer.resource) {
-    newEnforcer.resource = { ...defaultResource, ...newEnforcer.resource };
-  }
-  if (newEnforcer.resources) {
-    newEnforcer.resources = newEnforcer.resources.map((res) => ({ ...defaultResource, ...res }));
-  }
-  return newEnforcer;
-}
-
-export async function adapter(tokenString,
+async function adapter(tokenString,
   keycloakJson,
   options = {}) {
   if (!keycloakJson) {
     throw new Error('Expected \'keycloakJson\' parameter to be set');
   }
   // const lambdaArn = awsParser(event.methodArn);
-  const newOptions = {
-    keys: options.keys,
-    logger: options.logger || console,
-    keycloakJson,
-    cache: options.cache || defaultCache,
-    resources: options.resources,
-    enforce: updateEnforcer(options.enforce || defaultEnforcer),
-  };
+  const newOptions = commonOptions(options, keycloakJson);
   const token = decodeToken(tokenString);
   await verifyToken(token, newOptions);
   if (options.enforce && options.enforce.enabled) {
@@ -122,10 +86,14 @@ export async function adapter(tokenString,
 }
 
 
-export async function awsAdapter(event,
+async function awsAdapter(event,
   keycloakJson,
   options) {
   const tokenString = getTokenString(event);
   const ret = await adapter(tokenString, keycloakJson, options);
   return ret;
 }
+
+module.exports = {
+  awsAdapter, adapter,
+};

@@ -1,6 +1,6 @@
 import fs from 'fs';
 import jsonwebtoken from 'jsonwebtoken';
-import { awsHandler, jwksUrl } from 'keycloak-lambda-authorizer';
+import { apigateway, adapter } from 'keycloak-lambda-authorizer';
 import { getAuthentication } from '../serverless/authorizerUtil';
 import { publicKey, privateKey } from './rsaUtils';
 
@@ -42,7 +42,7 @@ export function hello(event, context, callback) {
 
 export async function auth0(event) {
   const keycloakJSON = await getKeycloakJSON();
-  const token = await awsHandler(event, keycloakJSON, {
+  const token = await apigateway.awsHandler(event, keycloakJSON, {
     keys: {
       privateKey: {
         key: privateKey,
@@ -100,7 +100,7 @@ export function auth(event, context, callback) {
 }
 
 export function cert(event, context, callback) {
-  const jwksResponse = jwksUrl(publicKey);
+  const jwksResponse = adapter.jwksUrl(publicKey);
   callback(null, {
     statusCode: 200,
     body: jwksResponse,

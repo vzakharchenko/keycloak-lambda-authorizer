@@ -1,6 +1,6 @@
 {
   "name": "keycloak-lambda-authorizer",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Keycloak adapter for aws Lambda",
   "main": "index.js",
   "homepage": "https://github.com/vzakharchenko/keycloak-lambda-authorizer",
@@ -10,8 +10,8 @@
     "email": "vaszakharchenko@gmail.com"
   },
   "scripts": {
-    "lint": "eslint --quiet --ext .js index.js && eslint --quiet --ext .js src",
-    "lint:fix": "eslint --fix --quiet --ext .js index.js && eslint --fix --quiet --ext .js src",
+    "lint": "eslint --quiet --ext .js index.js && eslint --quiet --ext .js src keycloak-cloudfront-dynamodb/DynamoDbSessionStorage.js",
+    "lint:fix": "eslint --fix --quiet --ext .js index.js && eslint --fix --quiet --ext .js  src keycloak-cloudfront-dynamodb/DynamoDbSessionStorage.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,6 +22,10 @@
     "keycloak",
     "lambda",
     "authorizer",
+    "cloudfront",
+    "lambda:edge",
+    "lambda@edge",
+    "aws",
     "custom-authorizer",
     "adapter",
     "oidc",
@@ -57,12 +61,14 @@
   "dependencies": {
     "aws-arn-parser": "^1.0.1",
     "axios": "^0.19.2",
+    "cookie": "^0.4.0",
     "copy-webpack-plugin": "^5.1.1",
     "get-keycloak-public-key": "^1.0.3",
     "jsonwebtoken": "^8.5.1",
     "jws": "^4.0.0",
     "node-cache": "^5.1.0",
     "node-forge": "^0.9.1",
+    "querystring": "^0.2.0",
     "rsa-pem-to-jwk": "^1.1.3",
     "uuid": "^7.0.3"
   }

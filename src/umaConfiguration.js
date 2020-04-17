@@ -16,16 +16,18 @@ async function getUma2Configuration(options) {
 }
 
 async function getResource(uma2Config,
-  options, resource) {
-  let resources = options.cache.get('resource', JSON.stringify(resource));
+  options, resourceObject) {
+  const { realm, resource } = options.keycloakJson;
+  const key = `${realm}:${resource}${JSON.stringify(resource)}`;
+  let resources = options.cache.get('resource', key);
   if (!resources) {
-    const resourceRegistrationEndpoint = `${uma2Config.resource_registration_endpoint}?name=${resource.name}&uri=${resource.uri}&matchingUri=${!!resource.matchingUri}&owner=${resource.owner}&type=${resource.type}&scope=${resource.scope}&deep=${resource.deep}&first=${resource.first}&max=${resource.max}`;
+    const resourceRegistrationEndpoint = `${uma2Config.resource_registration_endpoint}?name=${resourceObject.name}&uri=${resourceObject.uri}&matchingUri=${!!resourceObject.matchingUri}&owner=${resourceObject.owner}&type=${resourceObject.type}&scope=${resourceObject.scope}&deep=${resourceObject.deep}&first=${resourceObject.first}&max=${resourceObject.max}`;
     const jwt = await clientAuthentication(uma2Config, options);
     const res = await fetchData(resourceRegistrationEndpoint, 'GET', {
       Authorization: `Bearer ${jwt.access_token}`, // client authorizer
     });
     resources = JSON.parse(res);
-    options.cache.put('resource', JSON.stringify(resource), resources);
+    options.cache.put('resource', key, resources);
   }
   return resources;
 }
@@ -53,7 +55,7 @@ async function matchResource(uma2Config,
   }
 }
 
-export async function enforce(token, options) {
+async function enforce(token, options) {
   if (options.enforce.role) {
     const role = token.payload.realm_access.roles.find(
       (r) => r === options.enforce.role,
@@ -66,3 +68,7 @@ export async function enforce(token, options) {
     await matchResource(uma2Config, token, options);
   }
 }
+
+module.exports = {
+  enforce,
+};

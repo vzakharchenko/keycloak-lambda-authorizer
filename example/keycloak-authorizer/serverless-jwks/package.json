@@ -9,6 +9,7 @@
     "offline": "SLS_DEBUG=* serverless offline --host 0.0.0.0 --httpPort 3004 --dontPrintOutput",
     "keys": "openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -subj \"/C=US/ST=Denial/L=Springfield/O=Dis/CN=lambda-jwks\" -keyout ../../resources/server.key -out ../../resources/server.crt",
     "deploy": "serverless deploy --aws-profile aws-home",
+    "link:dep": "cd ../../.. && npm link && cd example/keycloak-authorizer/serverless-jwks && npm link keycloak-lambda-authorizer",
     "lint": "eslint --quiet --ext .js handler.js",
     "lint:fix": "eslint --fix --quiet --ext .js handler.js rsaUtils.js"
   },

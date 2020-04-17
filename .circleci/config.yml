@@ -12,7 +12,7 @@ jobs:
 
       - run:
           name: build source
-          command: npm i
+          command: npm i && cd keycloak-cloudfront-dynamodb && npm i
       - run:
           name: lint
           command: npm run lint
@@ -34,3 +34,15 @@ jobs:
       - run:
           name: lint example/keycloak-authorizer ui
           command: cd example/keycloak-authorizer/ui && npm run lint
+      - run:
+          name: build example/keycloak-cloudfront cloudfront-cdk
+          command: cd example/keycloak-cloudfront/keycloak-cloudfront-cdk && npm i
+      - run:
+          name: build example/keycloak-cloudfront lambda-edge-example
+          command: cd example/keycloak-cloudfront/lambda-edge-example && npm i && npm run build
+      - run:
+          name: build example/keycloak-cloudfront cloudfront
+          command: cd example/keycloak-cloudfront && npm i && npm run build
+      - run:
+          name: lint example/keycloak-cloudfront cloudfront
+          command: cd example/keycloak-cloudfront && npm run lint

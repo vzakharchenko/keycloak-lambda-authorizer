@@ -13,4 +13,5 @@ npm-debug.log
 example/*
 .circleci/*
 .idea/*
+keycloak-cloudfront-dynamodb
 package-lock.json

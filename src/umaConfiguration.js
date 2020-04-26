@@ -6,11 +6,11 @@ const { fetchData } = require('./utils/restCalls');
 
 async function getUma2Configuration(options) {
   const { realm } = options.keycloakJson;
-  let uma2Config = options.cache.get('uma2-configuration', realm);
+  let uma2Config = await options.cache.get('uma2-configuration', realm);
   if (!uma2Config) {
     const res = await fetchData(`${getKeycloakUrl(options.keycloakJson)}/realms/${realm}/.well-known/uma2-configuration`);
     uma2Config = JSON.parse(res);
-    options.cache.put('uma2-configuration', realm, uma2Config);
+    await options.cache.put('uma2-configuration', realm, uma2Config);
   }
   return uma2Config;
 }
@@ -19,7 +19,7 @@ async function getResource(uma2Config,
   options, resourceObject) {
   const { realm, resource } = options.keycloakJson;
   const key = `${realm}:${resource}${JSON.stringify(resource)}`;
-  let resources = options.cache.get('resource', key);
+  let resources = await options.cache.get('resource', key);
   if (!resources) {
     const resourceRegistrationEndpoint = `${uma2Config.resource_registration_endpoint}?name=${resourceObject.name}&uri=${resourceObject.uri}&matchingUri=${!!resourceObject.matchingUri}&owner=${resourceObject.owner}&type=${resourceObject.type}&scope=${resourceObject.scope}&deep=${resourceObject.deep}&first=${resourceObject.first}&max=${resourceObject.max}`;
     const jwt = await clientAuthentication(uma2Config, options);
@@ -27,7 +27,7 @@ async function getResource(uma2Config,
       Authorization: `Bearer ${jwt.access_token}`, // client authorizer
     });
     resources = JSON.parse(res);
-    options.cache.put('resource', key, resources);
+    await options.cache.put('resource', key, resources);
   }
   return resources;
 }

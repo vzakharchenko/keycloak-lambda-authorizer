@@ -4,7 +4,7 @@ const rsaPemToJwk = require('rsa-pem-to-jwk');
 function publicKeyTransform(publicKey) {
   const m = /^-----BEGIN RSA PUBLIC KEY-----/.exec(publicKey);
   if (m) {
-    return f;
+    return publicKey;
   }
   const certPem = forge.pki.certificateFromPem(publicKey);
   let p = forge.pki.publicKeyToRSAPublicKeyPem(certPem.publicKey);

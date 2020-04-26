@@ -7,7 +7,7 @@ const { getKeycloakUrl } = require('./utils/restCalls');
 
 function isExpired(options, token) {
   const clockTimestamp = Math.floor(Date.now() / 1000);
-  return clockTimestamp < token.exp - 30;
+  return clockTimestamp > token.exp - 30;
 }
 const clientJWT = (payload, option) => new Promise((resolve, reject) => {
   jws.createSign({
@@ -100,7 +100,7 @@ async function keycloakRefreshToken(token, options) {
       'POST',
       data,
       { 'Content-Type': 'application/x-www-form-urlencoded' });
-    tokenJson = JSON.parse(tokenResponse.data);
+    tokenJson = JSON.parse(tokenResponse);
     if (options.enforce.enabled && !options.enforce.role) {
       tokenJson = await exchangeRPT(tokenJson.access_token,
         options.keycloakJson.resource, options);
@@ -111,18 +111,18 @@ async function keycloakRefreshToken(token, options) {
 
 async function clientAuthentication(uma2Config, options) {
   const key = `${options.keycloakJson.realm}:${options.keycloakJson.resource}`;
-  let token = options.cache.get('client_credentials', key);
-  if (!token || isExpired(options, token.decodedAccessToken)) {
+  let token = await options.cache.get('client_credentials', key);
+  if (!token || isExpired(options, JSON.parse(token).decodedAccessToken)) {
     const authorization = await clientIdAuthorization(options);
     let data = `grant_type=client_credentials&${authorization}`;
-    if (token && !isExpired(options, token.decodedRefreshToken)) {
-      data = `refresh_token=${token.refresh_token}&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}`;
+    if (token && !isExpired(options, JSON.parse(token).decodedRefreshToken)) {
+      data = `refresh_token=${JSON.parse(token).refresh_token}&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}`;
     }
     const res = await sendData(`${uma2Config.token_endpoint}`, 'POST', data);
     token = JSON.parse(res);
     token.decodedAccessToken = jsonwebtoken.decode(token.access_token);
     token.decodedRefreshToken = jsonwebtoken.decode(token.refresh_token);
-    options.cache.put('client_credentials', key, token);
+    await options.cache.put('client_credentials', key, JSON.stringify(token));
   }
   return token;
 }
@@ -130,7 +130,7 @@ async function clientAuthentication(uma2Config, options) {
 async function logout(refreshToken, options) {
   const authorization = await clientIdAuthorization(options);
   const data = `refresh_token=${refreshToken}&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}`;
-  const url = `${getKeycloakUrl(options.keycloakJson)}}/realms/${options.keycloakJson.realm}/protocol/openid-connect/logout`;
+  const url = `${getKeycloakUrl(options.keycloakJson)}/realms/${options.keycloakJson.realm}/protocol/openid-connect/logout`;
   await sendData(url,
     'POST',
     data,

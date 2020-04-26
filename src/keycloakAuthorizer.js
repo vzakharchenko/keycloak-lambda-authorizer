@@ -7,12 +7,12 @@ const { commonOptions } = require('./utils/optionsUtils');
 
 
 async function getKeyFromKeycloak(options, kid) {
-  let publicKey = options.cache.get('publicKey', kid);
+  let publicKey = await options.cache.get('publicKey', kid);
   if (!publicKey) {
     const keycloakUrl = getKeycloakUrl(options.keycloakJson).replace('/auth', '');
     publicKey = await KeyCloakCerts(keycloakUrl,
       options.keycloakJson.realm).fetch(kid);
-    options.cache.put('publicKey', kid, publicKey);
+    await options.cache.put('publicKey', kid, publicKey);
   }
   return publicKey;
 }

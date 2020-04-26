@@ -1,9 +1,9 @@
 
 jest.mock('../../../src/keycloakAuthorizer');
-jest.mock('../../../src/jwks');
+jest.mock('../../../src/Jwks');
 const keycloakAuthorizer = require('../../../src/keycloakAuthorizer');
-// eslint-disable-next-line import/no-unresolved
-const jwks = require('../../../src/jwks');
+
+const jwks = require('../../../src/Jwks');
 
 const { lambdaAdapter, jwksUrl } = require('../../../src/adapter/adapter');
 

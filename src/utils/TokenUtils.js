@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
-const { keycloakRefreshToken } = require('../clientAuthorization');
 const { lambdaAdapter } = require('../adapter/adapter');
+const { keycloakRefreshToken } = require('../clientAuthorization');
 const { tenantName } = require('../edge/lambdaEdgeUtils');
 
 function decodeAccessToken(externalToken) {
@@ -28,7 +28,8 @@ async function getActiveToken(session, accessToken, options, refreshTokenHandler
   } catch (e1) {
     const sessionStorageItem = await options.sessionManager.getSessionIfExists(session, options);
     if (sessionStorageItem) {
-      const externalToken = sessionStorageItem[tenantName(options.keycloakJson)];
+      const tn = tenantName(options.keycloakJson);
+      const externalToken = sessionStorageItem[tn];
       try {
         const token = await keycloakRefreshToken(externalToken, options);
         if (!token) {
@@ -38,7 +39,7 @@ async function getActiveToken(session, accessToken, options, refreshTokenHandler
           refreshTokenHandler(token);
         }
         await options.sessionManager.updateSession(session,
-          `${options.keycloakJson.realm}:${options.keycloakJson.resource}`,
+          tn,
           token, options);
         return token.access_token;
       } catch (ex) {

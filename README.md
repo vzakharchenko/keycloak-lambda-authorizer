@@ -401,7 +401,7 @@ const privateKey = ...;
 const publicKey = ...;
 
 lamdaEdge.routes.addRoute({
-      isRoute: (request) => isRequest(request, '/someUrl'),
+      isRoute: async (request) => await isRequest(request, '/someUrl'),
       handle: async (request, config, callback) => {
         const response=... ;
          YOUR LOGIC
@@ -434,7 +434,7 @@ const privateKey = ...;
 const publicKey = ...;
 
 lamdaEdge.routes.addRoute({
-      isRoute: (request) => isRequest(request, '/someUrl'),
+      isRoute: async (request) => await isRequest(request, '/someUrl'),
       handle: async (request, config, callback) => {
         if (config.eventType === 'viewer-request') { // original-request, origin-response, viewer-request, viewer-response, local-request
             const response=... ;

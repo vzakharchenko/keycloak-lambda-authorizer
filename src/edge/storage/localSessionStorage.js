@@ -1,8 +1,8 @@
 const fs = require('fs');
 
-function readStorage() {
+async function readStorage() {
   try {
-    return fs.readFileSync('./storage.json');
+    return (await fs.promises.readFile('./storage.json')).toString('utf8');
   } catch (e) {
     if (e.code === 'ENOENT') {
       console.log('Expected storage.json to be included in Lambda deployment package');
@@ -12,9 +12,9 @@ function readStorage() {
   }
 }
 
-function saveStorage(storage) {
+async function saveStorage(storage) {
   try {
-    fs.writeFileSync('./storage.json', JSON.stringify(storage));
+    await fs.promises.writeFile('./storage.json', JSON.stringify(storage));
   } catch (e) {
     if (e.code === 'ENOENT') {
       console.log('Expected storage.json to be included in Lambda deployment package');
@@ -24,10 +24,10 @@ function saveStorage(storage) {
   }
 }
 
-function updateStorage() {
+async function updateStorage() {
   const timeLocal = new Date().getTime();
   const timeSec = Math.floor(timeLocal / 1000);
-  const jsonFile = readStorage();
+  const jsonFile = await readStorage();
   const json = JSON.parse(jsonFile);
   Object.keys(json).forEach((sessionId) => {
     const { exp } = json[sessionId];
@@ -35,12 +35,9 @@ function updateStorage() {
       delete json[sessionId];
     }
   });
-  saveStorage(json);
+  await saveStorage(json);
   return json;
 }
-
-
-const inMemory = updateStorage();
 
 async function saveSession(
   sessionId,
@@ -52,12 +49,14 @@ async function saveSession(
     session: sessionId,
     exp,
   };
+  const inMemory = await updateStorage();
   tenantJson[tenant] = externalToken;
   inMemory[sessionId] = tenantJson;
-  saveStorage(inMemory);
+  await saveStorage(inMemory);
 }
 
 async function updateSession(sessionId, tenant, externalToken) {
+  const inMemory = await updateStorage();
   const sessionObject = inMemory[sessionId];
   if (sessionObject) {
     sessionObject[tenant] = externalToken;
@@ -68,14 +67,16 @@ async function updateSession(sessionId, tenant, externalToken) {
     json[tenant] = externalToken;
     inMemory[sessionId] = json;
   }
-  saveStorage(inMemory);
+  await saveStorage(inMemory);
 }
 
 async function getSessionIfExists(session) {
+  const inMemory = await updateStorage();
   return inMemory[session];
 }
 
 async function deleteSession(session) {
+  const inMemory = await updateStorage();
   delete inMemory[session];
 }
 

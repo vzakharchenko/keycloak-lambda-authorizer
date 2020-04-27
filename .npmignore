@@ -14,5 +14,7 @@ example/*
 .circleci/*
 .idea/*
 .coverage
+__mocks__
+__tests__
 keycloak-cloudfront-dynamodb
 package-lock.json

@@ -4,12 +4,12 @@ const { clientJWT } = require('../clientAuthorization');
 const { getUrl } = require('../utils/restCalls');
 
 function getHostHeader(request) {
-  return request.headers.referer[0].value;
+  return request.headers && request.headers.referer ? request.headers.referer[0].value : '';
 }
 
 function isLocalhost(request) {
   const hostHeaderValue = getHostHeader(request);
-  return hostHeaderValue.startsWith('http://localhost');
+  return !hostHeaderValue || hostHeaderValue.startsWith('http://localhost');
 }
 
 function getHostUrl(request) {

@@ -5,6 +5,16 @@ const { getTokenByCode, exchangeRPT } = require('../../clientAuthorization');
 const { decodeAccessToken } = require('../../utils/TokenUtils');
 const { getCookie } = require('../../utils/cookiesUtils');
 
+const errors = {
+  invalid_request: 'Invalid Request',
+  unauthorized_client: 'Unauthorized Client',
+  access_denied: 'Access Denied',
+  unsupported_response_type: 'Unsupported Response Type',
+  invalid_scope: 'Invalid Scope',
+  server_error: 'Server Error',
+  temporarily_unavailable: 'Temporarily Unavailable',
+};
+
 async function callbackHandler(request, options, callback) {
   const { sessionManager } = options;
   const host = getHostUrl(request);

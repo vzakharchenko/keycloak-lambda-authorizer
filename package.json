@@ -10,7 +10,7 @@
     "email": "vaszakharchenko@gmail.com"
   },
   "scripts": {
-    "test": "jest --maxWorkers=2 --coverage --coverageDirectory=.coverage/",
+    "test": "jest --verbose --maxWorkers=2 --coverage --coverageDirectory=.coverage/",
     "lint": "eslint --quiet --ext .js index.js && eslint --quiet --ext .js src keycloak-cloudfront-dynamodb/DynamoDbSessionStorage.js",
     "lint:fix": "eslint --fix --quiet --ext .js index.js && eslint --fix --quiet --ext .js  src __tests__ keycloak-cloudfront-dynamodb/DynamoDbSessionStorage.js"
   },
@@ -46,7 +46,8 @@
       "import/extensions": 0,
       "import/prefer-default-export": 0,
       "import/no-extraneous-dependencies": 0,
-      "react/jsx-indent": 0
+      "react/jsx-indent": 0,
+      "no-return-await": 0
     }
   },
   "author": "vzakharchenko",

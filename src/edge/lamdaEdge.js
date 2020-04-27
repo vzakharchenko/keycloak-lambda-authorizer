@@ -9,7 +9,7 @@ async function lambdaEdgeRouter(event, context, sessionManager, callback) {
   const options = lambdaEdgeOptions(sessionManager);
   if (records && records[0] && records[0].cf) {
     const { request, config } = records[0].cf;
-    const route = getRoute(request, options);
+    const route = await getRoute(request, options);
     try {
       await route.handle(request, config, (error, response) => {
         updateResponse(request, response);
@@ -17,10 +17,10 @@ async function lambdaEdgeRouter(event, context, sessionManager, callback) {
       }, options);
     } catch (e) {
       console.error(e);
-      options.route.internalServerError(request, callback);
+      sessionManager.sessionOptions.route.internalServerError(request, callback);
     }
   } else {
-    options.route.internalServerError(request, callback);
+    sessionManager.sessionOptions.route.internalServerError({}, callback);
   }
 }
 

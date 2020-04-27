@@ -61,3 +61,4 @@ tmp/
 ehthumbs.db
 Icon?
 .webpack/*
+.coverage/*

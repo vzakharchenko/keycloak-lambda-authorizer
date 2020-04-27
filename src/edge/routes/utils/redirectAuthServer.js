@@ -106,11 +106,12 @@ async function checkToken(request, callback, options,
           refreshTokenHandler);
         if (!token) {
           callback(null, await redirectToKeycloakAction(request, options));
+        } else {
+          return {
+            access_token: token,
+            isChanged: token !== sessionTokenString,
+          };
         }
-        return {
-          access_token: token,
-          isChanged: token !== sessionTokenString,
-        };
       } catch (e) {
         options.logger.error(`error=${e}`);
         options.route.unauthorized(

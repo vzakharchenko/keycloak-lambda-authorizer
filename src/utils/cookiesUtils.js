@@ -44,7 +44,7 @@ function clearCookies(request, options, responseHeaders = {}) {
   return newResponseHeaders;
 }
 
-function getCookie(request, cookieName = 'KEYCLOAK_AWS_SESSION') {
+function getCookie(request, cookieName = 'SESSION') {
   const s = `KEYCLOAK_AWS_${cookieName}`;
   const { headers } = request;
   if ('cookie' in headers

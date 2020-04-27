@@ -3,8 +3,8 @@ const yallist = require('yallist');
 
 const routes = yallist.create([]);
 
-function getRoute(request, options) {
-  return routes.toArray().find((route) => route.isRoute(request, options));
+async function getRoute(request, options) {
+  return routes.toArray().find(async (route) => await route.isRoute(request, options));
 }
 
 

@@ -10,7 +10,7 @@ const {
   refreshResponse,
 } = require('./utils/redirectAuthServer');
 
-function isRequest(request, routePath) {
+async function isRequest(request, routePath) {
   const { uri } = request;
   return (uri.startsWith(`/${routePath}`)
         || uri.startsWith(routePath));
@@ -24,7 +24,7 @@ function addRoute(route) {
 function addUnProtected(routePath) {
   console.log(`unprotected route ${routePath}`);
   addRoute({
-    isRoute: (request) => isRequest(request, routePath),
+    isRoute: async (request) => await isRequest(request, routePath),
     handle: async (request, config, callback) => {
       callback(null, request);
     },
@@ -33,7 +33,7 @@ function addUnProtected(routePath) {
 function addJwksEndpoint(routePath, publicKey) {
   console.log(`unprotected jwks endpoint route ${routePath}`);
   addRoute({
-    isRoute: (request) => isRequest(request, routePath),
+    isRoute: async (request) => await isRequest(request, routePath),
     handle: async (request, config, callback) => {
       const response = {
         status: '200',
@@ -53,7 +53,7 @@ function addProtected(routePath, keycloakJson, options = {}) {
   // tenant logout
   console.log(`tenant logout route /${keycloakJson.realm}/${keycloakJson.resource}/logout`);
   addRoute({
-    isRoute: (request) => isRequest(request, `/${keycloakJson.realm}/${keycloakJson.resource}/logout`),
+    isRoute: async (request) => await isRequest(request, `/${keycloakJson.realm}/${keycloakJson.resource}/logout`),
     handle: async (request, config, callback, lambdaEdgeOptions) => {
       const newOptions0 = { ...newOptions, ...lambdaEdgeOptions };
       const response = await tenantLogout(request, newOptions0);
@@ -65,7 +65,7 @@ function addProtected(routePath, keycloakJson, options = {}) {
   console.log(`tenant callback route /${keycloakJson.realm}/${keycloakJson.resource}/callback`);
   // tenant callback
   addRoute({
-    isRoute: (request) => isRequest(request, `/${keycloakJson.realm}/${keycloakJson.resource}/callback`),
+    isRoute: async (request) => await isRequest(request, `/${keycloakJson.realm}/${keycloakJson.resource}/callback`),
     handle: async (request, config, callback, lambdaEdgeOptions) => {
       const newOptions0 = { ...newOptions, ...lambdaEdgeOptions };
       const response = await callbackHandler(request, newOptions0, callback);
@@ -78,7 +78,7 @@ function addProtected(routePath, keycloakJson, options = {}) {
   console.log(`tenant refresh token route /${keycloakJson.realm}/${keycloakJson.resource}/refresh`);
   // tenant refresh
   addRoute({
-    isRoute: (request) => isRequest(request, `/${keycloakJson.realm}/${keycloakJson.resource}/refresh`),
+    isRoute: async (request) => await isRequest(request, `/${keycloakJson.realm}/${keycloakJson.resource}/refresh`),
     handle: async (request, config, callback, lambdaEdgeOptions) => {
       const newOptions0 = { ...newOptions, ...lambdaEdgeOptions };
       let refreshToken = null;
@@ -97,7 +97,7 @@ function addProtected(routePath, keycloakJson, options = {}) {
     console.log(`tenant route ${route}`);
     // tenant protection
     addRoute({
-      isRoute: (request) => isRequest(request, route),
+      isRoute: async (request) => await isRequest(request, route),
       handle: async (request, config, callback, lambdaEdgeOptions) => {
         const newOptions0 = { ...newOptions, ...lambdaEdgeOptions };
         const token = await checkToken(request, callback, newOptions0);
@@ -113,7 +113,7 @@ function addProtected(routePath, keycloakJson, options = {}) {
 module.exports = {
   addRoute,
   addUnProtected,
-  addProtected,
   addJwksEndpoint,
+  addProtected,
   isRequest,
 };

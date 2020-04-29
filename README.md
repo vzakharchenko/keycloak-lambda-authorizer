@@ -1,6 +1,8 @@
 [![CircleCI](https://circleci.com/gh/vzakharchenko/keycloak-lambda-authorizer.svg?style=svg)](https://circleci.com/gh/vzakharchenko/keycloak-lambda-authorizer)  
 [![npm version](https://badge.fury.io/js/keycloak-lambda-authorizer.svg)](https://badge.fury.io/js/keycloak-lambda-authorizer)  
 [![Coverage Status](https://coveralls.io/repos/github/vzakharchenko/keycloak-lambda-authorizer/badge.svg?branch=master)](https://coveralls.io/github/vzakharchenko/keycloak-lambda-authorizer?branch=master)
+[![Maintainability](https://api.codeclimate.com/v1/badges/0b56148967afc99a64df/maintainability)](https://codeclimate.com/github/vzakharchenko/keycloak-lambda-authorizer/maintainability)
+
 # Description
 Implementation [Keycloak](https://www.keycloak.org/) adapter for aws Lambda
 ## Features

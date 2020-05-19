@@ -13,6 +13,7 @@ Implementation [Keycloak](https://www.keycloak.org/) adapter for aws Lambda
 - supports "clientId/secret" and "client-jwt" credential types
 - Role based authorization
 - support MultiTenant
+- Regexp endpoints for Lambda@Edge
 - Resource based authorization ( [Keycloak Authorization Services](https://www.keycloak.org/docs/latest/authorization_services/) )
 
 # Installation
@@ -338,7 +339,42 @@ export async function authorization(event, context, callback) {
   }), callback);
 }
 ```
-## 2. Create JWKS endpoint by Lambda:Edge
+## 2. protect Url with Regexp
+
+```javascript
+import { lamdaEdge } from 'keycloak-lambda-authorizer';
+import { SessionManager } from 'keycloak-lambda-authorizer/src/edge/storage/SessionManager';
+import { LocalSessionStorage } from 'keycloak-lambda-authorizer/src/edge/storage/localSessionStorage';
+import { DynamoDbSessionStorage } from 'keycloak-lambda-authorizer/src/edge/storage/DynamoDbSessionStorage';
+import { isLocalhost } from 'keycloak-lambda-authorizer/src/edge/lambdaEdgeUtils';
+
+const keycloakJson = ...;
+const privateKey = ...;
+const publicKey = ...;
+
+lamdaEdge.routes.addProtected(
+  (^)(\/|)someUrl(|((\/)))$,
+  keycloakJson,
+{
+  enforce: {
+    enabled: true,
+    resource: {
+      name: 'tenantResource',
+    },
+  },
+}
+);
+// eslint-disable-next-line import/prefer-default-export
+export async function authorization(event, context, callback) {
+  await lamdaEdge.lambdaEdgeRouter(event, context, new SessionManager(isLocalhost()? new LocalSessionStorage(): new DynamoDbSessionStorage({ region: 'us-east-1' },'teablename'), {
+    keys: {
+      privateKey,
+      publicKey,
+    },
+  }), callback);
+}
+```
+## 3. Create JWKS endpoint by Lambda:Edge
 
 ```javascript
 import { lamdaEdge } from 'keycloak-lambda-authorizer';
@@ -364,7 +400,7 @@ export async function authorization(event, context, callback) {
 ```
 
 
-## 3. Public url 
+## 4. Public url
 
 ```javascript
 import { lamdaEdge } from 'keycloak-lambda-authorizer';
@@ -389,7 +425,7 @@ export async function authorization(event, context, callback) {
 }
 ```
 
-## 4. Custom Url Handler 
+## 5. Custom Url Handler
 
 ```javascript
 import { lamdaEdge } from 'keycloak-lambda-authorizer';
@@ -421,7 +457,7 @@ export async function authorization(event, context, callback) {
 }
 ```
 
-## 5. Custom Url Handler with Lambda:Edge [EventType](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-event-structure.html)
+## 6. Custom Url Handler with Lambda:Edge [EventType](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-event-structure.html)
 
 
 ```javascript
@@ -458,7 +494,7 @@ export async function authorization(event, context, callback) {
 }
 ```
 
-# Implementation For Custom Service or non amazon cloud
+# 7. Implementation For Custom Service or non amazon cloud
 
 ```javascript
 import { adapter } from 'keycloak-lambda-authorizer';
@@ -494,5 +530,55 @@ async function handler(request,response) {
                                         },
                                       });
 ...
+}
+```
+
+## 8. protect Url with keycloak function
+
+```javascript
+import { lamdaEdge } from 'keycloak-lambda-authorizer';
+import { SessionManager } from 'keycloak-lambda-authorizer/src/edge/storage/SessionManager';
+import { LocalSessionStorage } from 'keycloak-lambda-authorizer/src/edge/storage/localSessionStorage';
+import { DynamoDbSessionStorage } from 'keycloak-lambda-authorizer/src/edge/storage/DynamoDbSessionStorage';
+import { isLocalhost } from 'keycloak-lambda-authorizer/src/edge/lambdaEdgeUtils';
+
+const privateKey = ...;
+const publicKey = ...;
+
+function getKeycloakJson(realm, clientId){
+  return {
+  "realm": realm,
+  "auth-server-url": "http://localhost:8090/auth",
+  "ssl-required": "external",
+  "resource": clientId,
+  "verify-token-audience": true,
+  "credentials": {
+    "secret": "772decbe-0151-4b08-8171-bec6d097293b"
+  },
+  "confidential-port": 0,
+  "policy-enforcer": {}
+}
+}
+
+lamdaEdge.routes.addProtected(
+  '/',
+getKeycloakJson("lambda-authorizer", "lambda"),
+{
+  enforce: {
+    enabled: true,
+    resource: {
+      name: 'tenantResource',
+    },
+  },
+}
+);
+// eslint-disable-next-line import/prefer-default-export
+export async function authorization(event, context, callback) {
+  await lamdaEdge.lambdaEdgeRouter(event, context, new SessionManager(isLocalhost()? new LocalSessionStorage(): new DynamoDbSessionStorage({ region: 'us-east-1' },'teablename'), {
+    keys: {
+      privateKey,
+      publicKey,
+    },
+  }), callback);
 }
 ```

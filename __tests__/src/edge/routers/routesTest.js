@@ -58,6 +58,23 @@ describe('testing routers', () => {
     });
   });
 
+  test('test unProtected Regexp', async () => {
+    routers.unProtected = [];
+    registerRoute.mockImplementation((route) => {
+      routers.unProtected.push(route);
+    });
+    routes.addUnProtected(new RegExp('(^)(\\/)(test)(/$|(\\?|$))', 'g'));
+    const route = routers.unProtected[0];
+    expect(await route.isRoute({ uri: '/t' })).toEqual(false);
+    expect(await route.isRoute({ uri: '/test' })).toEqual(true);
+    expect(await route.isRoute({ uri: '/test/' })).toEqual(true);
+    expect(await route.isRoute({ uri: '/test/fdfd' })).toEqual(false);
+    expect(await route.isRoute({ uri: '/test?test=kk' })).toEqual(true);
+    await route.handle({}, {}, (error, response) => {
+      expect(response).toEqual({});
+    });
+  });
+
   test('test JWKS', async () => {
     routers.jwks = [];
     registerRoute.mockImplementation((route) => {
@@ -71,6 +88,48 @@ describe('testing routers', () => {
         body: 'jwks response',
         status: '200',
       });
+    });
+  });
+
+  test('test Protected keycloak JSON', async () => {
+    routers.protected = [];
+    registerRoute.mockImplementation((route) => {
+      routers.protected.push(route);
+    });
+    routes.addProtected('/', () => ({ realm: 'realm', resource: 'resource' }));
+    const routeLogout = routers.protected[0];
+    expect(await routeLogout.isRoute({ uri: '/realm/resource/logout' })).toEqual(true);
+    await routeLogout.handle({}, {}, (error, response) => {
+      expect(response).toEqual({
+        status: '302',
+        statusDescription: 'Found',
+      });
+    });
+
+    const routeCallback = routers.protected[1];
+    expect(await routeCallback.isRoute({ uri: '/realm/resource/callback' })).toEqual(true);
+    await routeCallback.handle({}, {}, (error, response) => {
+      expect(response).toEqual({
+        status: '302',
+        statusDescription: 'Found',
+      });
+    });
+
+
+    const routeRefresh = routers.protected[2];
+    expect(await routeRefresh.isRoute({ uri: '/realm/resource/refresh' })).toEqual(true);
+    await routeRefresh.handle({}, {}, (error, response) => {
+      expect(response).toEqual({
+        status: '302',
+        statusDescription: 'Found',
+      });
+    });
+    const route = routers.protected[3];
+    expect(await route.isRoute({ uri: '/' })).toEqual(true);
+    expect(await route.isRoute({ uri: '/test' })).toEqual(true);
+    expect(await route.isRoute({ uri: '/test/333' })).toEqual(true);
+    await route.handle({ r: 'r' }, {}, (error, response) => {
+      expect(response).toEqual({ r: 'r' });
     });
   });
 

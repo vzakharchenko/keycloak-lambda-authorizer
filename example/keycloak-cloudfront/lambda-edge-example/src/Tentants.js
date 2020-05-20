@@ -5,7 +5,7 @@ export const tenant1KeycloakJson = {
   'auth-server-url': 'http://localhost:8090/auth',
   'ssl-required': 'external',
   resource: 'tenant1Client',
-  'verify-token-audience': true,
+  'verify-token-audience': false,
   credentials: {
     secret: '27a2a2e2-bbe2-4949-8a24-111084a4e3ee',
   },
@@ -28,7 +28,7 @@ export const tenant2KeycloakJson = {
   'auth-server-url': 'http://localhost:8090/auth',
   'ssl-required': 'external',
   resource: 'tenant2Client',
-  'verify-token-audience': true,
+  'verify-token-audience': false,
   credentials: {
     jwt: {
       'client-key-password': 'REPLACE WITH THE KEY PASSWORD IN KEYSTORE',

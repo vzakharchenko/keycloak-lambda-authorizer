@@ -21,7 +21,7 @@ function updateLoginLink(loginPage, options) {
 // eslint-disable-next-line import/prefer-default-export
 async function redirectToKeycloak(request, options, url) {
   const host = getHostUrl(request);
-  const { keycloakJson } = options;
+  const keycloakJson = options.keycloakJson(options);
   options.logger.debug('Redirecting to OIDC provider.');
   let state = url || buildUri(request);
   if (
@@ -65,7 +65,7 @@ async function responseWithKeycloakRedirectToLoginPage(request, options, callbac
   const state = buildUri(request);
   const jwt = await signState(state, options);
   const host = getHostUrl(request);
-  const { keycloakJson } = options;
+  const keycloakJson = options.keycloakJson(options);
   const response = {
     status: '200',
     statusDescription: 'OK',
@@ -90,9 +90,10 @@ async function responseWithKeycloakRedirectToLoginPage(request, options, callbac
   callback(null, response);
 }
 
-async function checkToken(request, callback, options,
+async function checkToken(callback, options,
   refreshTokenHandler = () => {}, redirectToKeycloakAction = redirectToKeycloak) {
-  const { keycloakJson } = options;
+  const { request } = options;
+  const keycloakJson = options.keycloakJson(options);
   const cookieName = tenantName(keycloakJson);
   const cookieHeader = getCookie(request, cookieName);
   if (cookieHeader) {
@@ -137,7 +138,7 @@ function updateResponseHeaders(token, response, options) {
     }
     headers['set-cookie'].push({
       key: 'Set-Cookie',
-      value: cookie.serialize(`KEYCLOAK_AWS_${tenantName(options.keycloakJson)}`, token.access_token, {
+      value: cookie.serialize(`KEYCLOAK_AWS_${tenantName(options.keycloakJson(options))}`, token.access_token, {
         path: '/',
         expires: new Date((accessTokenDecode.exp - 30) * 1000),
       }),
@@ -152,7 +153,7 @@ function refreshResponse(token, refreshToken, options) {
   };
   if (refreshToken) {
     const refreshTokenDecode = decodeAccessToken(refreshToken).accessTokenDecode;
-    const s = tenantName(options.keycloakJson);
+    const s = tenantName(options.keycloakJson(options));
     response.headers = {
       'set-cookie': [
         {

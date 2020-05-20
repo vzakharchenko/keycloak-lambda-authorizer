@@ -23,12 +23,14 @@ async function tokenIsValid(token, options) {
 
 async function getActiveToken(session, accessToken, options, refreshTokenHandler) {
   try {
-    await lambdaAdapter(decodeAccessToken(accessToken).accessToken, options.keycloakJson, options);
+    await lambdaAdapter(decodeAccessToken(accessToken).accessToken,
+      options.keycloakJson,
+      options);
     return accessToken;
   } catch (e1) {
     const sessionStorageItem = await options.sessionManager.getSessionIfExists(session, options);
     if (sessionStorageItem) {
-      const tn = tenantName(options.keycloakJson);
+      const tn = tenantName(options.keycloakJson(options));
       const externalToken = sessionStorageItem[tn];
       try {
         const token = await keycloakRefreshToken(externalToken, options);

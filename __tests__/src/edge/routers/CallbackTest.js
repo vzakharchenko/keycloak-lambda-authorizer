@@ -67,7 +67,7 @@ describe('testing callback', () => {
     lambdaEdgeUtils.validateState.mockImplementation(() => null);
     await callbackHandler({ headers: [] }, {
       logger: console,
-      keycloakJson: {},
+      keycloakJson: () => ({}),
       route: { unauthorized, internalServerError },
     }, (error, response) => {
       expect(response).toEqual({
@@ -82,7 +82,7 @@ describe('testing callback', () => {
     clientAuthorization.getTokenByCode.mockImplementation(() => { throw new Error('Test Error'); });
     await callbackHandler({ headers: [] }, {
       logger: console,
-      keycloakJson: {},
+      keycloakJson: () => ({}),
       route: { unauthorized, internalServerError },
     }, (error, response) => {
       expect(response).toEqual({
@@ -99,7 +99,7 @@ describe('testing callback', () => {
       logger: console,
       sessionManager,
       enforce: { enabled: true },
-      keycloakJson: {},
+      keycloakJson: () => ({}),
       route: { unauthorized, internalServerError },
     }, (error, response) => {
       expect(response).toEqual({
@@ -134,7 +134,7 @@ describe('testing callback', () => {
       logger: console,
       sessionManager,
       enforce: {},
-      keycloakJson: {},
+      keycloakJson: () => ({}),
       route: { unauthorized, internalServerError },
     }, (error, response) => {
       expect(response).toEqual({

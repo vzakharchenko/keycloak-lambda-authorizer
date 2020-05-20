@@ -59,7 +59,7 @@ async function createSessionToken(host, timeout, token, options) {
   const timeLocal = new Date().getTime();
   const timeSec = Math.floor(timeLocal / 1000);
   const sessionId = decodedjwt.session_state;
-  const { keycloakJson } = options;
+  const keycloakJson = options.keycloakJson(options);
   const tn = tenantName(keycloakJson);
   const payload = {
     jti: decodedjwt.session_state,
@@ -90,7 +90,7 @@ function createSession(sessionStorage, sessionOptions) {
     await sessionStorage.saveSession(
       sessionObject.sessionId,
       sessionObject.exp,
-      tenantName(newOptions.keycloakJson),
+      tenantName(newOptions.keycloakJson(options)),
       updateStorageToken(token),
       options,
     );
@@ -113,7 +113,7 @@ function deleteSession(sessionStorage) {
 }
 
 async function updateSessionToken(session, options) {
-  const { keycloakJson } = options;
+  const keycloakJson = options.keycloakJson(options);
   const payload = jwt.decode(session);
   const sessionId = getSessionId(session);
   let newSession = session;

@@ -25,7 +25,7 @@ const token = {
 };
 
 
-const keycloakJson = {
+const keycloakJson = () => ({
   realm: 'lambda-authorizer',
   'auth-server-url': 'http://localhost:8090/auth',
   'ssl-required': 'external',
@@ -36,7 +36,7 @@ const keycloakJson = {
   },
   'confidential-port': 0,
   'policy-enforcer': {},
-};
+});
 
 describe('testing umaConfiguration', () => {
   beforeEach(() => {

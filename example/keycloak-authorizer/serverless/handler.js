@@ -42,7 +42,7 @@ export function hello(event, context, callback) {
 
 export async function auth0(event) {
   const keycloakJSON = await getKeycloakJSON();
-  const token = await apigateway.awsHandler(event, keycloakJSON, {
+  const token = await apigateway.awsAdapter(event, keycloakJSON, {
     enforce: {
       enabled: true,
       resource: {

@@ -22,7 +22,7 @@ describe('testing cookiesUtils', () => {
           value: 'testCookie',
         }],
       },
-    }, {}, {});
+    }, { keycloakJson: () => {} }, {});
     expect(newResponseHeaders).toEqual({
       'set-cookie': [
         {

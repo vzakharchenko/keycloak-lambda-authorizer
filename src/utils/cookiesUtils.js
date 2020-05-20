@@ -31,7 +31,7 @@ function clearCookies(request, options, responseHeaders = {}) {
   }
   if ('cookie' in headers) {
     const cookieJson = cookie.parse(headers.cookie[0].value);
-    Object.keys(cookieJson).filter((field) => field.startsWith(`KEYCLOAK_AWS_${tenantName(options.keycloakJson)}`)).forEach((header) => {
+    Object.keys(cookieJson).filter((field) => field.startsWith(`KEYCLOAK_AWS_${tenantName(options.keycloakJson(options))}`)).forEach((header) => {
       newResponseHeaders['set-cookie'].push({
         key: 'Set-Cookie',
         value: cookie.serialize(header, '', {

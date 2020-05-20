@@ -30,12 +30,14 @@ const config = {
     new webpack.DefinePlugin({
       '.': '__dirname',
     }),
-    new CopyWebpackPlugin([
-      {
-        from: '../../resources',
-        to: '.',
-      },
-    ]),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: '../../resources',
+          to: '.',
+        },
+      ],
+    }),
   ],
   resolve: {
     modules: [

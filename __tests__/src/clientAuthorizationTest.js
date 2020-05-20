@@ -14,7 +14,7 @@ const cache = {
   put: async () => {},
 };
 
-const keycloakJsonWithSecret = {
+const keycloakJsonWithSecret =()=> ({
   realm: 'lambda-authorizer',
   'auth-server-url': 'http://localhost:8090/auth',
   'ssl-required': 'external',
@@ -25,9 +25,9 @@ const keycloakJsonWithSecret = {
   },
   'confidential-port': 0,
   'policy-enforcer': {},
-};
+});
 
-const keycloakJsonWithJWS = {
+const keycloakJsonWithJWS = ()=>({
   realm: 'lambda-authorizer',
   'auth-server-url': 'http://localhost:8090/auth',
   'ssl-required': 'external',
@@ -38,7 +38,7 @@ const keycloakJsonWithJWS = {
   'use-resource-role-mappings': true,
   'confidential-port': 0,
   'policy-enforcer': {},
-};
+});
 
 describe('testing clientAuthorization', () => {
   beforeEach(() => {

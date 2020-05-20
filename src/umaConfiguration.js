@@ -5,10 +5,11 @@ const { fetchData } = require('./utils/restCalls');
 
 
 async function getUma2Configuration(options) {
-  const { realm } = options.keycloakJson;
+  const keycloakJson = options.keycloakJson(options);
+  const { realm } = keycloakJson;
   let uma2Config = await options.cache.get('uma2-configuration', realm);
   if (!uma2Config) {
-    const res = await fetchData(`${getKeycloakUrl(options.keycloakJson)}/realms/${realm}/.well-known/uma2-configuration`);
+    const res = await fetchData(`${getKeycloakUrl(keycloakJson)}/realms/${realm}/.well-known/uma2-configuration`);
     uma2Config = JSON.parse(res);
     await options.cache.put('uma2-configuration', realm, uma2Config);
   }
@@ -17,7 +18,7 @@ async function getUma2Configuration(options) {
 
 async function getResource(uma2Config,
   options, resourceObject) {
-  const { realm, resource } = options.keycloakJson;
+  const { realm, resource } = options.keycloakJson(options);
   const key = `${realm}:${resource}${JSON.stringify(resource)}`;
   let resources = await options.cache.get('resource', key);
   if (!resources) {

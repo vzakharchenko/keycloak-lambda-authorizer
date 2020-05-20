@@ -38,7 +38,7 @@ function commonOptions(options, keycloakJson) {
     ...{
       keys: options.keys,
       logger: options.logger || console,
-      keycloakJson,
+      keycloakJson: typeof keycloakJson === 'function' ? keycloakJson : () => keycloakJson,
       cache: options.cache || defaultCache,
       resources: options.resources,
       enforce: updateEnforcer(options.enforce || defaultEnforcer),

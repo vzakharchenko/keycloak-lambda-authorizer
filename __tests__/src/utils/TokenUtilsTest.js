@@ -79,6 +79,7 @@ describe('testing TokenUtils', () => {
       {
         logger: console,
         sessionManager,
+        keycloakJson: () => {},
       });
     expect(t).toEqual(null);
   });
@@ -93,6 +94,7 @@ describe('testing TokenUtils', () => {
         {
           logger: console,
           sessionManager,
+          keycloakJson: () => {},
         });
       throw new Error('Unexpected state');
     } catch (e) {
@@ -106,6 +108,7 @@ describe('testing TokenUtils', () => {
       {
         logger: console,
         sessionManager,
+        keycloakJson: () => {},
       });
     expect(t).toEqual('TOKEN');
   });

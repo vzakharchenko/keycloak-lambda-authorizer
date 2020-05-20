@@ -95,7 +95,7 @@ describe('testing SessionManager', () => {
 
   test('test updateSessionToken ', async () => {
     const session = new SessionManager(sessionStorage, {
-      keycloakJson: {},
+      keycloakJson: () => ({}),
       keys: { publicKey: { key: 'PUBLIC_KEY' } },
     });
     jsonwebtoken.decode.mockImplementation(() => ({
@@ -117,12 +117,12 @@ describe('testing SessionManager', () => {
 
   test('test createSession ', async () => {
     const session = new SessionManager(sessionStorage, {
-      keycloakJson: {},
+      keycloakJson: () => ({}),
       keys: { publicKey: { key: 'PUBLIC_KEY' } },
     });
     jsonwebtoken.decode.mockImplementation(() => ({
       jti: 'testId',
     }));
-    expect(await session.createSession('host', 3, 'token')).toEqual('SESSION_TOKEN');
+    expect(await session.createSession('host', 3, 'token', { keycloakJson: () => {} })).toEqual('SESSION_TOKEN');
   });
 });

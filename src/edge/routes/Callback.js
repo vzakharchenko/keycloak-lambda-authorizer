@@ -61,6 +61,7 @@ async function callbackHandler(request, options, callback) {
 
   let response;
   try {
+    const keycloakJson = options.keycloakJson(options);
     const decodedState = await validateState(queryDict.state, options);
     if (!decodedState) {
       options.logger.error('State validation failed');
@@ -74,13 +75,13 @@ async function callbackHandler(request, options, callback) {
     let accessToken = decodeAccessToken(tokenJson);
     if (options.enforce.enabled && !options.enforce.role) {
       tokenJson = await exchangeRPT(accessToken.accessToken,
-        options.keycloakJson.resource, options);
+        keycloakJson.resource, options);
       accessToken = decodeAccessToken(tokenJson);
     }
     const { accessTokenDecode } = accessToken;
     const sessionTimeOut = 5 * 60 * 60;
 
-    const { keycloakJson } = options;
+
     const cookieName = tenantName(keycloakJson);
     const cookies = getCookie(request, cookieName);
     let sessionJWT;

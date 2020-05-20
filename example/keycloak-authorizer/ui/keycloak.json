@@ -3,7 +3,7 @@
   "auth-server-url": "http://localhost:8090/auth",
   "ssl-required": "external",
   "resource": "ui",
-  "verify-token-audience": true,
+  "verify-token-audience": false,
   "credentials": {
     "secret": "ddfb7637-6f8b-4ca8-98f5-90af1801198a"
   },

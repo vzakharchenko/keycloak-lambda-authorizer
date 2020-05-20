@@ -25,19 +25,21 @@ const clientJWT = (payload, option) => new Promise((resolve, reject) => {
 function createJWS(options) {
   const timeLocal = new Date().getTime();
   const timeSec = Math.floor(timeLocal / 1000);
+  const keycloakJson = options.keycloakJson(options);
   return {
     jti: v4(),
-    sub: options.keycloakJson.resource,
-    aud: `${getKeycloakUrl(options.keycloakJson)}/realms/${options.keycloakJson.realm}`,
+    sub: keycloakJson.resource,
+    aud: `${getKeycloakUrl(keycloakJson)}/realms/${keycloakJson.realm}`,
     exp: timeSec + 30,
     iat: timeSec,
   };
 }
 
 async function clientIdAuthorization(options) {
-  let authorization = `client_id=${options.keycloakJson.resource}`;
-  if (options.keycloakJson.credentials && options.keycloakJson.credentials.secret) {
-    const { secret } = options.keycloakJson.credentials;
+  const keycloakJson = options.keycloakJson(options);
+  let authorization = `client_id=${keycloakJson.resource}`;
+  if (keycloakJson.credentials && keycloakJson.credentials.secret) {
+    const { secret } = keycloakJson.credentials;
     if (secret) {
       authorization += `&client_secret=${secret}`;
     }
@@ -51,9 +53,10 @@ async function clientIdAuthorization(options) {
 }
 
 async function getTokenByCode(code, host, options) {
-  const url = `${getKeycloakUrl(options.keycloakJson)}/realms/${options.keycloakJson.realm}/protocol/openid-connect/token`;
+  const keycloakJson = options.keycloakJson(options);
+  const url = `${getKeycloakUrl(keycloakJson)}/realms/${keycloakJson.realm}/protocol/openid-connect/token`;
   const authorization = await clientIdAuthorization(options);
-  const data = `code=${code}&grant_type=authorization_code&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}&redirect_uri=${encodeURIComponent(`${host}/${options.keycloakJson.realm}/${options.keycloakJson.resource}/callback`)}`;
+  const data = `code=${code}&grant_type=authorization_code&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}&redirect_uri=${encodeURIComponent(`${host}/${keycloakJson.realm}/${keycloakJson.resource}/callback`)}`;
   const tokenResponse = await sendData(url,
     'POST',
     data,
@@ -63,8 +66,9 @@ async function getTokenByCode(code, host, options) {
 }
 
 async function exchangeRPT(accessToken, clientId, options) {
-  const realmName = options.keycloakJson.realm;
-  const url = `${getKeycloakUrl(options.keycloakJson)}/realms/${realmName}/protocol/openid-connect/token`;
+  const keycloakJson = options.keycloakJson(options);
+  const realmName = keycloakJson.realm;
+  const url = `${getKeycloakUrl(keycloakJson)}/realms/${realmName}/protocol/openid-connect/token`;
   const data = `grant_type=urn:ietf:params:oauth:grant-type:uma-ticket&response_include_resource_name=false&audience=${clientId}`;
   try {
     const response = await sendData(url,
@@ -91,8 +95,9 @@ async function keycloakRefreshToken(token, options) {
     return null;
   }
   if (!decodedAccessToken || isExpired(options, decodedAccessToken)) {
-    const realmName = options.keycloakJson.realm;
-    const url = `${getKeycloakUrl(options.keycloakJson)}/realms/${realmName}/protocol/openid-connect/token`;
+    const keycloakJson = options.keycloakJson(options);
+    const realmName = keycloakJson.realm;
+    const url = `${getKeycloakUrl(keycloakJson)}/realms/${realmName}/protocol/openid-connect/token`;
     options.logger.debug(`Token Request Url: ${url}`);
     const authorization = await clientIdAuthorization(options);
     const data = `refresh_token=${token.refresh_token}&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}`;
@@ -103,14 +108,15 @@ async function keycloakRefreshToken(token, options) {
     tokenJson = JSON.parse(tokenResponse);
     if (options.enforce.enabled && !options.enforce.role) {
       tokenJson = await exchangeRPT(tokenJson.access_token,
-        options.keycloakJson.resource, options);
+        keycloakJson.resource, options);
     }
   }
   return tokenJson;
 }
 
 async function clientAuthentication(uma2Config, options) {
-  const key = `${options.keycloakJson.realm}:${options.keycloakJson.resource}`;
+  const keycloakJson = options.keycloakJson(options);
+  const key = `${keycloakJson.realm}:${keycloakJson.resource}`;
   let token = await options.cache.get('client_credentials', key);
   if (!token || isExpired(options, JSON.parse(token).decodedAccessToken)) {
     const authorization = await clientIdAuthorization(options);
@@ -130,7 +136,8 @@ async function clientAuthentication(uma2Config, options) {
 async function logout(refreshToken, options) {
   const authorization = await clientIdAuthorization(options);
   const data = `refresh_token=${refreshToken}&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}`;
-  const url = `${getKeycloakUrl(options.keycloakJson)}/realms/${options.keycloakJson.realm}/protocol/openid-connect/logout`;
+  const keycloakJson = options.keycloakJson(options);
+  const url = `${getKeycloakUrl(keycloakJson)}/realms/${keycloakJson.realm}/protocol/openid-connect/logout`;
   await sendData(url,
     'POST',
     data,

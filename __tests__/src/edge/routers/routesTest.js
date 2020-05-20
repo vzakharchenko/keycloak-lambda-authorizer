@@ -133,6 +133,16 @@ describe('testing routers', () => {
     });
   });
 
+  test('test Protected Error', () => {
+    try {
+      routes.addProtected('/');
+    } catch (e) {
+      expect(e.message).toEqual('keycloak.json is empty');
+      return;
+    }
+    throw new Error('Unexpeted state');
+  });
+
   test('test Protected', async () => {
     routers.protected = [];
     registerRoute.mockImplementation((route) => {

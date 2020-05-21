@@ -67,7 +67,7 @@ async function signState(state, options) {
     n: tenantName(options.keycloakJson),
     exp: timeSec + 600,
   };
-  const jwtToken = await clientJWT(payload, options.sessionManager.sessionOptions);
+  const jwtToken = await clientJWT(payload, options);
   return jwtToken;
 }
 

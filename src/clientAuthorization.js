@@ -127,7 +127,7 @@ async function clientAuthentication(uma2Config, options) {
     const authorization = await clientIdAuthorization(options);
     let data = `grant_type=client_credentials&${authorization}`;
     if (token && !isExpired(options, JSON.parse(token).decodedRefreshToken)) {
-      data = `refresh_token=${JSON.parse(token).refresh_token}&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}`;
+      data = `refresh_token=${JSON.parse(token).refresh_token}&grant_type=refresh_token&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}`;
     }
     const res = await sendData(`${uma2Config.token_endpoint}`, 'POST', data);
     token = JSON.parse(res);

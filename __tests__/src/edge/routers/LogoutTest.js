@@ -14,7 +14,7 @@ describe('testing logout', () => {
   });
 
   test('test tenantLogout', async () => {
-    const ret = await tenantLogout({}, { keycloakJson: { realm: 'name', resource: 'resource' } });
+    const ret = await tenantLogout({}, { keycloakJson: () => ({ realm: 'name', resource: 'resource' }) });
     expect(ret).toEqual({
       body: 'Redirect to logout page',
       headers: {

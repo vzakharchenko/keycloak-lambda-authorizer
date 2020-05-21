@@ -56,7 +56,7 @@ describe('testing clientAuthorization', () => {
         if (data === 'grant_type=client_credentials&client_id=lambda-jwks&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_assertion=jwsSignature') {
           return JSON.stringify({ access_token: 'access_token_jws' });
         }
-        if (data === 'refresh_token=refresh_token&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_id=lambda&client_secret=772decbe-0151-4b08-8171-bec6d097293b') {
+        if (data === 'refresh_token=refresh_token&grant_type=refresh_token&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_id=lambda&client_secret=772decbe-0151-4b08-8171-bec6d097293b') {
           return JSON.stringify({ access_token: 'access_token_refresh' });
         }
         throw new Error(`unexpected token data: ${data}`);
@@ -72,7 +72,7 @@ describe('testing clientAuthorization', () => {
         if (data === 'code=code&grant_type=authorization_code&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_id=lambda&client_secret=772decbe-0151-4b08-8171-bec6d097293b&redirect_uri=host%2Flambda-authorizer%2Flambda%2Fcallback') {
           return JSON.stringify({ access_token: 'access_token_code' });
         }
-        if (data === 'refresh_token=refresh_token&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_id=lambda&client_secret=772decbe-0151-4b08-8171-bec6d097293b') {
+        if (data === 'refresh_token=refresh_token&grant_type=refresh_token&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_id=lambda&client_secret=772decbe-0151-4b08-8171-bec6d097293b') {
           return JSON.stringify({ access_token: 'access_token_refresh' });
         }
         throw new Error(`unexpected token data: ${data}`);

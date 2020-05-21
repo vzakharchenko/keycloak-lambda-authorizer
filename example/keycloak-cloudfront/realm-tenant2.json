@@ -36,6 +36,23 @@
   "quickLoginCheckMilliSeconds": 1000,
   "maxDeltaTimeSeconds": 43200,
   "failureFactor": 30,
+  "users" : [
+    {
+      "username" : "tenant2",
+      "enabled": true,
+      "email" : "tenant2@example.com",
+      "firstName": "tenant2",
+      "lastName": "Example",
+      "credentials" : [
+        { "type" : "password",
+          "value" : "tenant2" }
+      ],
+      "realmRoles": [ "uma_authorization", "Tenant2Role" ],
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"]
+      }
+    }
+  ],
   "roles": {
     "realm": [
       {

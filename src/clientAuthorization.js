@@ -100,15 +100,20 @@ async function keycloakRefreshToken(token, options) {
     const url = `${getKeycloakUrl(keycloakJson)}/realms/${realmName}/protocol/openid-connect/token`;
     options.logger.debug(`Token Request Url: ${url}`);
     const authorization = await clientIdAuthorization(options);
-    const data = `refresh_token=${token.refresh_token}&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}`;
-    const tokenResponse = await sendData(url,
-      'POST',
-      data,
-      { 'Content-Type': 'application/x-www-form-urlencoded' });
-    tokenJson = JSON.parse(tokenResponse);
-    if (options.enforce.enabled && !options.enforce.role) {
-      tokenJson = await exchangeRPT(tokenJson.access_token,
-        keycloakJson.resource, options);
+    const data = `refresh_token=${token.refresh_token}&grant_type=refresh_token&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}`;
+    try {
+      const tokenResponse = await sendData(url,
+        'POST',
+        data,
+        { 'Content-Type': 'application/x-www-form-urlencoded' });
+      tokenJson = JSON.parse(tokenResponse);
+      if (options.enforce.enabled && !options.enforce.role) {
+        tokenJson = await exchangeRPT(tokenJson.access_token,
+          keycloakJson.resource, options);
+      }
+    } catch (e) {
+      console.error(`wrong refresh token for ${realmName}`, e);
+      tokenJson = null;
     }
   }
   return tokenJson;

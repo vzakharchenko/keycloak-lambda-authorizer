@@ -12,9 +12,10 @@ const {
 
 async function isRequest(request, routePath) {
   const { uri } = request;
-  return (routePath instanceof RegExp) ? !!uri.match(routePath)
+  const ret = (routePath instanceof RegExp) ? !!uri.match(routePath)
     : (uri.startsWith(`/${routePath}`)
-        || uri.startsWith(routePath));
+      || uri.startsWith(routePath));
+  return ret;
 }
 
 function defaultRegexRoute(url) {

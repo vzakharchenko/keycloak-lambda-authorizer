@@ -8,7 +8,7 @@ const { getKeycloakUrl } = require('../../utils/restCalls');
 
 async function tenantLogout(request, options) {
   const queryDict = qs.parse(request.querystring);
-  const { keycloakJson } = options;
+  const keycloakJson = options.keycloakJson(options);
   const tn = tenantName(keycloakJson);
 
   return {

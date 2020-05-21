@@ -10,17 +10,21 @@ async function lambdaEdgeRouter(event, context, sessionManager, callback) {
   if (records && records[0] && records[0].cf) {
     const { request, config } = records[0].cf;
     const route = await getRoute(request, options);
-    try {
-      await route.handle(request, config, (error, response) => {
-        updateResponse(request, response);
-        callback(error, response);
-      }, options);
-    } catch (e) {
-      console.error(e);
-      sessionManager.sessionOptions.route.internalServerError(request, callback);
+    if (route) {
+      try {
+        await route.handle(request, config, (error, response) => {
+          updateResponse(request, response);
+          callback(error, response);
+        }, options);
+      } catch (e) {
+        console.error(e);
+        options.route.internalServerError(request, callback);
+      }
+    } else {
+      callback(null, request);
     }
   } else {
-    sessionManager.sessionOptions.route.internalServerError({}, callback);
+    options.route.internalServerError({}, callback);
   }
 }
 

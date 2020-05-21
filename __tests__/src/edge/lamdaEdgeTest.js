@@ -25,8 +25,19 @@ describe('testing lamdaEdge', () => {
     });
   });
 
+  test('test lambdaEdgeRouter without route', async () => {
+    getRoute.mockImplementation(() => null);
+    const event = {
+      Records: [{
+        cf: { request: { test: {} }, config: {} },
+      }],
+    };
+    await lamdaEdge.lambdaEdgeRouter(event, {}, {}, (error, response) => {
+      expect(response).toEqual({ test: {} });
+    });
+  });
+
   test('test lambdaEdgeRouter error', async () => {
-    getRoute.mockImplementation(() => ({ handle: async () => { throw new Error('test'); } }));
     await lamdaEdge.lambdaEdgeRouter({
       Records: [{
         cf: { request: {}, config: {} },

@@ -46,10 +46,7 @@ function commonOptions(options, keycloakJson) {
   };
 }
 
-function lambdaEdgeOptions(sessionManager) {
-  return { sessionManager };
-}
-function lambdaEdgeRouteOptions(options, keycloakJson) {
+function lambdaEdgeRouteOptions(options = {}, keycloakJson) {
   const route = options.route || {};
   return {
     ...commonOptions(options, keycloakJson),
@@ -57,11 +54,15 @@ function lambdaEdgeRouteOptions(options, keycloakJson) {
       updateLoginPage: options.updateLoginPage || function (url) { return url; },
       route: {
         unauthorized: route.unauthorized || unauthorized,
-        internalServerError: route.unauthorized || internalServerError,
+        internalServerError: route.internalServerError || internalServerError,
 
       },
     },
   };
+}
+
+function lambdaEdgeOptions(sessionManager) {
+  return { ...lambdaEdgeRouteOptions(sessionManager.sessionOptions), sessionManager };
 }
 
 

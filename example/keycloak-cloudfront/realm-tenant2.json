@@ -38,6 +38,21 @@
   "failureFactor": 30,
   "users" : [
     {
+      "username" : "tenant1",
+      "enabled": true,
+      "email" : "tenant1@example.com",
+      "firstName": "tenant1",
+      "lastName": "Example",
+      "credentials" : [
+        { "type" : "password",
+          "value" : "tenant1" }
+      ],
+      "realmRoles": [ "uma_authorization", "Tenant2Role" ],
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"]
+      }
+    },
+    {
       "username" : "tenant2",
       "enabled": true,
       "email" : "tenant2@example.com",

@@ -36,7 +36,7 @@
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "css-loader": "^3.5.3",
     "eslint": "^7.0.0",
-    "escdlint-plugin-import": "^2.20.2",
+    "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.20.0",
     "file-loader": "^6.0.0",
@@ -61,38 +61,5 @@
     "react-dom": "^16.13.1",
     "typeface-roboto": "0.0.75",
     "yallist": "^4.0.0"
-  },
-  "eslintConfig": {
-    "parser": "babel-eslint",
-    "parserOptions": {
-      "ecmaFeatures": {
-        "legacyDecorators": true
-      }
-    },
-    "extends": "airbnb",
-    "env": {
-      "browser": true,
-      "jest": true
-    },
-    "globals": {
-      "shallow": true,
-      "mount": true,
-      "render": true
-    },
-    "rules": {
-      "no-undef": 0,
-      "no-new": 0,
-      "react/jsx-indent": 0,
-      "react/jsx-props-no-spreading": 0,
-      "react/jsx-filename-extension": [
-        1,
-        {
-          "extensions": [
-            ".js",
-            ".jsx"
-          ]
-        }
-      ]
-    }
   }
 }

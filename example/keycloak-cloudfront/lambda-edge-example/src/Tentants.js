@@ -1,16 +1,16 @@
 import { privateKey, publicKey } from './sessionKeys';
 
 export const tenant1KeycloakJson = {
-  "realm": "tenant1",
-  "auth-server-url": "http://localhost:8090/auth/",
-  "ssl-required": "external",
-  "resource": "tenant1Client",
-  "verify-token-audience": true,
-  "credentials": {
-    "secret": "27a2a2e2-bbe2-4949-8a24-111084a4e3ee"
+  realm: 'tenant1',
+  'auth-server-url': 'http://localhost:8090/auth/',
+  'ssl-required': 'external',
+  resource: 'tenant1Client',
+  'verify-token-audience': true,
+  credentials: {
+    secret: '27a2a2e2-bbe2-4949-8a24-111084a4e3ee',
   },
-  "confidential-port": 0,
-  "policy-enforcer": {}
+  'confidential-port': 0,
+  'policy-enforcer': {},
 };
 
 export const tenant1Options = {

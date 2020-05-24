@@ -15,7 +15,8 @@ import {
 } from 'keycloak-lambda-cloudfront-ui';
 
 export default
-class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
+class App extends React.Component {
+  // eslint-disable-next-line class-methods-use-this
   render() {
     const classes = makeStyles({
       table: {

@@ -87,6 +87,7 @@ class KeycloakCloudFrontExampleStack extends cdk.Stack {
       viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
       defaultRootObject: 'index.html',
     });
+    // eslint-disable-next-line no-new
     new s3Deployment.BucketDeployment(this, `BucketDeployment ${bucket}`, {
       destinationBucket: bucket,
       role,
@@ -98,5 +99,6 @@ class KeycloakCloudFrontExampleStack extends cdk.Stack {
   }
 }
 const app = new cdk.App();
+// eslint-disable-next-line no-new
 new KeycloakCloudFrontExampleStack(app, `example-${bucketName}`);
 app.synth();

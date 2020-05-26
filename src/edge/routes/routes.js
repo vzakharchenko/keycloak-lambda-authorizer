@@ -124,7 +124,7 @@ function addProtected(routePath, keycloakJson, options = {}) {
         if (token) {
           callback(null,
             newOptions0.responseHandler
-              ? newOptions0.responseHandler(request, newOptions0)
+              ? await Promise.resolve(newOptions0.responseHandler(request, newOptions0))
               : request);
         }
       },

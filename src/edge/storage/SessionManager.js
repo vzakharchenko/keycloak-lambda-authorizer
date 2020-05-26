@@ -73,6 +73,7 @@ async function createSessionToken(host, timeout, token, options) {
   payload.tenants[keycloakJson.realm] = {};
   payload.tenants[keycloakJson.realm][keycloakJson.resource] = {
     cookieName: `KEYCLOAK_AWS_${tn}`,
+    session_state: decodedjwt.session_state,
   };
   const session = await clientJWT(payload, options);
   return {
@@ -112,7 +113,25 @@ function deleteSession(sessionStorage) {
     );
 }
 
-async function updateSessionToken(session, options) {
+function deleteTenantSession(sessionStorage, sessionOptions) {
+  return async (session, options) => {
+    const newOptions = { ...options, ...sessionOptions };
+    const keycloakJson = options.keycloakJson(newOptions);
+    const payload = jwt.decode(session);
+    if (payload[keycloakJson.realm]) {
+      delete (payload[keycloakJson.realm])[keycloakJson.resource];
+    }
+    const newSession = await clientJWT(payload, newOptions);
+    return {
+      sessionId: getSessionId(session),
+      session: newSession,
+      exp: payload.exp,
+      email: payload.email,
+    };
+  };
+}
+
+async function updateSessionToken(session, token, options) {
   const keycloakJson = options.keycloakJson(options);
   const payload = jwt.decode(session);
   const sessionId = getSessionId(session);
@@ -127,6 +146,7 @@ async function updateSessionToken(session, options) {
     payload.tenants[keycloakJson.realm] = payload.tenants[keycloakJson.realm] || {};
     payload.tenants[keycloakJson.realm][keycloakJson.resource] = {
       cookieName: `KEYCLOAK_AWS_${tn}`,
+      session_state: token.session_state,
     };
     newSession = await clientJWT(payload, options);
   }
@@ -139,9 +159,9 @@ async function updateSessionToken(session, options) {
 }
 
 function modifySession(sessionStorage, sessionOptions) {
-  return async (session, options) => {
+  return async (session, token, options) => {
     const newOptions = { ...options, ...sessionOptions };
-    const sessionObject = await updateSessionToken(session, newOptions);
+    const sessionObject = await updateSessionToken(session, token, newOptions);
     return sessionObject.session;
   };
 }
@@ -161,6 +181,7 @@ function SessionManager(sessionStorage, sessionOptions) {
     updateSession: updateSession(sessionStorage, sessionOptions),
     updateSessionToken: modifySession(sessionStorage, sessionOptions),
     deleteSession: deleteSession(sessionStorage),
+    deleteTenantSession: deleteTenantSession(sessionStorage, sessionOptions),
     createSession: createSession(sessionStorage, sessionOptions),
   };
 }

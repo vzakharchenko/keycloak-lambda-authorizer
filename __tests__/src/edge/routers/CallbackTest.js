@@ -25,7 +25,7 @@ describe('testing callback', () => {
     lambdaEdgeUtils.validateState.mockImplementation(() => ({ s: '/' }));
     clientAuthorization.getTokenByCode.mockImplementation(async () => ({ refresh_token: 'REFRESH_TOKEN', access_token: 'ACCESS_TOKEN' }));
     clientAuthorization.exchangeRPT.mockImplementation(async () => ({ refresh_token: 'REFRESH_TOKEN', access_token: 'ACCESS_TOKEN' }));
-    decodeAccessToken.mockImplementation(() => ({ accessToken: 'TOKEN', accessTokenDecode: { email: 'test@test' } }));
+    decodeAccessToken.mockImplementation(() => ({ accessToken: 'TOKEN', accessTokenDecode: { email: 'test@test', tenants: { test: { resNew: {} } } } }));
     cookiesUtils.getCookie.mockImplementation(() => ({
       session: 's',
       sessionToken: 'Session_TOKEN',
@@ -67,7 +67,7 @@ describe('testing callback', () => {
     lambdaEdgeUtils.validateState.mockImplementation(() => null);
     await callbackHandler({ headers: [] }, {
       logger: console,
-      keycloakJson: () => ({}),
+      keycloakJson: () => ({ realm: 'test', resource: 'res' }),
       route: { unauthorized, internalServerError },
     }, (error, response) => {
       expect(response).toEqual({
@@ -82,7 +82,7 @@ describe('testing callback', () => {
     clientAuthorization.getTokenByCode.mockImplementation(() => { throw new Error('Test Error'); });
     await callbackHandler({ headers: [] }, {
       logger: console,
-      keycloakJson: () => ({}),
+      keycloakJson: () => ({ realm: 'test', resource: 'res' }),
       route: { unauthorized, internalServerError },
     }, (error, response) => {
       expect(response).toEqual({
@@ -99,7 +99,7 @@ describe('testing callback', () => {
       logger: console,
       sessionManager,
       enforce: { enabled: true },
-      keycloakJson: () => ({}),
+      keycloakJson: () => ({ realm: 'test', resource: 'res' }),
       route: { unauthorized, internalServerError },
     }, (error, response) => {
       expect(response).toEqual({
@@ -129,12 +129,49 @@ describe('testing callback', () => {
     });
   });
 
+  test('test Success Logout ', async () => {
+    decodeAccessToken.mockImplementation(() => ({ accessToken: 'TOKEN', accessTokenDecode: { email: 'test@test', tenants: { test: { res: {} } } } }));
+
+    await callbackHandler({ headers: [] }, {
+      logger: console,
+      sessionManager,
+      enforce: { enabled: true },
+      keycloakJson: () => ({ realm: 'test', resource: 'res' }),
+      route: { unauthorized, internalServerError },
+    }, (error, response) => {
+      expect(response).toEqual({
+        body: 'ID token retrieved.',
+        headers: {
+          location: [
+            {
+              key: 'Location',
+              value: '/test/res/logout',
+            },
+          ],
+          'set-cookie': [
+            {
+              key: 'Set-Cookie',
+            },
+            {
+              key: 'Set-Cookie',
+            },
+            {
+              key: 'Set-Cookie',
+            },
+          ],
+        },
+        status: '302',
+        statusDescription: 'Found',
+      });
+    });
+  });
+
   test('test Success  ', async () => {
     await callbackHandler({ headers: [] }, {
       logger: console,
       sessionManager,
       enforce: {},
-      keycloakJson: () => ({}),
+      keycloakJson: () => ({ realm: 'test', resource: 'res' }),
       route: { unauthorized, internalServerError },
     }, (error, response) => {
       expect(response).toEqual({

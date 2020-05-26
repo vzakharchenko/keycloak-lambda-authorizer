@@ -13,17 +13,48 @@ import {
 const keycloakJson1 = tenant1KeycloakJson;
 const keycloakJson2 = tenant2KeycloakJson;
 
+function tenant2ResponseHandler(request, options) {
+  const { uri } = request;
+  const keycloakJson = options.keycloakJson(options);
+  if (uri.startsWith(`/${keycloakJson.realm}/api`)) {
+    return {
+      status: '200',
+      statusDescription: 'OK',
+      body: JSON.stringify({ tenant2: 'success' }),
+    };
+  }
+  return request;
+}
 lamdaEdge.routes.addJwksEndpoint('/cert', publicKey.key);
 lamdaEdge.routes.addProtected(
-  ['tenant2.html'],
+  ['tenant2.html', keycloakJson2.realm],
   keycloakJson2,
-  tenant2Options,
+  {
+    ...tenant2Options,
+    ...{ responseHandler: tenant2ResponseHandler },
+  },
 );
 
+function tenant1ResponseHandler(request, options) {
+  const { uri } = request;
+  const keycloakJson = options.keycloakJson(options);
+  if (uri.startsWith(`/${keycloakJson.realm}/api`)) {
+    return {
+      status: '200',
+      statusDescription: 'OK',
+      body: JSON.stringify({ tenant1: 'success' }),
+    };
+  }
+  return request;
+}
+
 lamdaEdge.routes.addProtected(
-  ['/', 'tenant1.html'],
+  ['/', 'tenant1.html', keycloakJson1.realm],
   keycloakJson1,
-  tenant1Options,
+  {
+    ...tenant1Options,
+    ...{ responseHandler: tenant1ResponseHandler },
+  },
 );
 // eslint-disable-next-line import/prefer-default-export
 export async function authorization(event, context, callback) {

@@ -122,7 +122,10 @@ function addProtected(routePath, keycloakJson, options = {}) {
         };
         const token = await checkToken(callback, newOptions0);
         if (token) {
-          callback(null, request);
+          callback(null,
+            newOptions0.responseHandler
+              ? newOptions0.responseHandler(request, newOptions0)
+              : request);
         }
       },
     });

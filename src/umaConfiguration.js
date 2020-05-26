@@ -11,7 +11,9 @@ async function getUma2Configuration(options) {
   if (!uma2Config) {
     const res = await fetchData(`${getKeycloakUrl(keycloakJson)}/realms/${realm}/.well-known/uma2-configuration`);
     uma2Config = JSON.parse(res);
-    await options.cache.put('uma2-configuration', realm, uma2Config);
+    await options.cache.put('uma2-configuration', realm, JSON.stringify(uma2Config));
+  } else {
+    uma2Config = JSON.parse(uma2Config);
   }
   return uma2Config;
 }
@@ -28,7 +30,9 @@ async function getResource(uma2Config,
       Authorization: `Bearer ${jwt.access_token}`, // client authorizer
     });
     resources = JSON.parse(res);
-    await options.cache.put('resource', key, resources);
+    await options.cache.put('resource', key, JSON.stringify(resources));
+  } else {
+    resources = JSON.parse(resources);
   }
   return resources;
 }

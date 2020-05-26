@@ -23,15 +23,15 @@ async function redirectToKeycloak(request, options, url) {
   const host = getHostUrl(request);
   const keycloakJson = options.keycloakJson(options);
   options.logger.debug('Redirecting to OIDC provider.');
-  let state = url || buildUri(request);
-  if (
-    !state.includes('#')
-    || !state.includes('?')
-    || !state.includes('logout')
-    || !state.includes('callback')
-  ) {
-    state = '/';
-  }
+  const state = url || buildUri(request);
+  // if (
+  //   !state.includes('#')
+  //   || !state.includes('?')
+  //   || !state.includes('logout')
+  //   || !state.includes('callback')
+  // ) {
+  //   state = '/';
+  // }
 
   const jwt = await signState(state, options);
   const headers = {
@@ -99,7 +99,13 @@ async function checkToken(callback, options,
   if (cookieHeader) {
     const sessionString = cookieHeader.session;
     const sessionTokenString = cookieHeader.sessionToken;
-    if (!await options.sessionManager.checkSession(sessionString)) {
+    const decodedSession = sessionString ? decodeAccessToken(sessionString).accessTokenDecode : {};
+    if (!await options.sessionManager.checkSession(sessionString)
+      || !sessionTokenString
+      || !decodedSession.tenants
+      || !decodedSession.tenants[keycloakJson.realm]
+      || !decodedSession.tenants[keycloakJson.realm][keycloakJson.resource]
+    ) {
       callback(null, await redirectToKeycloakAction(request, options));
     } else {
       try {

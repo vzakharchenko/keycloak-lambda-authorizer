@@ -14,8 +14,39 @@ import {
   getTenants,
 } from 'keycloak-lambda-cloudfront-ui';
 
+const fetch = require('axios');
+
+const TENANT_APIS = {};
+
+async function fetchData(url, method = 'GET', headers) {
+  const ret = await fetch({
+    url,
+    method,
+    headers,
+    transformResponse: (req) => req,
+    withCredentials: true,
+  });
+  return ret.data;
+}
+
+
 export default
 class App extends React.Component {
+  // eslint-disable-next-line class-methods-use-this
+
+
+  async componentDidMount() {
+    const tenants = getTenants();
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < tenants.length; i++) {
+      const row = tenants[i];
+      // eslint-disable-next-line no-await-in-loop
+      const ret = await fetchData(`/${row.realm}/api`);
+      TENANT_APIS[row.realm] = ret;
+    }
+    this.forceUpdate();
+  }
+
   // eslint-disable-next-line class-methods-use-this
   render() {
     const classes = makeStyles({
@@ -34,6 +65,7 @@ class App extends React.Component {
                                 <TableCell align="right">Client Name</TableCell>
                                 <TableCell align="right">Cookie Name</TableCell>
                                 <TableCell align="right">Access Token</TableCell>
+                                <TableCell align="right">Protected Api Response</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -44,7 +76,8 @@ class App extends React.Component {
                                     </TableCell>
                                     <TableCell align="right">{row.resource}</TableCell>
                                     <TableCell align="right">{getTenantCookie(row.realm, row.resource)}</TableCell>
-                                    <TableCell align="right">{getTenantCookieValue(getTenantCookie(row.realm, row.resource))}</TableCell>
+                                    <TableCell align="left">{getTenantCookieValue(getTenantCookie(row.realm, row.resource))}</TableCell>
+                                    <TableCell align="right">{TENANT_APIS[row.realm]}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

@@ -134,6 +134,8 @@ async function clientAuthentication(uma2Config, options) {
     token.decodedAccessToken = jsonwebtoken.decode(token.access_token);
     token.decodedRefreshToken = jsonwebtoken.decode(token.refresh_token);
     await options.cache.put('client_credentials', key, JSON.stringify(token));
+  } else {
+    token = JSON.parse(token);
   }
   return token;
 }

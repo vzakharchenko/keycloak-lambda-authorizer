@@ -14,7 +14,7 @@ const sessionManager = {
 
 describe('testing redirectAuthServer', () => {
   beforeEach(() => {
-    decodeAccessToken.mockImplementation(() => ({ accessToken: 'TOKEN', accessTokenDecode: { email: 'test@test' } }));
+    decodeAccessToken.mockImplementation(() => ({ accessToken: 'TOKEN', accessTokenDecode: { email: 'test@test', tenants: { testRealm: { resource: {} } } } }));
     getActiveToken.mockImplementation(async () => ({ accessToken: 'TOKEN', accessTokenDecode: { email: 'test@test' } }));
     cookiesUtils.getCookie.mockImplementation(() => ({
       session: 's',
@@ -26,7 +26,7 @@ describe('testing redirectAuthServer', () => {
   });
 
   test('test refreshResponse', async () => {
-    const refreshResponse = redirectAuthServer.refreshResponse('token', 'refreshToken', { keycloakJson: () => ({}) });
+    const refreshResponse = redirectAuthServer.refreshResponse('token', 'refreshToken', { keycloakJson: () => ({ realm: 'testRealm', resource: 'resource' }) });
     expect(refreshResponse).toEqual({
       headers: {
         'set-cookie': [
@@ -42,7 +42,7 @@ describe('testing redirectAuthServer', () => {
   });
 
   test('test refreshResponse without refreshToken', async () => {
-    const refreshResponse = redirectAuthServer.refreshResponse('token', null, { keycloakJson: () => ({}) });
+    const refreshResponse = redirectAuthServer.refreshResponse('token', null, { keycloakJson: () => ({ realm: 'testRealm', resource: 'resource' }) });
     expect(refreshResponse).toEqual({
       status: '200',
       statusDescription: 'OK',
@@ -59,7 +59,7 @@ describe('testing redirectAuthServer', () => {
         body: 'Redirecting to OIDC provider',
       });
     }, {
-      keycloakJson: () => ({}),
+      keycloakJson: () => ({ realm: 'testRealm', resource: 'resource' }),
       request: {},
       logger: console,
     });
@@ -74,7 +74,7 @@ describe('testing redirectAuthServer', () => {
         body: 'Redirecting to OIDC provider',
       });
     }, {
-      keycloakJson: () => ({}),
+      keycloakJson: () => ({ realm: 'testRealm', resource: 'resource' }),
       request: {},
       sessionManager: {
         checkSession: async () => false,
@@ -93,7 +93,7 @@ describe('testing redirectAuthServer', () => {
         body: 'Redirecting to OIDC provider',
       });
     }, {
-      keycloakJson: () => ({}),
+      keycloakJson: () => ({ realm: 'testRealm', resource: 'resource' }),
       request: {},
       sessionManager,
       logger: console,
@@ -111,7 +111,62 @@ describe('testing redirectAuthServer', () => {
         statusDescription: 'Unauthorized',
       });
     }, {
-      keycloakJson: () => ({}),
+      keycloakJson: () => ({ realm: 'testRealm', resource: 'resource' }),
+      request: {},
+      sessionManager,
+      route: { unauthorized },
+      logger: console,
+    });
+    expect(resp).toEqual(null);
+  });
+
+
+  test('test checkToken redirect error', async () => {
+    decodeAccessToken.mockImplementation(() => ({ accessToken: 'TOKEN', accessTokenDecode: { email: 'test@test', tenants: { testRealm: { } } } }));
+    const resp = await redirectAuthServer.checkToken((error, response) => {
+      expect(response).toEqual({
+        body: 'Redirecting to OIDC provider',
+        status: '302',
+        statusDescription: 'Found',
+      });
+    }, {
+      keycloakJson: () => ({ realm: 'testRealm', resource: 'resource' }),
+      request: {},
+      sessionManager,
+      route: { unauthorized },
+      logger: console,
+    });
+    expect(resp).toEqual(null);
+  });
+
+  test('test checkToken redirect error Realm', async () => {
+    decodeAccessToken.mockImplementation(() => ({ accessToken: 'TOKEN', accessTokenDecode: { email: 'test@test', tenants: { } } }));
+    const resp = await redirectAuthServer.checkToken((error, response) => {
+      expect(response).toEqual({
+        body: 'Redirecting to OIDC provider',
+        status: '302',
+        statusDescription: 'Found',
+      });
+    }, {
+      keycloakJson: () => ({ realm: 'testRealm', resource: 'resource' }),
+      request: {},
+      sessionManager,
+      route: { unauthorized },
+      logger: console,
+    });
+    expect(resp).toEqual(null);
+  });
+
+  test('test checkToken redirect error Tenants', async () => {
+    decodeAccessToken.mockImplementation(() => ({ accessToken: 'TOKEN', accessTokenDecode: { email: 'test@test' } }));
+    const resp = await redirectAuthServer.checkToken((error, response) => {
+      expect(response).toEqual({
+        body: 'Redirecting to OIDC provider',
+        status: '302',
+        statusDescription: 'Found',
+      });
+    }, {
+      keycloakJson: () => ({ realm: 'testRealm', resource: 'resource' }),
       request: {},
       sessionManager,
       route: { unauthorized },
@@ -124,7 +179,7 @@ describe('testing redirectAuthServer', () => {
     await redirectAuthServer.checkToken(() => {
       throw new Error('unexpected state');
     }, {
-      keycloakJson: () => ({ request: {} }),
+      keycloakJson: () => ({ realm: 'testRealm', resource: 'resource' }),
       sessionManager,
       logger: console,
     });
@@ -132,7 +187,7 @@ describe('testing redirectAuthServer', () => {
 
   test('test redirectToKeycloak', async () => {
     const resp = await redirectAuthServer.redirectToKeycloak({}, {
-      keycloakJson: () => ({}),
+      keycloakJson: () => ({ realm: 'testRealm', resource: 'resource' }),
       sessionManager,
       logger: console,
     }, 'ttt');
@@ -144,7 +199,7 @@ describe('testing redirectAuthServer', () => {
   });
   test('test responseWithKeycloakRedirectToLoginPage', async () => {
     await redirectAuthServer.responseWithKeycloakRedirectToLoginPage({}, {
-      keycloakJson: () => ({}),
+      keycloakJson: () => ({ realm: 'testRealm', resource: 'resource' }),
       sessionManager,
       request: {},
       logger: console,

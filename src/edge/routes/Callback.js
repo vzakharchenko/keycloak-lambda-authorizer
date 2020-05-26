@@ -69,7 +69,7 @@ async function callbackHandler(request, options, callback) {
       return;
     }
     const { code } = queryDict;
-    const state = decodedState.s || '/';
+    let state = decodedState.s || '/';
 
     let tokenJson = await getTokenByCode(code, host, options);
     let accessToken = decodeAccessToken(tokenJson);
@@ -87,11 +87,17 @@ async function callbackHandler(request, options, callback) {
     let sessionJWT;
     if (cookies && cookies.session && await sessionManager.checkSession(cookies.session, request)) {
       const decodeSession = decodeAccessToken(cookies.session).accessTokenDecode;
-      if (decodeSession.email === accessTokenDecode.email) {
-        sessionJWT = await sessionManager.updateSessionToken(cookies.session, options);
+      if (!decodeSession.tenants || !decodeSession.tenants[keycloakJson.realm]
+         || !decodeSession.tenants[keycloakJson.realm][keycloakJson.resource]) {
+        sessionJWT = await sessionManager.updateSessionToken(cookies.session,
+          accessTokenDecode, options);
+      } else if (!decodeSession.tenants[keycloakJson.realm][keycloakJson.resource]
+        .session_state !== accessTokenDecode.session_state) {
+        state = `/${keycloakJson.realm}/${keycloakJson.resource}/logout`;
+        sessionJWT = cookies.session;
       } else {
-        await sessionManager.deleteSession(cookies.session);
-        sessionJWT = await sessionManager.createSession(host, sessionTimeOut, tokenJson, options);
+        sessionJWT = await sessionManager.updateSessionToken(cookies.session,
+          accessTokenDecode, options);
       }
     } else {
       sessionJWT = await sessionManager.createSession(host, sessionTimeOut, tokenJson, options);
@@ -135,7 +141,7 @@ async function callbackHandler(request, options, callback) {
       },
     };
   } catch (e) {
-    options.logger.error(`Internal server error: ${e}`);
+    options.logger.error(`Internal server error: ${e}`, e);
     options.route.internalServerError(request, callback);
     return;
   }

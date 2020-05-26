@@ -41,6 +41,7 @@ function commonOptions(options, keycloakJson) {
       keycloakJson: typeof keycloakJson === 'function' ? keycloakJson : () => keycloakJson,
       cache: options.cache || defaultCache,
       resources: options.resources,
+      responseHandler: options.responseHandler,
       enforce: updateEnforcer(options.enforce || defaultEnforcer),
     },
   };

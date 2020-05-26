@@ -374,7 +374,30 @@ export async function authorization(event, context, callback) {
   }), callback);
 }
 ```
-## 3. Create JWKS endpoint by Lambda:Edge
+## 3. protect Url  with custom response handler
+
+
+lamdaEdge.routes.addProtected(
+  '/',
+keycloakJson,
+{
+  enforce: {
+    enabled: true,
+    resource: {
+      name: 'tenantResource',
+    },
+  },
+  responseHandler: (request, options)=>{
+ const uri = request.uri;
+  if (uri.startsWith('/callback') ||
+  uri.startsWith('callback')) {
+    return callBackPageHandle;
+  }
+  }
+}
+);
+
+## 4. Create JWKS endpoint by Lambda:Edge
 
 ```javascript
 import { lamdaEdge } from 'keycloak-lambda-authorizer';
@@ -400,7 +423,7 @@ export async function authorization(event, context, callback) {
 ```
 
 
-## 4. Public url
+## 5. Public url
 
 ```javascript
 import { lamdaEdge } from 'keycloak-lambda-authorizer';
@@ -425,7 +448,7 @@ export async function authorization(event, context, callback) {
 }
 ```
 
-## 5. Custom Url Handler
+## 6. Custom Url Handler
 
 ```javascript
 import { lamdaEdge } from 'keycloak-lambda-authorizer';
@@ -457,7 +480,7 @@ export async function authorization(event, context, callback) {
 }
 ```
 
-## 6. Custom Url Handler with Lambda:Edge [EventType](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-event-structure.html)
+## 7. Custom Url Handler with Lambda:Edge [EventType](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-event-structure.html)
 
 
 ```javascript
@@ -494,7 +517,7 @@ export async function authorization(event, context, callback) {
 }
 ```
 
-# 7. Implementation For Custom Service or non amazon cloud
+# 8. Implementation For Custom Service or non amazon cloud
 
 ```javascript
 import { adapter } from 'keycloak-lambda-authorizer';
@@ -533,7 +556,7 @@ async function handler(request,response) {
 }
 ```
 
-## 8. protect Url with keycloak function
+## 9. protect Url with keycloak function
 
 ```javascript
 import { lamdaEdge } from 'keycloak-lambda-authorizer';

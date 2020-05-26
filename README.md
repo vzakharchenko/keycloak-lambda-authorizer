@@ -376,7 +376,7 @@ export async function authorization(event, context, callback) {
 ```
 ## 3. protect Url  with custom response handler
 
-
+```js
 lamdaEdge.routes.addProtected(
   '/',
 keycloakJson,
@@ -387,7 +387,8 @@ keycloakJson,
       name: 'tenantResource',
     },
   },
-  responseHandler: (request, options)=>{
+  responseHandler: async (request, options)=>{
+    const jwtToken = request.token;
  const uri = request.uri;
   if (uri.startsWith('/callback') ||
   uri.startsWith('callback')) {
@@ -396,7 +397,7 @@ keycloakJson,
   }
 }
 );
-
+```
 ## 4. Create JWKS endpoint by Lambda:Edge
 
 ```javascript

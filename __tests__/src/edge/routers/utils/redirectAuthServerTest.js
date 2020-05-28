@@ -26,21 +26,58 @@ describe('testing redirectAuthServer', () => {
   });
 
   test('test refreshResponse', async () => {
-    const refreshResponse = redirectAuthServer.refreshResponse('token', 'refreshToken', { keycloakJson: () => ({ realm: 'testRealm', resource: 'resource' }) });
-    expect(refreshResponse).toEqual({
-      headers: {
-        'set-cookie': [
-          {
-            key: 'Set-Cookie',
-            value: 'KEYCLOAK_AWS_undefined_EXPIRE=undefined; Path=/; Expires=Invalid Date',
-          },
-        ],
-      },
-      status: '200',
-      statusDescription: 'OK',
+    const refreshResponse = redirectAuthServer.refreshResponse({
+      acess_token: 'token',
+      isChanged: true,
+    }, 'refreshToken', {
+      keycloakJson: () => ({
+        realm: 'testRealm',
+        resource: 'resource',
+      }),
     });
+    expect(refreshResponse)
+      .toEqual({
+        headers: {
+          'set-cookie': [
+            {
+              key: 'Set-Cookie',
+              value: 'KEYCLOAK_AWS_undefined_EXPIRE=undefined; Path=/; Expires=Invalid Date',
+            },
+            {
+              key: 'Set-Cookie',
+              value: 'KEYCLOAK_AWS_undefined=undefined; Path=/; Expires=Invalid Date',
+            },
+          ],
+        },
+        status: '200',
+        statusDescription: 'OK',
+      });
   });
 
+  test('test refreshResponse false', async () => {
+    const refreshResponse = redirectAuthServer.refreshResponse({
+      acess_token: 'token',
+      isChanged: false,
+    }, 'refreshToken', {
+      keycloakJson: () => ({
+        realm: 'testRealm',
+        resource: 'resource',
+      }),
+    });
+    expect(refreshResponse)
+      .toEqual({
+        headers: {
+          'set-cookie': [
+            {
+              key: 'Set-Cookie',
+              value: 'KEYCLOAK_AWS_undefined_EXPIRE=undefined; Path=/; Expires=Invalid Date',
+            },
+          ],
+        },
+        status: '200',
+        statusDescription: 'OK',
+      });
+  });
   test('test refreshResponse without refreshToken', async () => {
     const refreshResponse = redirectAuthServer.refreshResponse('token', null, { keycloakJson: () => ({ realm: 'testRealm', resource: 'resource' }) });
     expect(refreshResponse).toEqual({
@@ -197,6 +234,21 @@ describe('testing redirectAuthServer', () => {
       statusDescription: 'Found',
     });
   });
+
+
+  test('test redirectToKeycloak2', async () => {
+    const resp = await redirectAuthServer.redirectToKeycloak({ uri: '/manufacturer/test', querystring: 'redirectUri=/' }, {
+      keycloakJson: () => ({ realm: 'testRealm', resource: 'resource' }),
+      sessionManager,
+      logger: console,
+    });
+    expect(resp).toEqual({
+      body: 'Redirecting to OIDC provider',
+      status: '302',
+      statusDescription: 'Found',
+    });
+  });
+
   test('test responseWithKeycloakRedirectToLoginPage', async () => {
     await redirectAuthServer.responseWithKeycloakRedirectToLoginPage({}, {
       keycloakJson: () => ({ realm: 'testRealm', resource: 'resource' }),

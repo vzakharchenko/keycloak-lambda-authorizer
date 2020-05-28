@@ -1,4 +1,5 @@
 const cookie = require('cookie');
+const qs = require('querystring');
 
 const { getCookie, clearCookies } = require('../../../utils/cookiesUtils');
 
@@ -8,6 +9,10 @@ const { getKeycloakUrl } = require('../../../utils/restCalls');
 const { getHostUrl, tenantName, signState } = require('../../lambdaEdgeUtils');
 
 function buildUri(request) {
+  const queryDict = qs.parse(request.querystring);
+  if (queryDict.redirectUri) {
+    return queryDict.redirectUri;
+  }
   return request.uri + (request.querystring ? `?${request.querystring}` : '');
 }
 

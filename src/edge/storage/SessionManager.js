@@ -74,6 +74,7 @@ async function createSessionToken(host, timeout, token, options) {
   payload.tenants[keycloakJson.realm][keycloakJson.resource] = {
     cookieName: `KEYCLOAK_AWS_${tn}`,
     session_state: decodedjwt.session_state,
+    route: options.routePath,
   };
   const session = await clientJWT(payload, options);
   return {
@@ -147,6 +148,7 @@ async function updateSessionToken(session, token, options) {
     payload.tenants[keycloakJson.realm][keycloakJson.resource] = {
       cookieName: `KEYCLOAK_AWS_${tn}`,
       session_state: token.session_state,
+      route: options.routePath,
     };
     newSession = await clientJWT(payload, options);
   }

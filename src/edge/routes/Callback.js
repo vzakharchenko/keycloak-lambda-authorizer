@@ -91,7 +91,7 @@ async function callbackHandler(request, options, callback) {
          || !decodeSession.tenants[keycloakJson.realm][keycloakJson.resource]) {
         sessionJWT = await sessionManager.updateSessionToken(cookies.session,
           accessTokenDecode, options);
-      } else if (!decodeSession.tenants[keycloakJson.realm][keycloakJson.resource]
+      } else if (decodeSession.tenants[keycloakJson.realm][keycloakJson.resource]
         .session_state !== accessTokenDecode.session_state) {
         state = `/${keycloakJson.realm}/${keycloakJson.resource}/logout`;
         sessionJWT = cookies.session;

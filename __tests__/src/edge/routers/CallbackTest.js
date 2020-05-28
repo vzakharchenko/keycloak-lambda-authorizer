@@ -130,7 +130,7 @@ describe('testing callback', () => {
   });
 
   test('test Success Logout ', async () => {
-    decodeAccessToken.mockImplementation(() => ({ accessToken: 'TOKEN', accessTokenDecode: { email: 'test@test', tenants: { test: { res: {} } } } }));
+    decodeAccessToken.mockImplementation(() => ({ accessToken: 'TOKEN', accessTokenDecode: { email: 'test@test', tenants: { test: { res: { session_state: 'state' } } } } }));
 
     await callbackHandler({ headers: [] }, {
       logger: console,

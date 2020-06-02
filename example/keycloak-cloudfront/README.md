@@ -14,6 +14,7 @@ replace with http://<YOUR DEVICE IP>:8080/cert instead of http://localhost:8080/
 ```
 sh bin/standalone.sh  -c standalone.xml -b 0.0.0.0 -Djboss.bind.address.management=0.0.0.0 --debug 8190 -Djboss.http.port=8090
 ```
+### Import Realms
 **Open the Keycloak admin console, click on Add Realm, click on import 'Select file', select realm-tenant1.json and realm-tenant2.json and click Create.
 **
 ## 2. Run emulation cloudfront and lambda:edge locally

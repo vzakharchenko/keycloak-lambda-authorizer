@@ -61,7 +61,7 @@ async function createSessionToken(host, timeout, token, options) {
   const sessionId = decodedjwt.session_state;
   const keycloakJson = options.keycloakJson(options);
   const tn = tenantName(keycloakJson);
-  const payload = {
+  let payload = {
     jti: decodedjwt.session_state,
     sub: host,
     exp: (timeSec + timeout),
@@ -76,6 +76,10 @@ async function createSessionToken(host, timeout, token, options) {
     session_state: decodedjwt.session_state,
     route: options.routePath,
   };
+  if (options.sessionFunc) {
+    const updatedPayload = options.sessionFunc({ ...payload }, token, options);
+    payload = { ...updatedPayload, ...payload };
+  }
   const session = await clientJWT(payload, options);
   return {
     sessionId,
@@ -118,7 +122,11 @@ function deleteTenantSession(sessionStorage, sessionOptions) {
   return async (session, options) => {
     const newOptions = { ...options, ...sessionOptions };
     const keycloakJson = options.keycloakJson(newOptions);
-    const payload = jwt.decode(session);
+    let payload = jwt.decode(session);
+    if (options.sessionDeleteFunc) {
+      const updatedPayload = options.sessionDeleteFunc({ ...payload }, token, options);
+      payload = { ...updatedPayload, ...payload };
+    }
     if (payload[keycloakJson.realm]) {
       delete (payload[keycloakJson.realm])[keycloakJson.resource];
     }
@@ -134,7 +142,7 @@ function deleteTenantSession(sessionStorage, sessionOptions) {
 
 async function updateSessionToken(session, token, options) {
   const keycloakJson = options.keycloakJson(options);
-  const payload = jwt.decode(session);
+  let payload = jwt.decode(session);
   const sessionId = getSessionId(session);
   let newSession = session;
   if (!(payload.tenants
@@ -150,6 +158,10 @@ async function updateSessionToken(session, token, options) {
       session_state: token.session_state,
       route: options.routePath,
     };
+    if (options.sessionFunc) {
+      const updatedPayload = options.sessionFunc({ ...payload }, token, options);
+      payload = { ...updatedPayload, ...payload };
+    }
     newSession = await clientJWT(payload, options);
   }
   return {

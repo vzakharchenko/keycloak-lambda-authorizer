@@ -75,7 +75,7 @@ async function callbackHandler(request, options, callback) {
     let accessToken = decodeAccessToken(tokenJson);
     if (options.enforce.enabled && !options.enforce.role) {
       tokenJson = await exchangeRPT(accessToken.accessToken,
-        keycloakJson.resource, options);
+        options.enforce.clientId || keycloakJson.resource, options);
       accessToken = decodeAccessToken(tokenJson);
     }
     const { accessTokenDecode } = accessToken;

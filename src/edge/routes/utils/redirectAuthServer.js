@@ -24,7 +24,7 @@ function updateLoginLink(loginPage, options) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-async function redirectToKeycloak(request, options, url) {
+async function redirectToKeycloak(request, options, url, callback) {
   const host = getHostUrl(request);
   const keycloakJson = options.keycloakJson(options);
   options.logger.debug('Redirecting to OIDC provider.');
@@ -57,15 +57,15 @@ async function redirectToKeycloak(request, options, url) {
       },
     ],
   };
-  return {
+  callback(null, {
     status: '302',
     statusDescription: 'Found',
     body: 'Redirecting to OIDC provider',
     headers: clearCookies(request, options, headers),
-  };
+  });
 }
 
-async function responseWithKeycloakRedirectToLoginPage(request, options, callback) {
+async function responseWithKeycloakRedirectToLoginPage(request, options, url, callback) {
   console.debug('Redirecting to OIDC provider.');
   const state = buildUri(request);
   const jwt = await signState(state, options);
@@ -82,7 +82,7 @@ async function responseWithKeycloakRedirectToLoginPage(request, options, callbac
       'set-cookie': [
         {
           key: 'Set-Cookie',
-          value: cookie.serialize(tenantName(keycloakJson), '', {
+          value: cookie.serialize(`KEYCLOAK_AWS_${tenantName(keycloakJson)}`, '', {
             path: '/',
             expires: new Date(
               1970, 1, 1, 0, 0, 0, 0,
@@ -111,13 +111,13 @@ async function checkToken(callback, options,
       || !decodedSession.tenants[keycloakJson.realm]
       || !decodedSession.tenants[keycloakJson.realm][keycloakJson.resource]
     ) {
-      callback(null, await redirectToKeycloakAction(request, options));
+      await redirectToKeycloakAction(request, options, null, callback);
     } else {
       try {
         const token = await getActiveToken(sessionString, sessionTokenString, options,
           refreshTokenHandler);
         if (!token) {
-          callback(null, await redirectToKeycloakAction(request, options));
+          await redirectToKeycloakAction(request, options, null, callback);
         } else {
           return {
             access_token: token,
@@ -132,7 +132,7 @@ async function checkToken(callback, options,
       }
     }
   } else {
-    callback(null, await redirectToKeycloakAction(request, options));
+    await redirectToKeycloakAction(request, options, null, callback);
   }
   return null;
 }

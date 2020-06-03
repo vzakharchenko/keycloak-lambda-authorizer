@@ -24,6 +24,7 @@ npm install keycloak-lambda-authorizer -S
 # Examples
  - [Serverless example (Api gateway with lambda authorizer)](example/keycloak-authorizer/README.md)
  - [CloudFront with Lambda:Edge example](example/keycloak-cloudfront/README.md)
+ - [CloudFront with portal authorization (switching between security realms)](example/keycloak-cloudfront-portal)
 # How to use
 
 ### Role Based
@@ -605,4 +606,49 @@ export async function authorization(event, context, callback) {
     },
   }), callback);
 }
+```
+
+## 9. protect Url with Uma
+
+```javascript
+lamdaEdge.routes.addProtected(
+  '/',
+keycloakJson,
+{
+  enforce: {
+    enabled: true,
+    clientId: 'CLIENT_ID',
+    resource: {
+      name: 'tenantResource',
+    },
+  },
+}
+);
+```
+
+## 10. Modify Session
+
+```js
+lamdaEdge.routes.addProtected(
+  '/',
+keycloakJson,
+{
+  enforce: {
+    enabled: true,
+    resource: {
+      name: 'tenantResource',
+    },
+  },
+   sessionModify: (sessionToken, token, options) => {
+    const newSessionToken = { ...sessionToken };
+    sessionToken.newProperty="test";
+    return newSessionToken;
+  },
+     sessionDelete: (sessionToken, token, options) => {
+      const newSessionToken = { ...sessionToken };
+      delete sessionToken.newProperty;
+      return newSessionToken;
+    },
+}
+);
 ```

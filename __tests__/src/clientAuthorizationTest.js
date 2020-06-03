@@ -69,6 +69,9 @@ describe('testing clientAuthorization', () => {
         if (data === 'grant_type=urn:ietf:params:oauth:grant-type:uma-ticket&response_include_resource_name=false&audience=lambda') {
           return JSON.stringify({ access_token: 'access_token_uma' });
         }
+        if (data === 'grant_type=urn:ietf:params:oauth:grant-type:uma-ticket&response_include_resource_name=false&audience=test') {
+          return JSON.stringify({ access_token: 'access_token_uma' });
+        }
         if (data === 'code=code&grant_type=authorization_code&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_id=lambda&client_secret=772decbe-0151-4b08-8171-bec6d097293b&redirect_uri=host%2Flambda-authorizer%2Flambda%2Fcallback') {
           return JSON.stringify({ access_token: 'access_token_code' });
         }
@@ -184,6 +187,22 @@ describe('testing clientAuthorization', () => {
       keycloakJson: keycloakJsonWithSecret,
       cache,
       logger: console,
+      enforce: {
+        enabled: true,
+        resource: {
+          resource: 'testResource',
+        },
+      },
+    });
+    expect(token.access_token).toEqual('access_token_uma');
+  });
+
+  test('test keycloakRefreshToken with enforcer custom clientId', async () => {
+    const token = await clientAuthentication.keycloakRefreshToken({ access_token: 'access_token', refresh_token: 'refresh_token' }, {
+      keycloakJson: keycloakJsonWithSecret,
+      cache,
+      logger: console,
+      clientId: 'test',
       enforce: {
         enabled: true,
         resource: {

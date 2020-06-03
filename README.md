@@ -609,7 +609,7 @@ export async function authorization(event, context, callback) {
 }
 ```
 
-## 9. protect Url with Uma
+## 10. protect Url with Uma
 
 ```javascript
 lamdaEdge.routes.addProtected(
@@ -627,7 +627,7 @@ keycloakJson,
 );
 ```
 
-## 10. Modify Session
+## 11. Modify Session
 
 ```js
 lamdaEdge.routes.addProtected(

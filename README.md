@@ -13,6 +13,7 @@ Implementation [Keycloak](https://www.keycloak.org/) adapter for aws Lambda
 - supports "clientId/secret" and "client-jwt" credential types
 - Role based authorization
 - support MultiTenant
+- [cross-realm authentication](example/keycloak-cloudfront-portal)
 - Regexp endpoints for Lambda@Edge
 - Resource based authorization ( [Keycloak Authorization Services](https://www.keycloak.org/docs/latest/authorization_services/) )
 

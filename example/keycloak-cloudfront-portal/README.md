@@ -1,4 +1,6 @@
-# Cloudfront(Lambda:edge) with portal authorization
+# Cloudfront(Lambda:edge) with portal authorization (Cross-realm authentication)
+
+Solution how to loggedin to one realm and then switching to another realms without asking the password.
 
 ## 1. Start Keycloak
 
@@ -41,10 +43,16 @@ cd keycloak-cloudfront-cdk
 ./deploy.sh -n "<unique S3 Bucket>" -r "arn:aws:iam::<AWS-ACCOUNT>:role/<ROLE>"
 ```
 
-### Users:
+### Portal Users:
 
 | Portal User | Portal password | Security Realm 1 | Security Realm 1 |
 |:------------|:----------------|:-----------------|:-----------------|
 | user        | user            | X                | X                |
 | user1       | user1           | X                | -                |
 | user2       | user2           | -                | X                |
+
+### Switch Tenant:
+
+Tenant Selector : ![tenantSelector](../../docs/tenantSelector.png)
+Select to Security Tenant 1: ![SelectTenant1](../../docs/SelectTenant1.png)
+Select to Security Tenant 2: ![SelectTenant2](../../docs/SelectTenant2.png)

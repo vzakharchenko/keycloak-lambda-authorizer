@@ -93,6 +93,14 @@ describe('testing SessionManager', () => {
     expect(await session.updateSession('TEDT', 'tenant', {})).toEqual(undefined);
   });
 
+  test('test updateSession custom handler', async () => {
+    const session = new SessionManager(sessionStorage, { keys: { publicKey: { key: 'PUBLIC_KEY' } }, sessionModify: (token) => token });
+    jsonwebtoken.decode.mockImplementation(() => ({
+      jti: 'testId',
+    }));
+    expect(await session.updateSession('TEDT', 'tenant', {})).toEqual(undefined);
+  });
+
   test('test updateSessionToken ', async () => {
     const session = new SessionManager(sessionStorage, {
       keycloakJson: () => ({}),
@@ -104,10 +112,23 @@ describe('testing SessionManager', () => {
     expect(await session.updateSessionToken('TEDT', 'tenant', {})).toEqual('SESSION_TOKEN');
   });
 
-  test('test deleteSession ', async () => {
+  test('test updateSessionToken custom session handler', async () => {
+    const session = new SessionManager(sessionStorage, {
+      keycloakJson: () => ({}),
+      keys: { publicKey: { key: 'PUBLIC_KEY' } },
+      sessionModify: (token) => token,
+    });
+    jsonwebtoken.decode.mockImplementation(() => ({
+      jti: 'testId',
+    }));
+    expect(await session.updateSessionToken('TEDT', 'tenant', {})).toEqual('SESSION_TOKEN');
+  });
+
+  test('test deleteSession  custom session handler', async () => {
     const session = new SessionManager(sessionStorage, {
       keycloakJson: {},
       keys: { publicKey: { key: 'PUBLIC_KEY' } },
+      sessionDelete: (token) => token,
     });
     jsonwebtoken.decode.mockImplementation(() => ({
       jti: 'testId',

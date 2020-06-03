@@ -76,8 +76,10 @@ async function createSessionToken(host, timeout, token, options) {
     session_state: decodedjwt.session_state,
     route: options.routePath,
   };
-  if (options.sessionFunc) {
-    const updatedPayload = options.sessionFunc({ ...payload }, token, options);
+  if (options.sessionModify) {
+    const updatedPayload = await Promise.resolve(
+      options.sessionModify({ ...payload }, token, options),
+    );
     payload = { ...updatedPayload, ...payload };
   }
   const session = await clientJWT(payload, options);
@@ -123,8 +125,10 @@ function deleteTenantSession(sessionStorage, sessionOptions) {
     const newOptions = { ...options, ...sessionOptions };
     const keycloakJson = options.keycloakJson(newOptions);
     let payload = jwt.decode(session);
-    if (options.sessionDeleteFunc) {
-      const updatedPayload = options.sessionDeleteFunc({ ...payload }, token, options);
+    if (options.sessionDelete) {
+      const updatedPayload = await Promise.resolve(
+        options.sessionDelete({ ...payload }, token, options),
+      );
       payload = { ...updatedPayload, ...payload };
     }
     if (payload[keycloakJson.realm]) {
@@ -158,8 +162,10 @@ async function updateSessionToken(session, token, options) {
       session_state: token.session_state,
       route: options.routePath,
     };
-    if (options.sessionFunc) {
-      const updatedPayload = options.sessionFunc({ ...payload }, token, options);
+    if (options.sessionModify) {
+      const updatedPayload = await Promise.resolve(
+        options.sessionModify({ ...payload }, token, options),
+      );
       payload = { ...updatedPayload, ...payload };
     }
     newSession = await clientJWT(payload, options);

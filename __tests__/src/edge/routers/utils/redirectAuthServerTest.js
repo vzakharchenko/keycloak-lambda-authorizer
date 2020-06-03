@@ -223,29 +223,31 @@ describe('testing redirectAuthServer', () => {
   });
 
   test('test redirectToKeycloak', async () => {
-    const resp = await redirectAuthServer.redirectToKeycloak({}, {
+    await redirectAuthServer.redirectToKeycloak({}, {
       keycloakJson: () => ({ realm: 'testRealm', resource: 'resource' }),
       sessionManager,
       logger: console,
-    }, 'ttt');
-    expect(resp).toEqual({
-      body: 'Redirecting to OIDC provider',
-      status: '302',
-      statusDescription: 'Found',
+    }, 'ttt', (error, resp) => {
+      expect(resp).toEqual({
+        body: 'Redirecting to OIDC provider',
+        status: '302',
+        statusDescription: 'Found',
+      });
     });
   });
 
 
   test('test redirectToKeycloak2', async () => {
-    const resp = await redirectAuthServer.redirectToKeycloak({ uri: '/manufacturer/test', querystring: 'redirectUri=/' }, {
+    await redirectAuthServer.redirectToKeycloak({ uri: '/manufacturer/test', querystring: 'redirectUri=/' }, {
       keycloakJson: () => ({ realm: 'testRealm', resource: 'resource' }),
       sessionManager,
       logger: console,
-    });
-    expect(resp).toEqual({
-      body: 'Redirecting to OIDC provider',
-      status: '302',
-      statusDescription: 'Found',
+    }, null, (error, resp) => {
+      expect(resp).toEqual({
+        body: 'Redirecting to OIDC provider',
+        status: '302',
+        statusDescription: 'Found',
+      });
     });
   });
 
@@ -255,7 +257,7 @@ describe('testing redirectAuthServer', () => {
       sessionManager,
       request: {},
       logger: console,
-    }, (error, response) => {
+    }, null, (error, response) => {
       expect(response);
     });
   });

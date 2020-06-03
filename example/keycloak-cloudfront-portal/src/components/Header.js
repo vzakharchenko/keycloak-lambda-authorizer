@@ -7,7 +7,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import { AccountCircle } from '@material-ui/icons';
-import { getDecodedTenantToken, getTenants } from 'keycloak-lambda-cloudfront-ui';
+import { getDecodedTenantToken, getTenants, getTenant } from 'keycloak-lambda-cloudfront-ui';
 
 function useStyles() {
   return makeStyles((theme) => ({
@@ -34,13 +34,15 @@ class Header extends React.Component {
 
   async componentDidMount() {
     try {
-      if (getTenants('tenant1', 'tenant1Client')) {
-        const t1 = await getDecodedTenantToken('tenant1', 'tenant1Client');
-        this.setState({ token1: t1 });
+      if (getTenants().find(((tenant) => tenant.realm === 'securityRealm1'))) {
+        const t1 = await getDecodedTenantToken('securityRealm1', 'securityRealmClient');
+        const tenant1 = getTenant('securityRealm1', 'securityRealmClient');
+        this.setState({ token1: t1, tenant1: tenant1.resourceSession });
       }
-      if (getTenants('Tenant2', 'tenant2Client')) {
-        const t2 = await getDecodedTenantToken('Tenant2', 'tenant2Client');
-        this.setState({ token2: t2 });
+      if (getTenants().find(((tenant) => tenant.realm === 'securityRealm2'))) {
+        const t2 = await getDecodedTenantToken('securityRealm2', 'securityRealmClient');
+        const tenant2 = getTenant('securityRealm2', 'securityRealmClient');
+        this.setState({ token2: t2, tenant2: tenant2.resourceSession });
       }
     } catch (e) {
       console.error(e);
@@ -67,7 +69,9 @@ class Header extends React.Component {
     render() {
       // const [anchorEl, setAnchorEl] = React.useState(null);
       // const open = Boolean(anchorEl);
-      const { anchorEl, token1, token2 } = this.state;
+      const {
+        anchorEl, token1, token2, tenant1, tenant2,
+      } = this.state;
       const open = Boolean(anchorEl);
       const classes = useStyles();
       return (
@@ -103,16 +107,16 @@ class Header extends React.Component {
                                     horizontal: 'right',
                                   }}
                                 >
-                                    <MenuItem onClick={() => this.handleSwitch('/tenant1.html')}>
-Tenant 1
-{token1 ? token1.email : ''}
+                                    <MenuItem onClick={() => this.handleSwitch('/tenants/securityRealm1?redirectUri=/')}>
+                                      Security Realm 1
+{token1 ? `(${token1.email}${tenant1.status === 'Active' ? ' Last Used' : ''})` : ''}
                                     </MenuItem>
-                                    <MenuItem onClick={() => this.handleSwitch('/tenant2.html')}>
-Tenant 2
-{token2 ? token2.email : ''}
+                                    <MenuItem onClick={() => this.handleSwitch('/tenants/securityRealm2?redirectUri=/')}>
+                                      Security Realm 2
+                                      {token2 ? `(${token2.email}${tenant2.status === 'Active' ? ' Last Used' : ''})` : ''}
                                     </MenuItem>
-                                    <MenuItem onClick={() => this.handleLogout('tenant1', 'tenant1Client')}>Logout Tenant1</MenuItem>
-                                    <MenuItem onClick={() => this.handleLogout('Tenant2', 'tenant2Client')}> Logout Tenant2</MenuItem>
+                                    <MenuItem onClick={() => this.handleLogout('securityRealm1', 'securityRealmClient')}>Logout Security Realm 1</MenuItem>
+                                    <MenuItem onClick={() => this.handleLogout('securityRealm2', 'securityRealmClient')}> Logout Security Realm 2</MenuItem>
                                 </Menu>
                             </div>
                     </Toolbar>

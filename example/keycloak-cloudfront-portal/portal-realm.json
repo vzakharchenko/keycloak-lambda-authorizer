@@ -79,6 +79,50 @@
   "webAuthnPolicyPasswordlessCreateTimeout": 0,
   "webAuthnPolicyPasswordlessAvoidSameAuthenticatorRegister": false,
   "webAuthnPolicyPasswordlessAcceptableAaguids": [],
+  "users" : [
+    {
+      "username" : "user",
+      "enabled": true,
+      "email" : "user@example.com",
+      "firstName": "user",
+      "lastName": "Example",
+      "credentials" : [
+        { "type" : "password",
+          "value" : "user" }
+      ],
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"]
+      }
+    },
+    {
+      "username" : "user1",
+      "enabled": true,
+      "email" : "user1@example.com",
+      "firstName": "user1",
+      "lastName": "Example",
+      "credentials" : [
+        { "type" : "password",
+          "value" : "user1" }
+      ],
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"]
+      }
+    },
+    {
+      "username" : "user2",
+      "enabled": true,
+      "email" : "user2@example.com",
+      "firstName": "user2",
+      "lastName": "Example",
+      "credentials" : [
+        { "type" : "password",
+          "value" : "user1" }
+      ],
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"]
+      }
+    }
+  ],
   "scopeMappings": [
     {
       "clientScope": "offline_access",

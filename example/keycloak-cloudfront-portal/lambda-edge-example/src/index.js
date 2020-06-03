@@ -4,61 +4,35 @@ import { LocalSessionStorage } from 'keycloak-lambda-authorizer/src/edge/storage
 import { DynamoDbSessionStorage } from 'keycloak-cloudfront-dynamodb/DynamoDbSessionStorage';
 import { privateKey, publicKey } from './sessionKeys';
 import {
-  tenant1KeycloakJson,
-  tenant1Options,
-  tenant2KeycloakJson,
-  tenant2Options,
   portalKeycloakJSON,
+  tenantKeycloakJson,
+  tenantOptions,
 } from './Tentants';
 
-const keycloakJson1 = tenant1KeycloakJson;
-const keycloakJson2 = tenant2KeycloakJson;
 
-function tenant2ResponseHandler(request, options) {
-  const { uri } = request;
-  const keycloakJson = options.keycloakJson(options);
-  if (uri.startsWith(`/${keycloakJson.realm}/api`)) {
-    return {
-      status: '200',
-      statusDescription: 'OK',
-      body: JSON.stringify({ tenant2: 'success' }),
-    };
-  }
-  return request;
-}
 lamdaEdge.routes.addJwksEndpoint('/cert', publicKey.key);
-lamdaEdge.routes.addProtected(
-  ['tenant2.html', keycloakJson2.realm],
-  keycloakJson2,
-  {
-    ...tenant2Options,
-    ...{ responseHandler: tenant2ResponseHandler },
-  },
-);
 
-function tenant1ResponseHandler(request, options) {
+function tenantResponseHandler(request, options) {
   const { uri } = request;
   const keycloakJson = options.keycloakJson(options);
-  if (uri.startsWith(`/${keycloakJson.realm}/api`)) {
+  if (uri.startsWith(`/tenants/${keycloakJson.realm}/api`)) {
     return {
       status: '200',
       statusDescription: 'OK',
-      body: JSON.stringify({ tenant1: 'success' }),
+      body: JSON.stringify({ tenant: keycloakJson.realm, status: 'success' }),
     };
   }
   return request;
 }
 
-lamdaEdge.routes.addProtected(
-  ['tenant1.html', keycloakJson1.realm],
-  keycloakJson1,
+lamdaEdge.routes.addProtected([new RegExp('(^)(\\/|)(/tenants/(.*))(/$|(\\?|$))', 'g')],
+  tenantKeycloakJson,
   {
-    ...tenant1Options,
-    ...{ responseHandler: tenant1ResponseHandler },
-  },
-);
+    ...tenantOptions,
+    ...{ responseHandler: tenantResponseHandler },
+  });
 lamdaEdge.routes.addProtected(
-  ['/', keycloakJson1.realm],
+  ['/'],
   portalKeycloakJSON,
 );
 // eslint-disable-next-line import/prefer-default-export

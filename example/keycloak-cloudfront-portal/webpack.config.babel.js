@@ -23,6 +23,7 @@ const config = {
     inline: false,
     host: '0.0.0.0',
     disableHostCheck: true,
+    port: 9000,
     before(app) {
       // eslint-disable-next-line global-require
       const { middleware } = require('./lambdaEdgeProxy');

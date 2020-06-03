@@ -109,7 +109,7 @@ async function keycloakRefreshToken(token, options) {
       tokenJson = JSON.parse(tokenResponse);
       if (options.enforce.enabled && !options.enforce.role) {
         tokenJson = await exchangeRPT(tokenJson.access_token,
-          keycloakJson.resource, options);
+          options.clientId || keycloakJson.resource, options);
       }
     } catch (e) {
       console.error(`wrong refresh token for ${realmName}`, e);

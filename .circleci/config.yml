@@ -54,3 +54,15 @@ jobs:
       - run:
           name: lint example/keycloak-cloudfront cloudfront
           command: cd example/keycloak-cloudfront && npm run lint
+      - run:
+          name: build example/keycloak-cloudfront-portal cloudfront-cdk
+          command: cd example/keycloak-cloudfront-portal/keycloak-cloudfront-cdk && npm i
+      - run:
+          name: build example/keycloak-cloudfront-portal lambda-edge-example
+          command: cd example/keycloak-cloudfront-portal/lambda-edge-example && npm i && npm run build
+      - run:
+          name: build example/keycloak-cloudfront-portal cloudfront
+          command: cd example/keycloak-cloudfront-portal && npm i && npm run build
+      - run:
+          name: lint example/keycloak-cloudfront-portal cloudfront
+          command: cd example/keycloak-cloudfront-portal && npm run lint

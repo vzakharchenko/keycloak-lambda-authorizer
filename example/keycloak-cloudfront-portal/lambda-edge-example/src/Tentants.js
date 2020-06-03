@@ -2,7 +2,7 @@ import { privateKey, publicKey } from './sessionKeys';
 
 export const portalKeycloakJSON = {
   realm: 'portal',
-  'auth-server-url': 'http://127.0.0.1:8090/auth/',
+  'auth-server-url': 'http://127.0.0.1:8080/auth/',
   'ssl-required': 'external',
   resource: 'portal-ui',
   credentials: {
@@ -11,58 +11,48 @@ export const portalKeycloakJSON = {
   'confidential-port': 0,
 };
 
-export const tenant1KeycloakJson = {
-  realm: 'securityRealm2',
-  'auth-server-url': 'http://localhost:8090/auth/',
-  'ssl-required': 'external',
-  resource: 'tenant1Client',
-  'verify-token-audience': true,
-  credentials: {
-    jwt: { },
-  },
-  'confidential-port': 0,
-  'policy-enforcer': {},
-};
+function getRealmCallback(uri) {
+  return uri && uri.includes('/securityRealmClient') ? uri.split('/')[uri.split('/').length - 3] : null;
+}
 
-export const tenant1Options = {
-  enforce: {
-    enabled: true,
-    resource: {
-      name: 'tenant1Resource',
+function getRealm(options) {
+  const { uri } = options.request;
+  return uri && uri.startsWith('/tenants') ? uri.split('/')[2] : getRealmCallback(uri);
+}
+
+export function tenantKeycloakJson(options) {
+  return {
+    realm: getRealm(options),
+    'auth-server-url': 'http://localhost:8080/auth',
+    'ssl-required': 'external',
+    resource: 'securityRealmClient',
+    credentials: {
+      jwt: {
+      },
     },
-  },
-};
+    'confidential-port': 0,
+  };
+}
 
-
-export const tenant2KeycloakJson = {
-  realm: 'securityRealm2',
-  'auth-server-url': 'http://localhost:8090/auth',
-  'ssl-required': 'external',
-  resource: 'tenant2Client',
-  'verify-token-audience': false,
-  credentials: {
-    jwt: {
-      'client-key-password': 'REPLACE WITH THE KEY PASSWORD IN KEYSTORE',
-      'client-keystore-file': 'REPLACE WITH THE LOCATION OF YOUR KEYSTORE FILE',
-      'client-keystore-password': 'REPLACE WITH THE KEYSTORE PASSWORD',
-      'client-key-alias': 'tenant2Client',
-      'token-timeout': 10,
-      'client-keystore-type': 'jks',
-    },
-  },
-  'confidential-port': 0,
-  'policy-enforcer': {},
-};
-
-export const tenant2Options = {
+export const tenantOptions = {
   keys: {
     privateKey,
     publicKey,
   },
+  sessionModify: (sessionToken, token, options) => {
+    const keycloakJson = options.keycloakJson(options);
+    const newSessionToken = { ...sessionToken };
+    Object.keys(newSessionToken.tenants).forEach((realm) => {
+      Object.keys(newSessionToken.tenants[realm]).forEach((clientId) => {
+        newSessionToken.tenants[realm][clientId].status = realm === keycloakJson.realm && clientId === keycloakJson.resource ? 'Active' : 'InActive';
+      });
+    });
+    return newSessionToken;
+  },
   enforce: {
     enabled: true,
     resource: {
-      name: 'tenant2Resource',
+      name: 'securityRealmResource',
     },
   },
 };

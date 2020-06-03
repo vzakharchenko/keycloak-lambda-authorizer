@@ -41,8 +41,7 @@
   "roles": {
     "realm": [
       {
-
-        "name": "securityRealm1Role",
+        "name": "securityRealmRole",
         "composite": false,
         "clientRole": false,
         "containerId": "securityRealm1",
@@ -444,6 +443,28 @@
       },
       "notBefore": 0,
       "groups": []
+    },
+    {
+      "username" : "user",
+      "enabled": true,
+      "email" : "user@example.com",
+      "firstName": "user",
+      "lastName": "Example",
+      "realmRoles": [ "uma_authorization", "securityRealmRole" ],
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"]
+      }
+    },
+    {
+      "username" : "user1",
+      "enabled": true,
+      "email" : "user1@example.com",
+      "firstName": "user1",
+      "lastName": "Example",
+      "realmRoles": [ "uma_authorization", "securityRealmRole" ],
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"]
+      }
     }
   ],
   "scopeMappings": [
@@ -779,7 +800,7 @@
         "saml.server.signature": "false",
         "saml.server.signature.keyinfo.ext": "false",
         "exclude.session.state.from.auth.response": "false",
-        "jwks.url": "http://localhost:8080/cert",
+        "jwks.url": "http://localhost:9000/cert",
         "saml_force_name_id_format": "false",
         "saml.client.signature": "false",
         "tls.client.certificate.bound.access.tokens": "false",
@@ -857,32 +878,32 @@
         "policyEnforcementMode": "ENFORCING",
         "resources": [
           {
-            "name": "securityRealm1Resource",
+            "name": "securityRealmResource",
             "ownerManagedAccess": false,
-            "displayName": "securityRealm1 Resource",
+            "displayName": "securityRealm Resource",
             "attributes": {},
             "uris": []
           }
         ],
         "policies": [
           {
-            "name": "securityRealm1 Polici",
+            "name": "securityRealm Polici",
             "type": "role",
             "logic": "POSITIVE",
             "decisionStrategy": "UNANIMOUS",
             "config": {
-              "roles": "[{\"id\":\"securityRealm1Role\",\"required\":true}]"
+              "roles": "[{\"id\":\"securityRealmRole\",\"required\":true}]"
             }
           },
           {
 
-            "name": "securityRealm1 Permission",
+            "name": "securityRealm Permission",
             "type": "resource",
             "logic": "POSITIVE",
             "decisionStrategy": "UNANIMOUS",
             "config": {
-              "resources": "[\"securityRealm1Resource\"]",
-              "applyPolicies": "[\"securityRealm1 Polici\"]"
+              "resources": "[\"securityRealmResource\"]",
+              "applyPolicies": "[\"securityRealm Polici\"]"
             }
           }
         ],
@@ -1412,11 +1433,11 @@
       "addReadTokenRoleOnCreate": false,
       "authenticateByDefault": false,
       "linkOnly": false,
-      "firstBrokerLoginFlowAlias": "first broker login",
+      "firstBrokerLoginFlowAlias": "portal first broker login",
       "config": {
         "userInfoUrl": "http://127.0.0.1:8080/auth/realms/portal/protocol/openid-connect/userinfo",
         "validateSignature": "true",
-        "clientId": "Portal-ui",
+        "clientId": "portal-ui",
         "tokenUrl": "http://127.0.0.1:8080/auth/realms/portal/protocol/openid-connect/token",
         "jwksUrl": "http://127.0.0.1:8080/auth/realms/portal/protocol/openid-connect/certs",
         "issuer": "http://127.0.0.1:8080/auth/realms/portal",
@@ -2041,6 +2062,29 @@
           "authenticator": "auth-otp-form",
           "requirement": "REQUIRED",
           "priority": 20,
+          "userSetupAllowed": false,
+          "autheticatorFlow": false
+        }
+      ]
+    },
+    {
+      "alias": "portal first broker login",
+      "description": "",
+      "providerId": "basic-flow",
+      "topLevel": true,
+      "builtIn": false,
+      "authenticationExecutions": [
+        {
+          "authenticator": "idp-create-user-if-unique",
+          "requirement": "ALTERNATIVE",
+          "priority": 0,
+          "userSetupAllowed": false,
+          "autheticatorFlow": false
+        },
+        {
+          "authenticator": "idp-auto-link",
+          "requirement": "ALTERNATIVE",
+          "priority": 1,
           "userSetupAllowed": false,
           "autheticatorFlow": false
         }

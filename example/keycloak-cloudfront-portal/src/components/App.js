@@ -11,6 +11,7 @@ import TableCell from '@material-ui/core/TableCell';
 import {
   getTenantCookie,
   getTenantCookieValue,
+  getTenant,
   getTenants,
 } from 'keycloak-lambda-cloudfront-ui';
 
@@ -40,9 +41,14 @@ class App extends React.Component {
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < tenants.length; i++) {
       const row = tenants[i];
-      // eslint-disable-next-line no-await-in-loop
-      const ret = await fetchData(`/${row.realm}/api`);
-      TENANT_APIS[row.realm] = ret;
+      if (row.realm !== 'portal') {
+        // eslint-disable-next-line no-await-in-loop
+        const ret = await fetchData(`/tenants/${row.realm}/api`);
+        const tenant = getTenant(row.realm, row.resource);
+        TENANT_APIS[row.realm] = { data: ret, tenant: tenant.resourceSession };
+      } else {
+        TENANT_APIS[row.realm] = { data: ' - ' };
+      }
     }
     this.forceUpdate();
   }
@@ -54,7 +60,7 @@ class App extends React.Component {
         minWidth: 650,
       },
     });
-    const tenants = getTenants();
+    const tenants = getTenants().filter((tenant) => tenant.realm !== 'portal');
     return (
             <Container fixed>
                 <TableContainer component={Paper}>
@@ -66,6 +72,7 @@ class App extends React.Component {
                                 <TableCell align="right">Cookie Name</TableCell>
                                 <TableCell align="right">Access Token</TableCell>
                                 <TableCell align="right">Protected Api Response</TableCell>
+                                <TableCell align="right">Last Used</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -77,7 +84,8 @@ class App extends React.Component {
                                     <TableCell align="right">{row.resource}</TableCell>
                                     <TableCell align="right">{getTenantCookie(row.realm, row.resource)}</TableCell>
                                     <TableCell align="left">{getTenantCookieValue(getTenantCookie(row.realm, row.resource))}</TableCell>
-                                    <TableCell align="right">{TENANT_APIS[row.realm]}</TableCell>
+                                    <TableCell align="right">{TENANT_APIS[row.realm] ? TENANT_APIS[row.realm].data : ' - '}</TableCell>
+                                    <TableCell align="right">{TENANT_APIS[row.realm] ? TENANT_APIS[row.realm].tenant.status : 'Undefined'}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

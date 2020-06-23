@@ -653,3 +653,40 @@ keycloakJson,
 }
 );
 ```
+## 12. Support custom Idp(kc_idp_hint)
+
+```js
+lamdaEdge.routes.addProtected(
+  '/',
+keycloakJson,
+{
+  enforce: {
+    enabled: true,
+    resource: {
+      name: 'tenantResource',
+    },
+  },
+  kc_idp_hint:'tenantIdp'
+}
+);
+```
+
+## 13. Custom Router selector
+
+```js
+lamdaEdge.routes.addProtected(
+  '/',
+keycloakJson,
+{
+  enforce: {
+    enabled: true,
+    resource: {
+      name: 'tenantResource',
+    },
+  },
+  isRequest: (request, routePath, ret)=>{
+     return true;
+  }
+}
+);
+```

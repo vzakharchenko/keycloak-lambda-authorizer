@@ -236,6 +236,21 @@ describe('testing redirectAuthServer', () => {
     });
   });
 
+  test('test redirectToKeycloak idp', async () => {
+    await redirectAuthServer.redirectToKeycloak({}, {
+      kc_idp_hint: 'idp',
+      keycloakJson: () => ({ realm: 'testRealm', resource: 'resource' }),
+      sessionManager,
+      logger: console,
+    }, 'ttt', (error, resp) => {
+      expect(resp).toEqual({
+        body: 'Redirecting to OIDC provider',
+        status: '302',
+        statusDescription: 'Found',
+      });
+    });
+  });
+
 
   test('test redirectToKeycloak2', async () => {
     await redirectAuthServer.redirectToKeycloak({ uri: '/manufacturer/test', querystring: 'redirectUri=/' }, {

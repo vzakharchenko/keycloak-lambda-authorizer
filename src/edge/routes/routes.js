@@ -10,12 +10,12 @@ const {
   refreshResponse,
 } = require('./utils/redirectAuthServer');
 
-async function isRequest(request, routePath) {
+async function isRequest(request, routePath, isRequestChecker = (r, rp, ret) => ret) {
   const { uri } = request;
   const ret = (routePath instanceof RegExp) ? !!uri.match(routePath)
     : (uri.startsWith(`/${routePath}`)
       || uri.startsWith(routePath));
-  return ret;
+  return isRequestChecker(request, routePath, ret);
 }
 
 function defaultRegexRoute(url) {
@@ -115,7 +115,7 @@ function addProtected(routePath, keycloakJson, options = {}) {
     console.log(`tenant route ${route}`);
     // tenant protection
     addRoute({
-      isRoute: async (request) => await isRequest(request, route),
+      isRoute: async (request) => await isRequest(request, route, options.isRequest),
       handle: async (request, config, callback, lambdaEdgeOptions) => {
         const newOptions0 = {
           ...lambdaEdgeOptions, ...newOptions, request, routePath,

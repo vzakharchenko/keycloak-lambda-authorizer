@@ -1,6 +1,6 @@
 # Cloudfront(Lambda:edge) with portal authorization (Cross-realm authentication)
 
-Solution how to loggedin to one realm and then switching to another realms without asking the password.
+Solution how to logged in to one realm and then switching to another realms without asking the password.
 
 ## 1. Start Keycloak
 

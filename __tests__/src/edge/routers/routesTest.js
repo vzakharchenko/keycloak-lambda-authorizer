@@ -42,6 +42,7 @@ describe('testing routers', () => {
   test('test isRequest', async () => {
     expect(await routes.isRequest({ uri: 't' }, 't')).toEqual(true);
     expect(await routes.isRequest({ uri: 't' }, 'f')).toEqual(false);
+    expect(await routes.isRequest({ uri: 't' }, 'f', () => true)).toEqual(true);
   });
 
   test('test unProtected', async () => {

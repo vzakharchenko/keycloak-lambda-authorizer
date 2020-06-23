@@ -43,7 +43,7 @@ async function redirectToKeycloak(request, options, url, callback) {
     location: [{
       key: 'Location',
       value: updateLoginLink(
-        `${getKeycloakUrl(keycloakJson)}/realms/${keycloakJson.realm}/protocol/openid-connect/auth?client_id=${keycloakJson.resource}&redirect_uri=${encodeURIComponent(`${host}/${keycloakJson.realm}/${keycloakJson.resource}/callback`)}&state=${encodeURIComponent(jwt)}&response_type=code&scope=openid`,
+        `${getKeycloakUrl(keycloakJson)}/realms/${keycloakJson.realm}/protocol/openid-connect/auth?client_id=${keycloakJson.resource}&redirect_uri=${encodeURIComponent(`${host}/${keycloakJson.realm}/${keycloakJson.resource}/callback`)}&state=${encodeURIComponent(jwt)}&response_type=code&scope=openid${options.kc_idp_hint ? `&kc_idp_hint=${options.kc_idp_hint}` : ''}`,
         options,
       ),
     }],

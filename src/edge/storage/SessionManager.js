@@ -53,7 +53,6 @@ function checkSession(sessionOptions) {
   };
 }
 
-
 async function createSessionToken(host, timeout, token, options) {
   const decodedjwt = decodeAccessToken(token).accessTokenDecode;
   const timeLocal = new Date().getTime();

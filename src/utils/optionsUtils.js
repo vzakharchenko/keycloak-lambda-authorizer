@@ -21,7 +21,6 @@ const defaultResource = {
   max: -1,
 };
 
-
 function updateEnforcer(enforcer) {
   const newEnforcer = { ...defaultEnforcer, ...enforcer };
   if (newEnforcer.resource) {
@@ -69,7 +68,6 @@ function lambdaEdgeRouteOptions(options = {}, keycloakJson) {
 function lambdaEdgeOptions(sessionManager) {
   return { ...lambdaEdgeRouteOptions(sessionManager.sessionOptions), sessionManager };
 }
-
 
 module.exports = {
   commonOptions,

@@ -1,7 +1,6 @@
 jest.mock('node-forge');
 jest.mock('rsa-pem-to-jwk');
 
-
 const forge = require('node-forge');
 const rsaPemToJwk = require('rsa-pem-to-jwk');
 const { jwksUrlResponse } = require('../../src/Jwks');

@@ -133,7 +133,6 @@ function addProtected(routePath, keycloakJson, options = {}) {
   });
 }
 
-
 module.exports = {
   addRoute,
   addUnProtected,

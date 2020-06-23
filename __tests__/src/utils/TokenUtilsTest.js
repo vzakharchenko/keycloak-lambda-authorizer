@@ -53,7 +53,6 @@ describe('testing TokenUtils', () => {
     expect(t).toEqual(false);
   });
 
-
   test('test tokenIsValid still active', async () => {
     lambdaAdapter.mockImplementation(async () => {});
     const t = await tokenUtils.getActiveToken('SESSION', { access_token: 'TOKEN' }, {});

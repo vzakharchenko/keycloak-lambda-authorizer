@@ -58,7 +58,6 @@ async function callbackHandler(request, options, callback) {
     return;
   }
 
-
   let response;
   try {
     const keycloakJson = options.keycloakJson(options);
@@ -80,7 +79,6 @@ async function callbackHandler(request, options, callback) {
     }
     const { accessTokenDecode } = accessToken;
     const sessionTimeOut = 5 * 60 * 60;
-
 
     const cookieName = tenantName(keycloakJson);
     const cookies = getCookie(request, cookieName);

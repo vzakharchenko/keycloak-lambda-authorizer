@@ -5,7 +5,6 @@ const { getKeycloakUrl } = require('./utils/restCalls');
 const { enforce } = require('./umaConfiguration');
 const { commonOptions } = require('./utils/optionsUtils');
 
-
 async function getKeyFromKeycloak(options, kid) {
   let publicKey = await options.cache.get('publicKey', kid);
   if (!publicKey) {
@@ -85,7 +84,6 @@ async function adapter(tokenString,
   }
   return token;
 }
-
 
 async function awsAdapter(event,
   keycloakJson,

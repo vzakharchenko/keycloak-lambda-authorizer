@@ -93,7 +93,6 @@ describe('testing keycloakAuthorizer', () => {
     }
   });
 
-
   test('test adapter  ', async () => {
     const token = await keycloakAuthorizer.adapter('TOKEN', {}, { cache });
     expect(token).toEqual({
@@ -115,7 +114,6 @@ describe('testing keycloakAuthorizer', () => {
       tokenString: 'TOKEN',
     });
   });
-
 
   test('test awsAdapter authorizer', async () => {
     const token = await keycloakAuthorizer.awsAdapter({ authorizationToken: 'Bearer TOKEN' }, {}, { cache, enforce: { enabled: true } });

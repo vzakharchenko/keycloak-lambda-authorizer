@@ -3,7 +3,6 @@ const { clientAuthentication } = require('./clientAuthorization');
 
 const { fetchData } = require('./utils/restCalls');
 
-
 async function getUma2Configuration(options) {
   const keycloakJson = options.keycloakJson(options);
   const { realm } = keycloakJson;

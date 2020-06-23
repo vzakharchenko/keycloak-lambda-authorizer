@@ -93,7 +93,6 @@ describe('testing callback', () => {
     });
   });
 
-
   test('test Success RPT ', async () => {
     await callbackHandler({ headers: [] }, {
       logger: console,

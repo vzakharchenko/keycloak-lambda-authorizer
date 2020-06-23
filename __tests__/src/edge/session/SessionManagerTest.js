@@ -1,11 +1,9 @@
-
 jest.mock('jsonwebtoken');
 jest.mock('../../../../src/clientAuthorization');
 const jsonwebtoken = require('jsonwebtoken');
 
 const { SessionManager } = require('../../../../src/edge/storage/SessionManager');
 const { clientJWT } = require('../../../../src/clientAuthorization');
-
 
 const sessionStorage = {
   saveSession: async () => {
@@ -19,7 +17,6 @@ const sessionStorage = {
 
   },
 };
-
 
 describe('testing SessionManager', () => {
   beforeEach(() => {

@@ -1,7 +1,6 @@
 const { getCookies } = require('./cookiesUtils');
 const { getHostUrl } = require('../edge/lambdaEdgeUtils');
 
-
 function unauthorized(
   error, errorDescription, errorUri, request, callback,
 ) {
@@ -37,7 +36,6 @@ function unauthorized(
   };
   callback(null, response);
 }
-
 
 function internalServerError(request, callback) {
   const page = `

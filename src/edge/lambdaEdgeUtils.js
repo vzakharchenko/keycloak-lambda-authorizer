@@ -58,7 +58,6 @@ async function validateState(state, options) {
   }
 }
 
-
 async function signState(state, options) {
   const timeLocal = new Date().getTime();
   const timeSec = Math.floor(timeLocal / 1000);

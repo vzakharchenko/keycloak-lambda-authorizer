@@ -64,7 +64,6 @@ describe('testing lambdaEdgeUtils', () => {
     }
   });
 
-
   test('test validateState invalid token', async () => {
     jsonwebtoken.decode.mockImplementation(() => ({
     }));

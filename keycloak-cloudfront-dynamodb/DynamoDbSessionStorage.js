@@ -1,6 +1,5 @@
 const AWS = require('aws-sdk');
 
-
 function saveSession(dbSettings) {
   return async (sessionId,
     exp,
@@ -36,7 +35,6 @@ function updateSession(dbSettings) {
     }).promise();
   };
 }
-
 
 function transformResponse(item, tenant) {
   const itemData = {

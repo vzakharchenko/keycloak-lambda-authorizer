@@ -1,4 +1,3 @@
-
 const yallist = require('yallist');
 
 const routes = yallist.create([]);
@@ -15,7 +14,6 @@ async function getRoute(request, options) {
   }
   return null;
 }
-
 
 function registerRoute(route) {
   routes.push(route);

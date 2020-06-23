@@ -1,4 +1,3 @@
-
 jest.mock('../../../src/keycloakAuthorizer');
 jest.mock('../../../src/Jwks');
 const keycloakAuthorizer = require('../../../src/keycloakAuthorizer');

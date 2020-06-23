@@ -116,7 +116,6 @@ describe('testing routers', () => {
       });
     });
 
-
     const routeRefresh = routers.protected[2];
     expect(await routeRefresh.isRoute({ uri: '/realm/resource/refresh' })).toEqual(true);
     await routeRefresh.handle({}, {}, (error, response) => {
@@ -167,7 +166,6 @@ describe('testing routers', () => {
         statusDescription: 'Found',
       });
     });
-
 
     const routeRefresh = routers.protected[2];
     expect(await routeRefresh.isRoute({ uri: '/realm/resource/refresh' })).toEqual(true);

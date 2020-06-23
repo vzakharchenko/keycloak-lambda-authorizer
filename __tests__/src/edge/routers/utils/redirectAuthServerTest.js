@@ -86,7 +86,6 @@ describe('testing redirectAuthServer', () => {
     });
   });
 
-
   test('test checkToken without cookie', async () => {
     cookiesUtils.getCookie.mockImplementation(() => null);
     const resp = await redirectAuthServer.checkToken((error, response) => {
@@ -156,7 +155,6 @@ describe('testing redirectAuthServer', () => {
     });
     expect(resp).toEqual(null);
   });
-
 
   test('test checkToken redirect error', async () => {
     decodeAccessToken.mockImplementation(() => ({ accessToken: 'TOKEN', accessTokenDecode: { email: 'test@test', tenants: { testRealm: { } } } }));
@@ -250,7 +248,6 @@ describe('testing redirectAuthServer', () => {
       });
     });
   });
-
 
   test('test redirectToKeycloak2', async () => {
     await redirectAuthServer.redirectToKeycloak({ uri: '/manufacturer/test', querystring: 'redirectUri=/' }, {

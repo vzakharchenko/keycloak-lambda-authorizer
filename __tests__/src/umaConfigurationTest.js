@@ -24,7 +24,6 @@ const token = {
   },
 };
 
-
 const keycloakJson = () => ({
   realm: 'lambda-authorizer',
   'auth-server-url': 'http://localhost:8090/auth',

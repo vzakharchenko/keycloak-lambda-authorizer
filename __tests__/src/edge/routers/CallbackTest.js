@@ -16,6 +16,7 @@ const { callbackHandler } = require('../../../../src/edge/routes/Callback');
 
 const sessionManager = {
   checkSession: async () => true,
+  updateSession: async () => true,
   updateSessionToken: async () => 'SESSION_JWT',
 };
 

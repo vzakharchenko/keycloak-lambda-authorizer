@@ -89,6 +89,8 @@ async function callbackHandler(request, options, callback) {
          || !decodeSession.tenants[keycloakJson.realm][keycloakJson.resource]) {
         sessionJWT = await sessionManager.updateSessionToken(cookies.session,
           accessTokenDecode, options);
+        await sessionManager.updateSession(cookies.session,
+          cookieName, tokenJson, options);
       } else if (decodeSession.tenants[keycloakJson.realm][keycloakJson.resource]
         .session_state !== accessTokenDecode.session_state) {
         state = `/${keycloakJson.realm}/${keycloakJson.resource}/logout`;
@@ -96,6 +98,8 @@ async function callbackHandler(request, options, callback) {
       } else {
         sessionJWT = await sessionManager.updateSessionToken(cookies.session,
           accessTokenDecode, options);
+        await sessionManager.updateSession(cookies.session,
+          cookieName, tokenJson, options);
       }
     } else {
       sessionJWT = await sessionManager.createSession(host, sessionTimeOut, tokenJson, options);

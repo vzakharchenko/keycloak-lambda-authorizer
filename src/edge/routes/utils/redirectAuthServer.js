@@ -106,7 +106,7 @@ async function checkToken(callback, options,
     const sessionTokenString = cookieHeader.sessionToken;
     const decodedSession = sessionString ? decodeAccessToken(sessionString).accessTokenDecode : {};
     if (!await options.sessionManager.checkSession(sessionString)
-      || !sessionTokenString
+    //   || !sessionTokenString
       || !decodedSession.tenants
       || !decodedSession.tenants[keycloakJson.realm]
       || !decodedSession.tenants[keycloakJson.realm][keycloakJson.resource]

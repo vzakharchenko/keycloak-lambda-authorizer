@@ -30,11 +30,9 @@ async function fetchData(url, method = 'GET', headers) {
   return ret.data;
 }
 
-
 export default
 class App extends React.Component {
   // eslint-disable-next-line class-methods-use-this
-
 
   async componentDidMount() {
     const tenants = getTenants();

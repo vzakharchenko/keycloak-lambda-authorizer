@@ -51,7 +51,6 @@ class Header extends React.Component {
       this.setState({ anchorEl: event.currentTarget });
     };
 
-
     handleClose = () => {
       this.setState({ anchorEl: null });
     };

@@ -9,7 +9,6 @@ import {
   tenantOptions,
 } from './Tentants';
 
-
 lamdaEdge.routes.addJwksEndpoint('/cert', publicKey.key);
 
 function tenantResponseHandler(request, options) {

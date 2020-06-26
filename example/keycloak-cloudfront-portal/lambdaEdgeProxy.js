@@ -76,7 +76,6 @@ function transformResponse(response, res, next) {
   }
 }
 
-
 module.exports.middleware = async (req, res, next) => {
   const cb = function callback(error, r) {
     if (error) {

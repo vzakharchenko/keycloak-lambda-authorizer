@@ -47,7 +47,11 @@ async function matchResource(uma2Config,
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i < permissions.length; i++) {
     // eslint-disable-next-line no-await-in-loop
-    resources = resources.concat(await getResource(uma2Config, options, permissions[i]));
+    const resourceJson = await getResource(uma2Config, options, permissions[i]);
+    if (options.enforce.resourceHandler) {
+      options.enforce.resourceHandler(resourceJson, options);
+    }
+    resources = resources.concat(resourceJson);
   }
   const resource = resources.filter((resId) => {
     const { authorization } = token.payload;

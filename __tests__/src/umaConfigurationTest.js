@@ -99,6 +99,24 @@ describe('testing umaConfiguration', () => {
     });
   });
 
+  test('test enforceResource Handler success', async () => {
+    await enforce(token, {
+      cache,
+      keycloakJson,
+      enforce: {
+        enabled: true,
+        resource: {
+          name: 'resource',
+          uri: '/test',
+          matchingUri: true,
+        },
+        resourceHandler: (resourceJson) => {
+          expect(resourceJson).toEqual(['resourceId']);
+        },
+      },
+    });
+  });
+
   test('test enforceResource denied', async () => {
     try {
       await enforce(token, {

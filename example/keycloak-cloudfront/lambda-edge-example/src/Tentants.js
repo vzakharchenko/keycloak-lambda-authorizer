@@ -22,7 +22,6 @@ export const tenant1Options = {
   },
 };
 
-
 export const tenant2KeycloakJson = {
   realm: 'Tenant2',
   'auth-server-url': 'http://localhost:8090/auth',

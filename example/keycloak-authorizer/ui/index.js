@@ -20,13 +20,11 @@ app.use(session({
   store: memoryStore,
 }));
 
-
 const keycloak = new Keycloak({
   store: memoryStore,
 });
 
 app.use(keycloak.middleware());
-
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -69,7 +67,6 @@ async function clientToRPTExchange(request, clientId) {
   }
 }
 
-
 app.post('/lambda', keycloak.protect(), keycloak.enforcer(['uiResource']), async (request, response) => {
   try {
     const lambdaJWT = await clientToRPTExchange(request, 'lambda');
@@ -93,7 +90,6 @@ app.post('/lambdaJwks', keycloak.protect(), keycloak.enforcer(['uiResource']), a
     renderUI(request, response, state.status, e);
   }
 });
-
 
 app.get('/', keycloak.protect(), keycloak.enforcer(['uiResource']), (request, response) => {
   renderUI(request, response, '', '');

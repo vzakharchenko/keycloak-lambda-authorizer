@@ -689,4 +689,28 @@ keycloakJson,
   }
 }
 );
+
+```
+## 14. Resource Handler
+
+```js
+    const keycloakJSON = ...; // read Keycloak.json
+  apigateway.awsHandler(event, keycloakJSON, {
+    enforce: {
+      enabled: true,
+      resource: {
+        name: 'SOME_RESOURCE',
+        uri: 'RESOURCE_URI',
+        matchingUri: true,
+      },
+      resourceHandler:(resourceJson, options)=>{
+      console.log('resource: ' + JSON.stringify(resourceJson));
+      }
+    },
+  }).then((token)=>{
+      // Success
+  }).catch((e)=>{
+    // Failed
+  });
+}
 ```

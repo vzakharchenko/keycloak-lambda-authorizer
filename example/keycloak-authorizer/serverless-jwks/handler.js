@@ -13,7 +13,6 @@ function getKeycloakJSON() {
   }));
 }
 
-
 function getToken(event) {
   const tokenString = event.authorizationToken || event.headers.Authorization;
   if (!tokenString) {
@@ -26,7 +25,6 @@ function getToken(event) {
   const tokenStringValue = match[1];
   return jsonwebtoken.decode(tokenStringValue);
 }
-
 
 export function hello(event, context, callback) {
   const token = getToken(event);

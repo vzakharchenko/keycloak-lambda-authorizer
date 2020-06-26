@@ -14,7 +14,6 @@ class KeycloakCloudFrontExampleStack extends cdk.Stack {
   constructor(parent, id, props) {
     super(parent, id, props);
 
-
     const role = iam.Role.fromRoleArn(this, `Role ${bucketName}`, roleArn, { mutable: false });
     const bucket = new s3.Bucket(this, 'lambda-edge-bucket', {
       accessControl: s3.BucketAccessControl.AUTHENTICATED_READ,

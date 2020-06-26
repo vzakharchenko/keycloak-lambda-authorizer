@@ -6,6 +6,7 @@ const defaultEnforcer = {
   enable: false,
   role: '',
   resource: null,
+  resourceHandler: () => {},
   resources: [],
 };
 

@@ -48,7 +48,9 @@ async function matchResource(uma2Config,
   for (let i = 0; i < permissions.length; i++) {
     // eslint-disable-next-line no-await-in-loop
     const resourceJson = await getResource(uma2Config, options, permissions[i]);
-    options.enforce.resourceHandler(resourceJson, options);
+    if (options.enforce.resourceHandler) {
+      options.enforce.resourceHandler(resourceJson, options);
+    }
     resources = resources.concat(resourceJson);
   }
   const resource = resources.filter((resId) => {

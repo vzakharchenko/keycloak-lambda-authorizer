@@ -21,6 +21,6 @@
   },
   "homepage": "https://github.com/vzakharchenko/keycloak-lambda-authorizer#readme",
   "dependencies": {
-    "aws-sdk": "^2.657.0"
+    "aws-sdk": "^2.809.0"
   }
 }

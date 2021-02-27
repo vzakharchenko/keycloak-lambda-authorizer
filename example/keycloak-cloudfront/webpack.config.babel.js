@@ -35,47 +35,47 @@ const config = {
       test: /\.(js|jsx)$/,
       use: ['babel-loader'],
     },
-      {
-        test: /\.scss$/,
-        use: [
-          'style-loader' ,
-          'css-loader',
-          'sass-loader',
-        ],
-      },
-      {
-        test: /\.css$/,
-        // exclude: /node_modules/,
-        use: [
-          'style-loader',
-          'css-loader',
-        ],
-      },
-      {
-        test: /\.(jpe?g|png|gif|svg)$/i,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              hash: 'sha512',
-              digest: 'hex',
-              name: 'img/[name].[ext]',
-            },
+    {
+      test: /\.scss$/,
+      use: [
+        'style-loader',
+        'css-loader',
+        'sass-loader',
+      ],
+    },
+    {
+      test: /\.css$/,
+      // exclude: /node_modules/,
+      use: [
+        'style-loader',
+        'css-loader',
+      ],
+    },
+    {
+      test: /\.(jpe?g|png|gif|svg)$/i,
+      use: [
+        {
+          loader: 'file-loader',
+          options: {
+            hash: 'sha512',
+            digest: 'hex',
+            name: 'img/[name].[ext]',
           },
-        ],
-      },
-      {
-        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              outputPath: 'fonts/'
-            }
-          }
-        ]
-      }
+        },
+      ],
+    },
+    {
+      test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+      use: [
+        {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: 'fonts/',
+          },
+        },
+      ],
+    },
     ],
   },
   plugins: [
@@ -94,11 +94,12 @@ const config = {
     }),
   ],
   resolve: {
-    alias:{
+    alias: {
       'lambda-edge-example': path.resolve(__dirname, './lambda-edge-example'),
+      crypto: path.resolve(__dirname, './node_modules/crypto-js'),
     },
     modules: [
-      path.join(__dirname, 'src',"app"),
+      path.join(__dirname, 'src', 'app'),
       path.join(__dirname),
       'node_modules',
     ],

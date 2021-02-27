@@ -78,5 +78,5 @@ async function enforce(token, options) {
 }
 
 module.exports = {
-  enforce,
+  enforce, matchResource, getResource, getUma2Configuration,
 };

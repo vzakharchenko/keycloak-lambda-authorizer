@@ -76,7 +76,3 @@ async function enforce(token, options) {
     await matchResource(uma2Config, token, options);
   }
 }
-
-module.exports = {
-  enforce,
-};

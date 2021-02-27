@@ -97,6 +97,7 @@ const config = {
   resolve: {
     alias: {
       'lambda-edge-example': path.resolve(__dirname, './lambda-edge-example'),
+      crypto: path.resolve(__dirname, './node_modules/crypto-js'),
     },
     modules: [
       path.join(__dirname, 'src', 'app'),

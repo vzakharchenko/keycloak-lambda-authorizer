@@ -1,0 +1,45 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 13.x, 14.x, 15.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm i && cd keycloak-cloudfront-dynamodb && npm i
+    - run: npm run lint
+    - run: npm run test
+    - run: cd example/keycloak-authorizer/serverless && npm i
+    - run: cd example/keycloak-authorizer/serverless && npm run lint
+    - run: cd example/keycloak-authorizer/serverless-jwks && npm i
+    - run: cd example/keycloak-authorizer/serverless-jwks && npm run lint
+    - run: cd example/keycloak-authorizer/ui && npm i
+    - run: cd example/keycloak-authorizer/ui && npm run lint
+    - run: cd example/keycloak-cloudfront/keycloak-cloudfront-cdk && npm i
+    - run: cd example/keycloak-cloudfront/lambda-edge-example && npm i && npm run build
+    - run: cd example/keycloak-cloudfront && npm i && npm run build
+    - run: cd example/keycloak-cloudfront && npm run lint
+    - run: cd example/keycloak-cloudfront-portal/keycloak-cloudfront-cdk && npm i
+    - run: cd example/keycloak-cloudfront-portal/lambda-edge-example && npm i && npm run build
+    - run: cd example/keycloak-cloudfront-portal && npm i && npm run build
+    - run: cd example/keycloak-cloudfront-portal && npm run lint
+    
+    

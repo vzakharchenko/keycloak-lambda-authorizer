@@ -1,6 +1,6 @@
 {
   "name": "keycloak-cloudfront-dynamodb",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "dynamodb module for keycloak-lambda-authorizer",
   "main": "DynamoDbSessionStorage.js",
   "scripts": {
@@ -21,6 +21,6 @@
   },
   "homepage": "https://github.com/vzakharchenko/keycloak-lambda-authorizer#readme",
   "dependencies": {
-    "aws-sdk": "^2.809.0"
+    "aws-sdk": "^2.890.0"
   }
 }

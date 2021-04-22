@@ -1,7 +1,7 @@
 const jsonwebtoken = require('jsonwebtoken');
 
 const KeyCloakCerts = require('get-keycloak-public-key');
-const { getKeycloakUrl } = require('./utils/restCalls');
+const { getKeycloakUrl, getUrl } = require('./utils/restCalls');
 const { enforce } = require('./umaConfiguration');
 const { commonOptions } = require('./utils/optionsUtils');
 
@@ -9,8 +9,9 @@ async function getKeyFromKeycloak(options, kid) {
   let publicKey = await options.cache.get('publicKey', kid);
   if (!publicKey) {
     const kJson = options.keycloakJson(options);
-    const keycloakUrl = getKeycloakUrl(kJson).replace('/auth', '');
-    publicKey = await KeyCloakCerts(keycloakUrl,
+    const keycloakUrl = new URL(getKeycloakUrl(kJson));
+    keycloakUrl.pathname = keycloakUrl.pathname.replace('/auth', '');
+    publicKey = await KeyCloakCerts(getUrl(keycloakUrl.toString()),
       kJson.realm).fetch(kid);
     await options.cache.put('publicKey', kid, publicKey);
   }

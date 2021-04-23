@@ -5,16 +5,31 @@
         <th>Lambda url</th>
         <th>Client Name</th>
         <th>Credential Type</th>
+        <th>Entitlement</th>
         <th>Invoke Lambda</th>
         <th>Lambda Response</th>
+        <th>Access Token</th>
     </tr>
       <form action="/lambda" method="post">
     <tr>
         <td>{{host}}</td>
         <td>lambda</td>
         <td>Client Id and Secret</td>
+        <td>Client Side</td>
         <td><input type="submit" value="Invoke"></td>
         <td>{{status}}</td>
+        <td>{{statusToken}}</td>
+    </tr>
+     </form>
+        <form action="/lambdaEnt" method="post">
+    <tr>
+        <td>{{host}}</td>
+        <td>lambda</td>
+        <td>Client Id and Secret</td>
+        <td>Serverless side</td>
+        <td><input type="submit" value="Invoke"></td>
+        <td>{{statusEnt}}</td>
+        <td>{{statusTokenEnt}}</td>
     </tr>
      </form>
       <form action="/lambdaJwks" method="post">
@@ -22,8 +37,21 @@
         <td>{{hostJwks}}</td>
         <td>lambda-jwks</td>
         <td>Signed jwt</td>
+        <td>Client Side</td>
         <td><input type="submit" value="Invoke"></td>
         <td>{{statusJwks}}</td>
+         <td>{{statusTokenJwks}}</td>
+    </tr>
+     </form>
+      <form action="/lambdaJwksEnt" method="post">
+    <tr>
+        <td>{{hostJwks}}</td>
+        <td>lambda-jwks</td>
+        <td>Signed jwt</td>
+        <td>Serverless side</td>
+        <td><input type="submit" value="Invoke"></td>
+        <td>{{statusJwksEnt}}</td>
+         <td>{{statusTokenJwksEnt}}</td>
     </tr>
      </form>
 </table>

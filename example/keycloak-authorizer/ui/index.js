@@ -1,3 +1,4 @@
+const jsonwebtoken = require('jsonwebtoken');
 const express = require('express');
 const exphbs = require('express-handlebars');
 const Keycloak = require('keycloak-connect');
@@ -11,6 +12,7 @@ const memoryStore = new session.MemoryStore();
 const state = {
   status: '',
   statusJwks: '',
+  statusToken: '',
 };
 
 app.use(session({
@@ -38,14 +40,11 @@ app.set('view engine', '.hbs');
 
 app.set('views', path.join(__dirname, 'views'));
 
-function renderUI(request, response, status, statusJwks) {
-  state.status = status;
-  state.statusJwks = statusJwks;
+function renderUI(request, response, data) {
   response.render('home', {
-    status,
     host: process.env.LAMBDA_URL,
-    statusJwks,
     hostJwks: process.env.LAMBDA_JWKS_URL,
+    ...data,
   });
 }
 
@@ -68,26 +67,85 @@ async function clientToRPTExchange(request, clientId) {
 }
 
 app.post('/lambda', keycloak.protect(), keycloak.enforcer(['uiResource']), async (request, response) => {
+  const lambdaJWT = await clientToRPTExchange(request, 'lambda');
   try {
-    const lambdaJWT = await clientToRPTExchange(request, 'lambda');
     res = await fetchData(process.env.LAMBDA_URL, 'GET', {
       Authorization: `Bearer ${lambdaJWT.access_token}`,
     });
-    renderUI(request, response, JSON.parse(res).message, state.statusJwks);
+    renderUI(request, response, {
+      status: JSON
+        .parse(res).message,
+      statusToken: JSON
+        .stringify(jsonwebtoken.decode(lambdaJWT.access_token), null, 2),
+    });
   } catch (e) {
-    renderUI(request, response, e, state.statusJwks);
+    renderUI(request, response, {
+      status: e,
+      statusToken: JSON
+        .stringify(jsonwebtoken.decode(lambdaJWT.access_token), null, 2),
+    });
+  }
+});
+
+app.post('/lambdaEnt', keycloak.protect(), keycloak.enforcer(['uiResource']), async (request, response) => {
+  const lambdaJWT = JSON.parse(request.session['keycloak-token']);
+  try {
+    res = await fetchData(process.env.LAMBDA_URL, 'GET', {
+      Authorization: `Bearer ${lambdaJWT.access_token}`,
+    });
+    renderUI(request, response, {
+      statusEnt: JSON
+        .parse(res).message,
+      statusTokenEnt: JSON
+        .stringify(jsonwebtoken.decode(lambdaJWT.access_token), null, 2),
+    });
+  } catch (e) {
+    renderUI(request, response, {
+      statusEnt: e,
+      statusTokenEnt: JSON
+        .stringify(jsonwebtoken.decode(lambdaJWT.access_token), null, 2),
+    });
   }
 });
 
 app.post('/lambdaJwks', keycloak.protect(), keycloak.enforcer(['uiResource']), async (request, response) => {
+  const lambdaJWT = await clientToRPTExchange(request, 'lambda-jwks');
   try {
-    const lambdaJWT = await clientToRPTExchange(request, 'lambda-jwks');
     res = await fetchData(process.env.LAMBDA_JWKS_URL, 'GET', {
       Authorization: `Bearer ${lambdaJWT.access_token}`,
     });
-    renderUI(request, response, state.status, JSON.parse(res).message);
+    renderUI(request, response, {
+      statusJwks: JSON
+        .parse(res).message,
+      statusTokenJwks: JSON
+        .stringify(jsonwebtoken.decode(lambdaJWT.access_token), null, 2),
+    });
   } catch (e) {
-    renderUI(request, response, state.status, e);
+    renderUI(request, response, {
+      statusJwks: e,
+      statusTokenJwks: JSON
+        .stringify(jsonwebtoken.decode(lambdaJWT.access_token), null, 2),
+    });
+  }
+});
+app.post('/lambdaJwksEnt', keycloak.protect(), keycloak.enforcer(['uiResource']), async (request, response) => {
+  const lambdaJWT = JSON.parse(request.session['keycloak-token']);
+  try {
+    res = await fetchData(process.env.LAMBDA_JWKS_URL, 'GET', {
+      Authorization: `Bearer ${lambdaJWT.access_token}`,
+    });
+    renderUI(request, response, {
+      statusJwksEnt: JSON
+        .parse(res).message,
+      statusTokenJwksEnt: JSON
+        .stringify(jsonwebtoken.decode(lambdaJWT.access_token), null, 2),
+    });
+  } catch (e) {
+    renderUI(request, response, {
+      statusJwksEnt: e,
+      statusTokenJwksEnt: JSON
+        .stringify(jsonwebtoken.decode(lambdaJWT.access_token), null, 2),
+    });
   }
 });
 

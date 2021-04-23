@@ -74,22 +74,28 @@ Permissions:
 | UI Permission     | uiRolePermission | uiRolePolicy | uiResource     | Access To UI                |
 | Lambda Permission | lambdaPermission | lambdaPolicy | LambdaResource | Permission To Invoke Lambda |
 
-## 5. Results
+## 5. Entitlement Types
+### 5.1 Client Side
+![](../../docs/keycloakCrossClientAuthorization.png)
+### 5.2 Serverless side
+![](../../docs/keycloakCrossClientAuthorization2.png)
+
+## 6. Results
 
 | User      | Result                                                                                                 | Description                                           |
 |:----------|:-------------------------------------------------------------------------------------------------------|:------------------------------------------------------|
-| User      | ![Express handlebars 2020-04-12 12-54-06](../../docs/Express%20handlebars%202020-04-12%2012-54-06.png) | All Access                                            |
-| user-jwks | ![Express handlebars 2020-04-12 12-56-22](../../docs/Express%20handlebars%202020-04-12%2012-56-22.png) | lambda-jwks only                                      |
-| User2     | ![Express handlebars 2020-04-11 22-45-33](../../docs/Express%20handlebars%202020-04-12%2012-57-43.png) | Has access to UI but does not have access to Lambda`s |
+| User      | ![Express handlebars 2020-04-12 12-54-06](../../docs/allAccess.png) | All Access                                            |
+| user-jwks | ![Express handlebars 2020-04-12 12-56-22](../../docs/jwksonly1.png) ![Express handlebars 2020-04-12 12-56-22](../../docs/jwksonly2.png) | lambda-jwks only                                      |
+| User2     | ![Express handlebars 2020-04-11 22-45-33](../../docs/noLambdas.png) | Has access to UI but does not have access to Lambda`s |
 | User3     | ![localhost3001+2020-04-11+22-47-30](../../docs/localhost3001%2B2020-04-11%2B22-47-30.png)             | Does not have access to UI and Lambda`s               |
 
-## 6. Deploy to cloud
-### 6.1 Run Keycloak with ngrok
+## 7. Deploy to cloud
+### 7.1 Run Keycloak with ngrok
 ```console
 ngrok http 8080
 ```
 ![vzakharchenko14-32-39](../../docs/vzakharchenko14-32-39.png)
-### 6.2 Modify keycloak.json with a new host
+### 7.2 Modify keycloak.json with a new host
 
 example/keycloak-authorizer/ui/keycloak.json
 ```json
@@ -138,7 +144,7 @@ example/resources/keycloak.json
 }
 ```
 
-### 6.1 Deploy Lambda`s
+### 7.2 Deploy Lambda`s
 - deploy serverless
 ```bash
 cd serverless

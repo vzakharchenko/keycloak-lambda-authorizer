@@ -4,8 +4,13 @@
 .git
 .hg
 .npmrc
+package-lock.json
 .lock-wscript
 .svn
+.idea
+.tgz
+.github
+.coverage
 .wafpickle-*
 config.gypi
 CVS

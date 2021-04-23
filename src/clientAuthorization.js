@@ -139,6 +139,25 @@ async function clientAuthentication(uma2Config, options) {
   }
   return token;
 }
+async function getRPT(uma2Config, token, clientId, options) {
+  const keycloakJson = await options.keycloakJson(options);
+  const key = `${keycloakJson.realm}:${clientId}:${token.payload.jti}`;
+  let tkn = await options.cache.get('rpt', key);
+  if (!tkn) {
+    tkn = await exchangeRPT(token.tokenString, clientId, options);
+    tkn.decodedAccessToken = jsonwebtoken.decode(tkn.access_token);
+    tkn.decodedRefreshToken = jsonwebtoken.decode(tkn.refresh_token);
+    await options.cache.put('rpt', key, JSON.stringify(tkn), tkn.refresh_expires_in);
+  } else if (isExpired(options, JSON.parse(tkn).decodedAccessToken)) {
+    tkn = await keycloakRefreshToken(JSON.parse(tkn), options);
+    tkn.decodedAccessToken = jsonwebtoken.decode(tkn.access_token);
+    tkn.decodedRefreshToken = jsonwebtoken.decode(tkn.refresh_token);
+    await options.cache.put('rpt', key, JSON.stringify(tkn), tkn.refresh_expires_in);
+  } else {
+    tkn = JSON.parse(tkn);
+  }
+  return tkn;
+}
 
 async function logout(refreshToken, options) {
   const authorization = await clientIdAuthorization(options);
@@ -157,5 +176,6 @@ module.exports = {
   getTokenByCode,
   clientJWT,
   exchangeRPT,
+  getRPT,
   logout,
 };

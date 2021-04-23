@@ -23,12 +23,12 @@ Open the Keycloak admin console, click on Add Realm, click on import 'Select fil
 cd serverless
 npm i
 cd ../../..
-sudo npm link 
+sudo npm link
 cd example/keycloak-authorizer/serverless
 npm link keycloak-lambda-authorizer
 npm run offline
 ```
-Client Credentials:  
+Client Credentials:
 ![Keycloak Admin Console 2020-04-12 13-00-52](../../docs/Keycloak%20Admin%20Console%202020-04-12%2013-00-52.png)
 
 ## 2. Run Serverless offline (Client jwt credential Type)
@@ -39,9 +39,10 @@ cd ../../.. && npm link && cd example/keycloak-authorizer/serverless && npm link
 npm run offline
 ```
 
-Client Credentials:  
+Client Credentials:
 ![Keycloak Admin Console 2020-04-12 12-58-57](../../docs/Keycloak%20Admin%20Console%202020-04-12%2012-58-57.png)
-
+- Note. If you are using a docker image, then you need to override localhost with  with your host ip:
+![dockerJwtCreds.png](../../docs/dockerJwtCreds.png)
 
 
 ## 3. Run UI locally
@@ -85,7 +86,7 @@ Permissions:
 ## 6. Deploy to cloud
 ### 6.1 Run Keycloak with ngrok
 ```console
-ngrok http 8080 
+ngrok http 8080
 ```
 ![vzakharchenko14-32-39](../../docs/vzakharchenko14-32-39.png)
 ### 6.2 Modify keycloak.json with a new host

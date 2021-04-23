@@ -133,12 +133,12 @@ export function authorizer(event, context, callback) {
    "matchingUri":false
 }
 ```
-**name** : unique name of resource
-**uri** :  URIs which are protected by resource.
-**Owner** : Owner of resource
-**type** : Type of Resource
-**scope** : The scope associated with this resource.
-**matchingUri** : matching Uri
+- **name** : unique name of resource
+- **uri** :  URIs which are protected by resource.
+- **Owner** : Owner of resource
+- **type** : Type of Resource
+- **scope** : The scope associated with this resource.
+- **matchingUri** : matching Uri
 
 ![Keycloak Admin Console 2020-04-11 23-58-06](docs/Keycloak%20Admin%20Console%202020-04-11%2023-58-06.png)
 
@@ -212,11 +212,11 @@ module.exports = {
 ```
 ### Cache Regions:
 
-**publicKey** - Cache for storing Public Keys. (The time to live - 180 sec)
-**uma2-configuration** - uma2-configuration link. example of link http://localhost:8090/auth/realms/lambda-authorizer/.well-known/uma2-configuration (The time to live - 180 sec)
-**client_credentials** - Service Accounts Credential Cache (The time to live - 180 sec).
-**resource** - Resources Cache (The time to live - 30 sec).
-**rpt** - Resources Cache (The time to live - refresh token expiration time).
+- **publicKey** - Cache for storing Public Keys. (The time to live - 180 sec)
+- **uma2-configuration** - uma2-configuration link. example of link http://localhost:8090/auth/realms/lambda-authorizer/.well-known/uma2-configuration (The time to live - 180 sec)
+- **client_credentials** - Service Accounts Credential Cache (The time to live - 180 sec).
+- **resource** - Resources Cache (The time to live - 30 sec).
+- **rpt** - Resources Cache (The time to live - refresh token expiration time).
 
 ### Change Cache:
 
@@ -250,9 +250,9 @@ export function authorizer(event, context, callback) {
    }
 }
 ```
-privateKey.**key** - RSA Private Key
-privateKey.**passphrase** - word or phrase that protects private key
-publicKey.**key** - RSA Public Key or Certificate
+- privateKey.**key** - RSA Private Key
+- privateKey.**passphrase** - word or phrase that protects private key
+- publicKey.**key** - RSA Public Key or Certificate
 
 ###  RSA keys generation example using openssl
 

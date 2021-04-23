@@ -30,8 +30,6 @@ npm run offline
 ```
 Client Credentials:
 ![Keycloak Admin Console 2020-04-12 13-00-52](../../docs/Keycloak%20Admin%20Console%202020-04-12%2013-00-52.png)
-- If you use docker then you need override localhost with your host ip:
-![dockerJwtCreds.png](../../docs/dockerJwtCreds.png)
 
 ## 2. Run Serverless offline (Client jwt credential Type)
 ```bash
@@ -43,7 +41,8 @@ npm run offline
 
 Client Credentials:
 ![Keycloak Admin Console 2020-04-12 12-58-57](../../docs/Keycloak%20Admin%20Console%202020-04-12%2012-58-57.png)
-
+- Note. If you are using a docker image, then you need to override localhost with  with your host ip:
+![dockerJwtCreds.png](../../docs/dockerJwtCreds.png)
 
 
 ## 3. Run UI locally

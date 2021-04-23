@@ -4,6 +4,7 @@
 .git
 .hg
 .npmrc
+package-lock.json
 .lock-wscript
 .svn
 .idea

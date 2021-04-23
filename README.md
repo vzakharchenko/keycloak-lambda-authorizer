@@ -1,9 +1,9 @@
-[![CircleCI](https://circleci.com/gh/vzakharchenko/keycloak-lambda-authorizer.svg?style=svg)](https://circleci.com/gh/vzakharchenko/keycloak-lambda-authorizer)  
-[![npm version](https://badge.fury.io/js/keycloak-lambda-authorizer.svg)](https://badge.fury.io/js/keycloak-lambda-authorizer)  
+[![CircleCI](https://circleci.com/gh/vzakharchenko/keycloak-lambda-authorizer.svg?style=svg)](https://circleci.com/gh/vzakharchenko/keycloak-lambda-authorizer)
+[![npm version](https://badge.fury.io/js/keycloak-lambda-authorizer.svg)](https://badge.fury.io/js/keycloak-lambda-authorizer)
 [![Coverage Status](https://coveralls.io/repos/github/vzakharchenko/keycloak-lambda-authorizer/badge.svg?branch=master)](https://coveralls.io/github/vzakharchenko/keycloak-lambda-authorizer?branch=master)
 [![Maintainability](https://api.codeclimate.com/v1/badges/0b56148967afc99a64df/maintainability)](https://codeclimate.com/github/vzakharchenko/keycloak-lambda-authorizer/maintainability)
 [![Node.js 10.x, 12.x, 13.x, 14.x, 15.x CI](https://github.com/vzakharchenko/keycloak-lambda-authorizer/actions/workflows/nodejs.yml/badge.svg)](https://github.com/vzakharchenko/keycloak-lambda-authorizer/actions/workflows/nodejs.yml)
-[![donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://secure.wayforpay.com/button/b18610f33a01c)  
+[![donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://secure.wayforpay.com/button/b18610f33a01c)
 
 
 # Description
@@ -34,13 +34,13 @@ npm install keycloak-lambda-authorizer -S
 ### Role Based
 ```javascript
 import { apigateway } from 'keycloak-lambda-authorizer';
- 
+
 export function authorizer(event, context, callback) {
     const keycloakJSON = ...; // read Keycloak.json
   awsAdapter.awsHandler(event, keycloakJSON, {
     enforce: { enabled: true, role: 'SOME_ROLE' },
   }).then((token)=>{
-      // Success 
+      // Success
   }).catch((e)=>{
     // Failed
   });
@@ -50,7 +50,7 @@ export function authorizer(event, context, callback) {
 ### Resource Based (Keycloak Authorization Services)
 ```javascript
 import { apigateway } from 'keycloak-lambda-authorizer';
- 
+
 export function authorizer(event, context, callback) {
     const keycloakJSON = ...; // read Keycloak.json
   apigateway.awsHandler(event, keycloakJSON, {
@@ -63,7 +63,7 @@ export function authorizer(event, context, callback) {
       },
     },
   }).then((token)=>{
-      // Success 
+      // Success
   }).catch((e)=>{
     // Failed
   });
@@ -133,11 +133,11 @@ export function authorizer(event, context, callback) {
    "matchingUri":false
 }
 ```
-**name** : unique name of resource  
-**uri** :  URIs which are protected by resource.  
-**Owner** : Owner of resource  
-**type** : Type of Resource  
-**scope** : The scope associated with this resource.  
+**name** : unique name of resource
+**uri** :  URIs which are protected by resource.
+**Owner** : Owner of resource
+**type** : Type of Resource
+**scope** : The scope associated with this resource.
 **matchingUri** : matching Uri
 
 ![Keycloak Admin Console 2020-04-11 23-58-06](docs/Keycloak%20Admin%20Console%202020-04-11%2023-58-06.png)
@@ -152,13 +152,13 @@ awsHandler(event, keycloakJSON, {
 ```javascript
 const winston from 'winston';
 import { awsHandler } from 'keycloak-lambda-authorizer';
- 
+
 export function authorizer(event, context, callback) {
     const keycloakJSON = ...; // read Keycloak.json
   awsHandler(event, keycloakJSON, {
       logger:winston
   }).then((token)=>{
-      // Success 
+      // Success
   }).catch((e)=>{
     // Failed
   });
@@ -171,23 +171,26 @@ Example of cache:
 const NodeCache = require('node-cache');
 
 const defaultCache = new NodeCache({ stdTTL: 180, checkperiod: 0, errorOnMissing: false });
+const rptCache = new NodeCache({ stdTTL: 1800, checkperiod: 0, errorOnMissing: false });
 const resourceCache = new NodeCache({ stdTTL: 30, checkperiod: 0, errorOnMissing: false });
 
-export async function put(region, key, value) {
+async function put(region, key, value, ttl) {
   if (region === 'publicKey') {
-    defaultCache.set(key, value);
+    defaultCache.set(key, value, ttl);
   } else if (region === 'uma2-configuration') {
-    defaultCache.set(key, value);
+    defaultCache.set(key, value, ttl);
   } else if (region === 'client_credentials') {
-    defaultCache.set(key, value);
+    defaultCache.set(key, value, ttl);
   } else if (region === 'resource') {
-    resourceCache.set(key, value);
+    resourceCache.set(key, value, ttl);
+  } else if (region === 'rpt') {
+    rptCache.set(key, value, ttl);
   } else {
     throw new Error('Unsupported Region');
   }
 }
 
-export async function get(region, key) {
+async function get(region, key) {
   if (region === 'publicKey') {
     return defaultCache.get(key);
   } if (region === 'uma2-configuration') {
@@ -196,28 +199,36 @@ export async function get(region, key) {
     return defaultCache.get(key);
   } if (region === 'resource') {
     return resourceCache.get(key);
+  } if (region === 'rpt') {
+    return rptCache.get(key);
   }
   throw new Error('Unsupported Region');
 }
+
+module.exports = {
+  put,
+  get,
+};
 ```
 ### Cache Regions:
 
-**publicKey** - Cache for storing Public Keys. (The time to live - 180 sec)  
-**uma2-configuration** - uma2-configuration link. example of link http://localhost:8090/auth/realms/lambda-authorizer/.well-known/uma2-configuration (The time to live - 180 sec)  
+**publicKey** - Cache for storing Public Keys. (The time to live - 180 sec)
+**uma2-configuration** - uma2-configuration link. example of link http://localhost:8090/auth/realms/lambda-authorizer/.well-known/uma2-configuration (The time to live - 180 sec)
 **client_credentials** - Service Accounts Credential Cache (The time to live - 180 sec).
 **resource** - Resources Cache (The time to live - 30 sec).
+**rpt** - Resources Cache (The time to live - refresh token expiration time).
 
 ### Change Cache:
 
 ```javascript
 import { awsHandler } from 'keycloak-lambda-authorizer';
- 
+
 export function authorizer(event, context, callback) {
     const keycloakJSON = ...; // read Keycloak.json
   awsHandler(event, keycloakJSON, {
       cache: newCache,
   }).then((token)=>{
-      // Success 
+      // Success
   }).catch((e)=>{
     // Failed
   });
@@ -273,7 +284,7 @@ export function cert(event, context, callback) {
   });
 }
 ```
- - Keycloak Settings  
+ - Keycloak Settings
 ![Keycloak Admin Console 2020-04-12 13-30-26](docs/Keycloak%20Admin%20Console%202020-04-12%2013-30-26.png)
 
 
@@ -281,7 +292,7 @@ export function cert(event, context, callback) {
 
 ```javascript
 import { awsHandler } from 'keycloak-lambda-authorizer';
- 
+
 export function authorizer(event, context, callback) {
     const keycloakJSON = ...; // read Keycloak.json
   awsHandler(event, keycloakJSON, {
@@ -302,7 +313,7 @@ export function authorizer(event, context, callback) {
       },
     },
   }).then((token)=>{
-      // Success 
+      // Success
   }).catch((e)=>{
     // Failed
   });
@@ -719,4 +730,4 @@ keycloakJson,
 ```
 
 
-# If you find these useful, please [Donate](https://secure.wayforpay.com/button/b18610f33a01c)!  
+# If you find these useful, please [Donate](https://secure.wayforpay.com/button/b18610f33a01c)!

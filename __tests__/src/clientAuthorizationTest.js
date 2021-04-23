@@ -224,4 +224,24 @@ describe('testing clientAuthorization', () => {
     });
     expect(token.access_token).toEqual('access_token_refresh');
   });
+  test('test getRPT', async () => {
+    const token = await clientAuthentication.getRPT({}, {
+      payload: {
+        jti: '1',
+      },
+    },
+    'lambda',
+    {
+      keycloakJson: keycloakJsonWithSecret,
+      cache,
+      logger: console,
+      enforce: {
+        enabled: true,
+        resource: {
+          resource: 'testResource',
+        },
+      },
+    });
+    expect(token.access_token).toEqual('access_token_uma');
+  });
 });

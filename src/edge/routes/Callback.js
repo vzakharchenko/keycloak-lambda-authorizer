@@ -1,7 +1,7 @@
 const qs = require('querystring');
 const cookie = require('cookie');
 const { getHostUrl, tenantName, validateState } = require('../lambdaEdgeUtils');
-const { getTokenByCode, exchangeRPT } = require('../../clientAuthorization');
+const { getTokenByCode, getRPT } = require('../../clientAuthorization');
 const { decodeAccessToken } = require('../../utils/TokenUtils');
 const { getCookie } = require('../../utils/cookiesUtils');
 

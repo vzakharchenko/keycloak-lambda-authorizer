@@ -4,7 +4,7 @@ jest.mock('../../src/utils/restCalls');
 const restCalls = require('../../src/utils/restCalls');
 
 const { enforce } = require('../../src/umaConfiguration');
-const { clientAuthentication } = require('../../src/clientAuthorization');
+const { clientAuthentication, getRPT } = require('../../src/clientAuthorization');
 
 const cache = {
   get: async () => null,
@@ -20,6 +20,16 @@ const token = {
     },
     authorization: {
       permissions: [{ rsid: 'resourceId' }],
+    },
+  },
+};
+
+const accessToken = {
+  payload: {
+    realm_access: {
+      roles: [
+        'accessRole',
+      ],
     },
   },
 };
@@ -54,6 +64,9 @@ describe('testing umaConfiguration', () => {
     });
     restCalls.getKeycloakUrl.mockImplementation(() => 'http://localhost:8090/auth');
     clientAuthentication.mockImplementation(async () => ({ access_token: 'access_token' }));
+    getRPT.mockImplementation(async () => ({
+      decodedAccessToken: token.payload,
+    }));
   });
 
   afterEach(() => {
@@ -65,6 +78,21 @@ describe('testing umaConfiguration', () => {
       enforce: {
         enabled: true,
         role: 'accessRole',
+      },
+    });
+  });
+
+  test('test access_token success', async () => {
+    await enforce(accessToken, {
+      cache,
+      keycloakJson,
+      enforce: {
+        enabled: true,
+        resource: {
+          name: 'resource',
+          uri: '/test',
+          matchingUri: true,
+        },
       },
     });
   });

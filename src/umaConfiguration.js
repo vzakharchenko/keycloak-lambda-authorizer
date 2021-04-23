@@ -1,3 +1,4 @@
+const { getRPT } = require('./clientAuthorization');
 const { getKeycloakUrl } = require('./utils/restCalls');
 const { clientAuthentication } = require('./clientAuthorization');
 
@@ -53,8 +54,14 @@ async function matchResource(uma2Config,
     }
     resources = resources.concat(resourceJson);
   }
+  let { payload } = token;
+  if (!payload.authorization) {
+    const keycloakJson = await options.keycloakJson();
+    const tkn = await getRPT(uma2Config, token, keycloakJson.resource, options);
+    payload = tkn.decodedAccessToken;
+  }
   const resource = resources.filter((resId) => {
-    const { authorization } = token.payload;
+    const { authorization } = payload;
     return authorization && authorization.permissions && authorization
       .permissions.find((p) => p.rsid === resId);
   });

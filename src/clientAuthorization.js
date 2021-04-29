@@ -112,7 +112,7 @@ async function keycloakRefreshToken(token, options) {
           options.clientId || keycloakJson.resource, options);
       }
     } catch (e) {
-      console.error(`wrong refresh token for ${realmName}`, e);
+      options.logger.error(`wrong refresh token for ${realmName}`, e);
       tokenJson = null;
     }
   }
@@ -148,13 +148,20 @@ async function getRPT(uma2Config, token, clientId, options) {
     tkn.decodedAccessToken = jsonwebtoken.decode(tkn.access_token);
     tkn.decodedRefreshToken = jsonwebtoken.decode(tkn.refresh_token);
     await options.cache.put('rpt', key, JSON.stringify(tkn), tkn.refresh_expires_in);
-  } else if (isExpired(options, JSON.parse(tkn).decodedAccessToken)) {
-    tkn = await keycloakRefreshToken(JSON.parse(tkn), options);
-    tkn.decodedAccessToken = jsonwebtoken.decode(tkn.access_token);
-    tkn.decodedRefreshToken = jsonwebtoken.decode(tkn.refresh_token);
-    await options.cache.put('rpt', key, JSON.stringify(tkn), tkn.refresh_expires_in);
   } else {
-    tkn = JSON.parse(tkn);
+    const parseToken = JSON.parse(tkn);
+    if (isExpired(options, parseToken.decodedAccessToken)) {
+      if (parseToken.refresh_token) {
+        tkn = await keycloakRefreshToken(parseToken, options);
+      } else {
+        tkn = await exchangeRPT(token.tokenString, clientId, options);
+      }
+      tkn.decodedAccessToken = jsonwebtoken.decode(tkn.access_token);
+      tkn.decodedRefreshToken = jsonwebtoken.decode(tkn.refresh_token);
+      await options.cache.put('rpt', key, JSON.stringify(tkn), tkn.refresh_expires_in);
+    } else {
+      tkn = parseToken;
+    }
   }
   return tkn;
 }

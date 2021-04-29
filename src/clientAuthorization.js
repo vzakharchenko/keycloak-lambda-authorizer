@@ -78,7 +78,6 @@ async function exchangeRPT(accessToken, clientId, options) {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       });
-    console.log(response);
     return JSON.parse(response);
   } catch (e) {
     throw new Error(e);
@@ -113,7 +112,7 @@ async function keycloakRefreshToken(token, options) {
           options.clientId || keycloakJson.resource, options);
       }
     } catch (e) {
-      console.error(`wrong refresh token for ${realmName}`, e);
+      options.logger.error(`wrong refresh token for ${realmName}`, e);
       tokenJson = null;
     }
   }

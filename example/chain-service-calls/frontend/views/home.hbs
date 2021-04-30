@@ -1,0 +1,48 @@
+
+<table border="1">
+    <caption>Invoke Lambda</caption>
+    <tr>
+        <th>Lambda url</th>
+        <th>Chain Name</th>
+        <th>Invoke Lambda</th>
+        <th>Service Response</th>
+        <th>Access Token</th>
+    </tr>
+      <form action="/service1api1" method="post">
+    <tr>
+        <td>{{host1}}</td>
+        <td>FrontEnd->Service1->Service2</td>
+        <td><input type="submit" value="Invoke"></td>
+        <td>{{status1}}</td>
+        <td>{{status1Token}}</td>
+    </tr>
+     </form>
+        <form action="/service1api2" method="post">
+    <tr>
+        <td>{{host1}}</td>
+        <td>FrontEnd->Service1->Service3->Service2</td>
+        <td><input type="submit" value="Invoke"></td>
+        <td>{{status2}}</td>
+        <td>{{status2Token}}</td>
+    </tr>
+     </form>
+        <form action="/service2api" method="post">
+    <tr>
+        <td>{{host2}}</td>
+        <td>FrontEnd->Service2</td>
+        <td><input type="submit" value="Invoke"></td>
+        <td>{{status3}}</td>
+        <td>{{status3Token}}</td>
+    </tr>
+     </form>
+        <form action="/service3api" method="post">
+    <tr>
+        <td>{{host3}}</td>
+        <td>FrontEnd->Service3->Service2</td>
+        <td><input type="submit" value="Invoke"></td>
+        <td>{{status4}}</td>
+        <td>{{status4Token}}</td>
+    </tr>
+     </form>
+</table>
+

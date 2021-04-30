@@ -1,0 +1,8 @@
+{
+  "name": "chain-service-calls",
+  "version": "1.0.0",
+  "description": "keycloak chain of service calls",
+  "main": "index.js",
+  "author": "vzakharchenko",
+  "license": "Apache-2.0"
+}

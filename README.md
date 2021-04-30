@@ -27,6 +27,7 @@ npm install keycloak-lambda-authorizer -S
 ```
 # Examples
  - [Serverless example (Api gateway with lambda authorizer)](example/keycloak-authorizer/README.md)
+ - [Example of calling a chain of micro services, where each service is protected by its secured client](example/chain-service-calls)
  - [CloudFront with Lambda:Edge example](example/keycloak-cloudfront/README.md)
  - [CloudFront with portal authorization (switching between security realms)](example/keycloak-cloudfront-portal)
 # How to use

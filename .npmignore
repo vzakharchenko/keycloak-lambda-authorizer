@@ -19,6 +19,7 @@ example/*
 .circleci/*
 .idea/*
 .coverage
+.webpack
 __mocks__
 __tests__
 keycloak-cloudfront-dynamodb

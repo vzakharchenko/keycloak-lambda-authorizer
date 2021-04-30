@@ -14,10 +14,6 @@ sh bin/standalone.sh  -c standalone.xml -b 0.0.0.0 -Djboss.bind.address.manageme
 ```
 Open the Keycloak admin console, click on Add Realm, click on import 'Select file', select example-realm-export.json and click Create.
 
-## 2. Run Serverless offline (Client Id and Secret credential Type)
-
-```
-
 ## 2. Run Services Locally
 - Service1
 ```bash
@@ -58,12 +54,6 @@ users:
 | user2     | user2      | X                | -                | -              | X              |
 
 ## 6. Results
-
-| User      | Password   | Service 1 Role 1 | Service 1 Role 2 | Service 2 Role | Service 3 Role |
-|:----------|:-----------|:-----------------|:-----------------|:---------------|:---------------|
-| user      | user       | X                | X                | X              | X              |
-| user1     | user1      | -                | -                | X              | X              |
-| user2     | user2      | X                | -                | -              | X              |
 
 | User      | Result                                                                                                 | Description                                           |
 |:----------|:-------------------------------------------------------------------------------------------------------|:------------------------------------------------------|

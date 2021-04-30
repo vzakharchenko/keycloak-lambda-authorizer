@@ -1,0 +1,13 @@
+{
+  "realm": "chain_of_services",
+  "auth-server-url": "http://localhost:8090/auth/",
+  "ssl-required": "external",
+  "resource": "Service1",
+  "verify-token-audience": true,
+  "credentials": {
+    "secret": "Service1-Secret"
+  },
+  "use-resource-role-mappings": true,
+  "confidential-port": 0,
+  "policy-enforcer": {}
+}

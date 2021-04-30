@@ -27,6 +27,8 @@ npm install keycloak-lambda-authorizer -S
 ```
 # Examples
  - [Serverless example (Api gateway with lambda authorizer)](example/keycloak-authorizer/README.md)
+ - [Example of expressjs middleware](example/express)
+ - [Example of calling a chain of micro services, where each service is protected by its secured client](example/chain-service-calls)
  - [CloudFront with Lambda:Edge example](example/keycloak-cloudfront/README.md)
  - [CloudFront with portal authorization (switching between security realms)](example/keycloak-cloudfront-portal)
 # How to use
@@ -727,6 +729,35 @@ keycloakJson,
     // Failed
   });
 }
+```
+## 15. ExpressJS middleware
+
+```
+const fs = require('fs');
+const { middlewareAdapter } = require('keycloak-lambda-authorizer');
+
+function getKeycloakJSON() {
+  return JSON.parse(fs.readFileSync(`${__dirname}/keycloak.json`, 'utf8'));
+}
+
+const app = express();
+
+app.get('/expressServiceApi', middlewareAdapter(
+  getKeycloakJSON(),
+  {
+    enforce: {
+      enabled: true,
+      resource: {
+        name: 'service-api',
+      },
+    },
+  },
+).middleware,
+async (request, response) => {
+  response.json({
+    message: `Hi ${request.jwt.payload.preferred_username}. Your function executed successfully!`,
+  });
+});
 ```
 
 

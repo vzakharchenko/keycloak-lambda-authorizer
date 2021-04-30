@@ -66,3 +66,21 @@ jobs:
       - run:
           name: lint example/keycloak-cloudfront-portal cloudfront
           command: cd example/keycloak-cloudfront-portal && npm run lint
+      - run:
+          name: lint example/chain-service-calls/frontend
+          command: cd example/chain-service-calls/frontend && npm i && npm run lint
+      - run:
+          name: lint example/chain-service-calls/service1
+          command: cd example/chain-service-calls/service1 && npm i && npm run lint
+      - run:
+          name: lint example/chain-service-calls/service2
+          command: cd example/chain-service-calls/service2 && npm i && npm run lint
+      - run:
+          name: lint example/chain-service-calls/service3
+          command: cd example/chain-service-calls/service3 && npm i && npm run lint
+      - run:
+          name: lint example/express/frontend
+          command: cd example/express/frontend && npm i && npm run lint
+      - run:
+          name: lint example/express/express-service
+          command: cd example/express/express-service && npm i && npm run lint

@@ -1,0 +1,29 @@
+{
+  "name": "chain-service-calls-frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "SERVICE1_URL=http://localhost:3002/ SERVICE2_URL=http://localhost:3003/dev/ SERVICE3_URL=http://localhost:3004/dev/ node index.js",
+    "lint": "eslint --quiet --ext .js index.js",
+    "lint:fix": "eslint --fix --quiet --ext .js index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "vzakharchenko",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "eslint": "*",
+    "eslint-config-airbnb": "*",
+    "eslint-plugin-import": "*"
+  },
+  "dependencies": {
+    "axios": "*",
+    "body-parser": "*",
+    "express": "*",
+    "express-handlebars": "*",
+    "express-session": "*",
+    "jsonwebtoken": "*",
+    "keycloak-connect": "*",
+    "path": "*"
+  }
+}

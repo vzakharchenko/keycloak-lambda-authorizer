@@ -41,5 +41,11 @@ jobs:
     - run: cd example/keycloak-cloudfront-portal/lambda-edge-example && npm i && npm run build
     - run: cd example/keycloak-cloudfront-portal && npm i && npm run build
     - run: cd example/keycloak-cloudfront-portal && npm run lint
+    - run:  cd example/chain-service-calls/frontend && npm i && npm run lint
+    - run:  cd example/chain-service-calls/service1 && npm i && npm run lint
+    - run:  cd example/chain-service-calls/service2 && npm i && npm run lint
+    - run:  cd example/chain-service-calls/service3 && npm i && npm run lint
+    - run:  cd example/express/frontend && npm i && npm run lint
+    - run:  cd example/express/express-service && npm i && npm run lint
 
 

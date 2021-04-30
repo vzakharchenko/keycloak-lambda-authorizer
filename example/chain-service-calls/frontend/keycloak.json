@@ -1,0 +1,10 @@
+{
+  "realm": "chain_of_services",
+  "auth-server-url": "http://localhost:8090/auth/",
+  "ssl-required": "external",
+  "resource": "FrontEnd",
+  "credentials": {
+    "secret": "FrontEnd-Secret"
+  },
+  "confidential-port": 0
+}

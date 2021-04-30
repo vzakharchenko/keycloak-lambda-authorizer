@@ -25,7 +25,7 @@ function getTokenString(req) {
 
 async function middleware(keycloakJson, options, middlewareParams) {
   const newOptions = commonOptions(options, keycloakJson);
-  if (isJwksRoute(middlewareParams.request)) {
+  if (newOptions.keys && newOptions.keys.publicKey && isJwksRoute(middlewareParams.request)) {
     jwks(middlewareParams.request, middlewareParams.response, newOptions);
     return;
   }

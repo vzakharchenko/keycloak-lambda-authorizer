@@ -1,4 +1,5 @@
 const { decode } = require('jsonwebtoken');
+const { serviceAccountJWT } = require('../serviceAccount');
 
 const { commonOptions } = require('../utils/optionsUtils');
 const { jwksUrlResponse } = require('../Jwks');
@@ -31,6 +32,9 @@ async function middleware(keycloakJson, options, middlewareParams) {
   }
   try {
     await adapter(getTokenString(middlewareParams.request), keycloakJson, newOptions);
+    // eslint-disable-next-line no-param-reassign
+    middlewareParams.request.serviceAccountJWT = async () => await serviceAccountJWT(keycloakJson,
+      newOptions);
     middlewareParams.next();
   } catch (e) {
     newOptions.logger.log(`Authorization error ${e}`);

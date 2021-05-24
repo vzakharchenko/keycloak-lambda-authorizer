@@ -21,7 +21,7 @@ async function getUma2Configuration(options) {
 async function getResource(uma2Config,
   options, resourceObject) {
   const { realm, resource } = options.keycloakJson(options);
-  const key = `${realm}:${resource}${JSON.stringify(resource)}`;
+  const key = `${realm}:${resource}${JSON.stringify(resourceObject)}`;
   let resources = await options.cache.get('resource', key);
   if (!resources) {
     const resourceRegistrationEndpoint = `${uma2Config.resource_registration_endpoint}?name=${resourceObject.name}&uri=${resourceObject.uri}&matchingUri=${!!resourceObject.matchingUri}&owner=${resourceObject.owner}&type=${resourceObject.type}&scope=${resourceObject.scope}&deep=${resourceObject.deep}&first=${resourceObject.first}&max=${resourceObject.max}`;
@@ -74,6 +74,14 @@ async function enforce(token, options) {
   if (options.enforce.role) {
     const role = token.payload.realm_access.roles.find(
       (r) => r === options.enforce.role,
+    );
+    if (!role) {
+      throw new Error('Access Denied');
+    }
+  } else if (options.enforce.clientRole) {
+    const { roles } = token.payload.resource_access[options.enforce.clientRole.clientId];
+    const role = roles.find(
+      (r) => r === options.enforce.clientRole.roleName,
     );
     if (!role) {
       throw new Error('Access Denied');

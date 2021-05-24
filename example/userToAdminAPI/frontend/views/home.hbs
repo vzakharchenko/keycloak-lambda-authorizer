@@ -1,0 +1,57 @@
+
+<table border="1">
+    <caption>Invoke Lambda</caption>
+    <tr>
+        <th>API Name</th>
+        <th>Invoke API</th>
+        <th>Service Response</th>
+        <th>Access Token</th>
+    </tr>
+      <form action="/getUserList" method="post">
+    <tr>
+        <td>List of Users</td>
+        <td><input type="submit" value="Invoke"></td>
+        <td>
+        <table border="1" style="width: 100%;">
+            <tr>
+                <th>user name</td>
+                <th>email</td>
+            </tr>
+              {{#each users}}
+                <tr>
+                    <td>{{name}}</td>
+                    <td>{{email}}</td>
+                </tr>
+                {{/each}}
+        </table>
+        </td>
+        <td>{{status1Token}}</td>
+    </tr>
+    </form>
+      <form action="/getClientList" method="post">
+    <tr>
+        <td>List of Clients</td>
+        <td><input type="submit" value="Invoke"></td>
+        <td>
+        <table border="1" style="width: 100%;">
+            <tr>
+                <th>id</td>
+                <th>client</td>
+                <th>Client Secret Type</td>
+                <th>Client Secret</td>
+            </tr>
+              {{#each clients}}
+                <tr>
+                    <td>{{id}}</td>
+                    <td>{{name}}</td>
+                    <td>{{type}}</td>
+                    <td>{{secret}}</td>
+                </tr>
+                {{/each}}
+        </table>
+        </td>
+        <td>{{status1Token}}</td>
+    </tr>
+    </form>
+</table>
+

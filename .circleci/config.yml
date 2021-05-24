@@ -84,3 +84,9 @@ jobs:
       - run:
           name: lint example/express/express-service
           command: cd example/express/express-service && npm i && npm run lint
+      - run:
+          name: lint example/userToAdminAPI/frontend
+          command: cd example/userToAdminAPI/frontend && npm i && npm run lint
+      - run:
+          name: lint example/userToAdminAPI/express-service
+          command: cd example/userToAdminAPI/express-service && npm i && npm run lint

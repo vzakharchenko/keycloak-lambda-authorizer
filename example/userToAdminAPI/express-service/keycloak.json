@@ -1,0 +1,13 @@
+{
+  "realm": "admin-rest-api",
+  "auth-server-url": "http://localhost:8090/auth/",
+  "ssl-required": "external",
+  "resource": "admin-service",
+  "verify-token-audience": true,
+  "credentials": {
+    "secret": "admin-service"
+  },
+  "use-resource-role-mappings": true,
+  "confidential-port": 0,
+  "policy-enforcer": {}
+}

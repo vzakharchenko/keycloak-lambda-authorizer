@@ -184,6 +184,110 @@ export function authorizer(event, context, callback) {
 }
 ```
 
+## ExpressJS middleware
+
+```js
+const fs = require('fs');
+const { middlewareAdapter } = require('keycloak-lambda-authorizer');
+
+function getKeycloakJSON() {
+  return JSON.parse(fs.readFileSync(`${__dirname}/keycloak.json`, 'utf8'));
+}
+
+const app = express();
+
+app.get('/expressServiceApi', middlewareAdapter(
+  getKeycloakJSON(),
+  {
+    enforce: {
+      enabled: true,
+      resource: {
+        name: 'service-api',
+      },
+    },
+  },
+).middleware,
+async (request, response) => {
+  response.json({
+    message: `Hi ${request.jwt.payload.preferred_username}. Your function executed successfully!`,
+  });
+});
+```
+
+## Get Service Account Token
+ - ExpressJS
+```js
+const fs = require('fs');
+const { middlewareAdapter } = require('keycloak-lambda-authorizer');
+
+function getKeycloakJSON() {
+  return JSON.parse(fs.readFileSync(`${__dirname}/keycloak.json`, 'utf8'));
+}
+
+const app = express();
+
+app.get('/expressServiceApi', middlewareAdapter(
+  getKeycloakJSON(),
+  {
+    enforce: {
+      enabled: true,
+      resource: {
+        name: 'service-api',
+      },
+    },
+  },
+).middleware,
+async (request, response) => {
+  const serviceAccountToken = await request.serviceAccountJWT();
+  ...
+});
+```
+- AWS Lambda/Serverless or another cloud
+
+```js
+const { serviceAccountJWT } = require('keycloak-lambda-authorizer/src/serviceAccount');
+
+const keycloakJSON = ...
+
+async function getServiceAccountJWT(){
+   return serviceAccountJWT(keycloakJSON);
+}
+
+...
+
+const serviceAccountToken = await getServiceAccountJWT();
+```
+
+- AWS Lambda/Serverless or another cloud with Signed JWT
+
+```js
+const { serviceAccountJWT } = require('keycloak-lambda-authorizer/src/serviceAccount');
+
+const keycloakJSON = ...
+const options = {
+    "keys":{
+          "privateKey":{
+            "key": privateKey,
+            "passphrase": 'privateKey passphrase'
+          },
+          "publicKey":{
+            "key": publicKey,
+          }
+        }
+}
+
+async function getServiceAccountJWT(){
+   return serviceAccountJWT(keycloakJSON,options);
+}
+
+...
+
+const serviceAccountToken = await getServiceAccountJWT();
+```
+
+
+
+
 ## Cache
 Example of cache:
 ```javascript
@@ -338,6 +442,7 @@ export function authorizer(event, context, callback) {
   });
 }
 ```
+
 # Lambda:Edge
 ## 1. protect Url
 
@@ -747,106 +852,5 @@ keycloakJson,
   });
 }
 ```
-## 15. ExpressJS middleware
-
-```js
-const fs = require('fs');
-const { middlewareAdapter } = require('keycloak-lambda-authorizer');
-
-function getKeycloakJSON() {
-  return JSON.parse(fs.readFileSync(`${__dirname}/keycloak.json`, 'utf8'));
-}
-
-const app = express();
-
-app.get('/expressServiceApi', middlewareAdapter(
-  getKeycloakJSON(),
-  {
-    enforce: {
-      enabled: true,
-      resource: {
-        name: 'service-api',
-      },
-    },
-  },
-).middleware,
-async (request, response) => {
-  response.json({
-    message: `Hi ${request.jwt.payload.preferred_username}. Your function executed successfully!`,
-  });
-});
-```
-
-## 16. get Service Account Token
- - ExpressJS
-```js
-const fs = require('fs');
-const { middlewareAdapter } = require('keycloak-lambda-authorizer');
-
-function getKeycloakJSON() {
-  return JSON.parse(fs.readFileSync(`${__dirname}/keycloak.json`, 'utf8'));
-}
-
-const app = express();
-
-app.get('/expressServiceApi', middlewareAdapter(
-  getKeycloakJSON(),
-  {
-    enforce: {
-      enabled: true,
-      resource: {
-        name: 'service-api',
-      },
-    },
-  },
-).middleware,
-async (request, response) => {
-  const serviceAccountToken = await request.serviceAccountJWT();
-  ...
-});
-```
-- AWS Lambda/Serverless or another cloud
-
-```js
-const { serviceAccountJWT } = require('keycloak-lambda-authorizer/src/serviceAccount');
-
-const keycloakJSON = ...
-
-async function getServiceAccountJWT(){
-   return serviceAccountJWT(keycloakJSON);
-}
-
-...
-
-const serviceAccountToken = await getServiceAccountJWT();
-```
-
-- AWS Lambda/Serverless or another cloud with Signed JWT
-
-```js
-const { serviceAccountJWT } = require('keycloak-lambda-authorizer/src/serviceAccount');
-
-const keycloakJSON = ...
-const options = {
-    "keys":{
-          "privateKey":{
-            "key": privateKey,
-            "passphrase": 'privateKey passphrase'
-          },
-          "publicKey":{
-            "key": publicKey,
-          }
-        }
-}
-
-async function getServiceAccountJWT(){
-   return serviceAccountJWT(keycloakJSON,options);
-}
-
-...
-
-const serviceAccountToken = await getServiceAccountJWT();
-```
-
 
 # If you find these useful, please [Donate](https://secure.wayforpay.com/button/b18610f33a01c)!

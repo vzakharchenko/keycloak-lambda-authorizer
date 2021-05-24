@@ -749,7 +749,7 @@ keycloakJson,
 ```
 ## 15. ExpressJS middleware
 
-```
+```js
 const fs = require('fs');
 const { middlewareAdapter } = require('keycloak-lambda-authorizer');
 
@@ -775,6 +775,50 @@ async (request, response) => {
     message: `Hi ${request.jwt.payload.preferred_username}. Your function executed successfully!`,
   });
 });
+```
+
+## 16. get Service Account Token
+ - ExpressJS
+```js
+const fs = require('fs');
+const { middlewareAdapter } = require('keycloak-lambda-authorizer');
+
+function getKeycloakJSON() {
+  return JSON.parse(fs.readFileSync(`${__dirname}/keycloak.json`, 'utf8'));
+}
+
+const app = express();
+
+app.get('/expressServiceApi', middlewareAdapter(
+  getKeycloakJSON(),
+  {
+    enforce: {
+      enabled: true,
+      resource: {
+        name: 'service-api',
+      },
+    },
+  },
+).middleware,
+async (request, response) => {
+  const serviceAccountToken = await request.serviceAccountJWT();
+  ...
+});
+```
+- AWS Lambda/Serverless or another cloud
+
+```js
+const { serviceAccountJWT } = require('keycloak-lambda-authorizer/src/serviceAccount');
+
+const keycloakJSON = ...
+
+async function getServiceAccountJWT(){
+   return serviceAccountJWT(keycloakJSON);
+}
+
+...
+
+const serviceAccountToken = await getServiceAccountJWT();
 ```
 
 

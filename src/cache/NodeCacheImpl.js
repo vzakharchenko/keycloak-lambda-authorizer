@@ -21,6 +21,7 @@ async function put(region, key, value, ttl) {
 }
 
 async function get(region, key) {
+  // return null;
   if (region === 'publicKey') {
     return defaultCache.get(key);
   } if (region === 'uma2-configuration') {

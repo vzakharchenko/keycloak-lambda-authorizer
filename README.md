@@ -48,6 +48,21 @@ export function authorizer(event, context, callback) {
   });
 }
 ```
+### Client Role Based
+```javascript
+import { apigateway } from 'keycloak-lambda-authorizer';
+
+export function authorizer(event, context, callback) {
+    const keycloakJSON = ...; // read Keycloak.json
+  awsAdapter.awsHandler(event, keycloakJSON, {
+    enforce: { enabled: true,  clientRole: {roleName: 'SOME_ROLE',clientId: 'Client Name',}, },
+  }).then((token)=>{
+      // Success
+  }).catch((e)=>{
+    // Failed
+  });
+}
+```
 
 ### Resource Based (Keycloak Authorization Services)
 ```javascript

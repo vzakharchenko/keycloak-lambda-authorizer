@@ -447,44 +447,64 @@
   "webAuthnPolicyPasswordlessAvoidSameAuthenticatorRegister": false,
   "webAuthnPolicyPasswordlessAcceptableAaguids": [],
   "users": [
-      {
-        "username" : "user",
-        "enabled": true,
-        "email" : "example-user@lambda-example",
-        "firstName": "Lambda",
-        "lastName": "User",
-        "credentials" : [
-          { "type" : "password",
-            "value" : "user" }
-        ],
-        "clientRoles": {
-          "admin-service": ["CLIENT-LIST-ROLE", "CLIENT-SECRETS-ROLE", "USER-LIST"]
+    {
+      "username": "user",
+      "enabled": true,
+      "email": "example-user@lambda-example",
+      "firstName": "Lambda",
+      "lastName": "User",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "user"
         }
-      },{
-        "username" : "user1",
-        "enabled": true,
-        "email" : "example-user1@lambda-example",
-        "firstName": "Lambda",
-        "lastName": "User1",
-        "credentials" : [
-          { "type" : "password",
-            "value" : "user1" }
-        ],
-        "clientRoles": {
-          "admin-service": ["CLIENT-LIST-ROLE", "CLIENT-SECRETS-ROLE"]
+      ],
+      "clientRoles": {
+        "admin-service": [
+          "CLIENT-LIST-ROLE",
+          "CLIENT-SECRETS-ROLE",
+          "USER-LIST"
+        ]
+      }
+    },
+    {
+      "username": "user1",
+      "enabled": true,
+      "email": "example-user1@lambda-example",
+      "firstName": "Lambda",
+      "lastName": "User1",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "user1"
         }
-      },{
-        "username" : "user2",
-        "enabled": true,
-        "email" : "example-user2@lambda-example",
-        "firstName": "Lambda",
-        "lastName": "User2",
-        "credentials" : [
-          { "type" : "password",
-            "value" : "user2" }
+      ],
+      "clientRoles": {
+        "admin-service": [
+          "CLIENT-LIST-ROLE",
+          "CLIENT-SECRETS-ROLE"
+        ]
+      }
+    },
+    {
+      "username": "user2",
+      "enabled": true,
+      "email": "example-user2@lambda-example",
+      "firstName": "Lambda",
+      "lastName": "User2",
+      "clientRoles": {
+        "admin-service": [
+          "CLIENT-LIST-ROLE"
         ]
       },
-      {
+      "credentials": [
+        {
+          "type": "password",
+          "value": "user2"
+        }
+      ]
+    },
+    {
       "id": "b096ed9f-1856-4867-9964-d9f44af7ea13",
       "createdTimestamp": 1620662224373,
       "username": "service-account-admin-service",

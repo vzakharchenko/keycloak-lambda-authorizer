@@ -47,5 +47,7 @@ jobs:
     - run:  cd example/chain-service-calls/service3 && npm i && npm run lint
     - run:  cd example/express/frontend && npm i && npm run lint
     - run:  cd example/express/express-service && npm i && npm run lint
+    - run:  cd example/userToAdminAPI/frontend && npm i && npm run lint
+    - run:  cd example/userToAdminAPI/express-service && npm i && npm run lint
 
 

@@ -18,6 +18,13 @@ const token = {
         'accessRole',
       ],
     },
+    resource_access: {
+      testClient: {
+        roles: [
+          'accessRole',
+        ],
+      },
+    },
     authorization: {
       permissions: [{ rsid: 'resourceId' }],
     },
@@ -30,6 +37,13 @@ const accessToken = {
       roles: [
         'accessRole',
       ],
+      resource_access: {
+        testClient: {
+          roles: [
+            'accessRole',
+          ],
+        },
+      },
     },
   },
 };
@@ -78,6 +92,19 @@ describe('testing umaConfiguration', () => {
       enforce: {
         enabled: true,
         role: 'accessRole',
+      },
+    });
+  });
+
+  test('test enforce client Role success', async () => {
+    await enforce(token, {
+      keycloakJson,
+      enforce: {
+        enabled: true,
+        clientRole: {
+          roleName: 'accessRole',
+          clientId: 'testClient',
+        },
       },
     });
   });

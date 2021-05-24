@@ -2,6 +2,13 @@
 
 This example allow to get list of users and List of security clients (with secrets) using regular user permissions.
 
+## How it works
+User calls the service API using their own token, but the service API calls Keycloak using the service account token (service-to-service communication)
+- **user has no administrator roles!!!**
+- service Account has Admin Roles ![](../../docs/serviceAccountRoles.png)
+- FrontEnd does not have access to call Admin Api.
+![](../../docs/UserToAdminAPI.png)
+
 ## 1. Start Keycloak
 
 ### Docker
@@ -36,14 +43,15 @@ npm run start
 
 users:
 
-| User      | Password   | Service Role |
-|:----------|:-----------|:-----------------|
-| user      | user       | X                |
-| user1     | user1      | -                |
+| User      | Password   | UserList Role    | Client List Role | Client Secret Role |
+|:----------|:-----------|:-----------------|:-----------------|:-------------------|
+| user      | user       | X                | X                | X                  |
+| user1     | user1      | -                | -                | -                  |
 
 ## 6. Results
 
 | User      | Result                                                                                                 | Description                                           |
 |:----------|:-------------------------------------------------------------------------------------------------------|:------------------------------------------------------|
-| User      |  Hi user. Your function executed successfully!                                                         | All Access                                            |
-| User1     |  Request failed with status code 403                                                                   | User has not access to express-service                |
+| User      |  User List, Client List with secrets                                                                   | All Access                                            |
+| User1     |  Client List with secrets                                                                              | User has access to  Client List  and secrets          |
+| User2     |  Client List without secrets                                                                           | User has access only to Client List                   |

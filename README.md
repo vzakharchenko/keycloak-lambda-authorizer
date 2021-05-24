@@ -12,6 +12,7 @@ Implementation [Keycloak](https://www.keycloak.org/) adapter for aws Lambda
 - supports AWS API Gateway, AWS Cloudfront with Lambda@Edge
 - Resource based authorization ( [Keycloak Authorization Services](https://www.keycloak.org/docs/latest/authorization_services/) )
 - works with non amazon services.
+- [Service to Service communication](./example/userToAdminAPI).
 - validate expiration of JWT token
 - validate JWS signature
 - supports "clientId/secret" and "client-jwt" credential types
@@ -29,6 +30,7 @@ npm install keycloak-lambda-authorizer -S
  - [Serverless example (Api gateway with lambda authorizer)](example/keycloak-authorizer/README.md)
  - [Example of expressjs middleware](example/express)
  - [Example of calling a chain of micro services, where each service is protected by its secured client](example/chain-service-calls)
+ - [Example of calling the Admin API Using the regular User Permissions (Role or Resource)](example/userToAdminAPI)
  - [CloudFront with Lambda:Edge example](example/keycloak-cloudfront/README.md)
  - [CloudFront with portal authorization (switching between security realms)](example/keycloak-cloudfront-portal)
 # How to use

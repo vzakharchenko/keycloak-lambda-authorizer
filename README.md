@@ -821,5 +821,32 @@ async function getServiceAccountJWT(){
 const serviceAccountToken = await getServiceAccountJWT();
 ```
 
+- AWS Lambda/Serverless or another cloud with Signed JWT
+
+```js
+const { serviceAccountJWT } = require('keycloak-lambda-authorizer/src/serviceAccount');
+
+const keycloakJSON = ...
+const options = {
+    "keys":{
+          "privateKey":{
+            "key": privateKey,
+            "passphrase": 'privateKey passphrase'
+          },
+          "publicKey":{
+            "key": publicKey,
+          }
+        }
+}
+
+async function getServiceAccountJWT(){
+   return serviceAccountJWT(keycloakJSON,options);
+}
+
+...
+
+const serviceAccountToken = await getServiceAccountJWT();
+```
+
 
 # If you find these useful, please [Donate](https://secure.wayforpay.com/button/b18610f33a01c)!

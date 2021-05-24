@@ -46,7 +46,8 @@ users:
 | User      | Password   | UserList Role    | Client List Role | Client Secret Role |
 |:----------|:-----------|:-----------------|:-----------------|:-------------------|
 | user      | user       | X                | X                | X                  |
-| user1     | user1      | -                | -                | -                  |
+| user1     | user1      | -                | X                | X                  |
+| user2     | user2      | -                | X                | -                  |
 
 ## 6. Results
 

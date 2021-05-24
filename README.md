@@ -7,7 +7,7 @@
 
 
 # Description
-Implementation [Keycloak](https://www.keycloak.org/) adapter for aws Lambda
+Implementation [Keycloak](https://www.keycloak.org/) adapter for Cloud
 ## Features
 - supports AWS API Gateway, AWS Cloudfront with Lambda@Edge
 - Resource based authorization ( [Keycloak Authorization Services](https://www.keycloak.org/docs/latest/authorization_services/) )

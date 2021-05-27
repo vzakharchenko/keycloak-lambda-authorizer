@@ -60,12 +60,17 @@ async function matchResource(uma2Config,
     const tkn = await getRPT(uma2Config, token, keycloakJson.resource, options);
     payload = tkn.decodedAccessToken;
   }
-  const resource = resources.filter((resId) => {
+  let permission;
+  const resource = resources.find((resId) => {
     const { authorization } = payload;
-    return authorization && authorization.permissions && authorization
-      .permissions.find((p) => p.rsid === resId);
+    if (authorization && authorization.permissions) {
+      permission = authorization.permissions.find((p) => p.rsid === resId);
+    }
+    return permission;
   });
-  if (!resource || resource.length !== permissions.length) {
+  const hasScope = !permissions.find((p) => p.scope)
+    || permissions.every((p) => permission.scopes.includes(p.scope));
+  if (!resource || !hasScope) {
     throw new Error('Access is denied');
   }
 }

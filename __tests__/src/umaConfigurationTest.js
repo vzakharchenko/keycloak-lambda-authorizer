@@ -26,7 +26,10 @@ const token = {
       },
     },
     authorization: {
-      permissions: [{ rsid: 'resourceId' }],
+      permissions: [
+        { rsid: 'resourceId' },
+        { rsid: 'resourceId3', scopes: ['testscope'] },
+      ],
     },
   },
 };
@@ -72,6 +75,12 @@ describe('testing umaConfiguration', () => {
       }
       if (url === 'resourceEndpoint?name=deniedResource&uri=/test&matchingUri=true&owner=undefined&type=undefined&scope=undefined&deep=undefined&first=undefined&max=undefined') {
         return JSON.stringify(['resourceId2']);
+      }
+      if (url === 'resourceEndpoint?name=resource&uri=/test&matchingUri=true&owner=undefined&type=undefined&scope=testscope&deep=undefined&first=undefined&max=undefined') {
+        return JSON.stringify(['resourceId3']);
+      }
+      if (url === 'resourceEndpoint?name=resource&uri=/test&matchingUri=true&owner=undefined&type=undefined&scope=invalidscope&deep=undefined&first=undefined&max=undefined') {
+        return JSON.stringify(['resourceId3']);
       }
 
       throw new Error(`unsupported Url: ${url}`);
@@ -172,6 +181,25 @@ describe('testing umaConfiguration', () => {
     });
   });
 
+  test('test enforceResource with scope Handler success', async () => {
+    await enforce(token, {
+      cache,
+      keycloakJson,
+      enforce: {
+        enabled: true,
+        resource: {
+          name: 'resource',
+          uri: '/test',
+          scope: 'testscope',
+          matchingUri: true,
+        },
+        resourceHandler: (resourceJson) => {
+          expect(resourceJson).toEqual(['resourceId3']);
+        },
+      },
+    });
+  });
+
   test('test enforceResource denied', async () => {
     try {
       await enforce(token, {
@@ -182,6 +210,27 @@ describe('testing umaConfiguration', () => {
           resource: {
             name: 'deniedResource',
             uri: '/test',
+            matchingUri: true,
+          },
+        },
+      });
+      throw new Error('unexpected status');
+    } catch (e) {
+      expect(e.message).toEqual('Access is denied');
+    }
+  });
+
+  test('test enforceResource with scope denied', async () => {
+    try {
+      await enforce(token, {
+        cache,
+        keycloakJson,
+        enforce: {
+          enabled: true,
+          resource: {
+            name: 'resource',
+            uri: '/test',
+            scope: 'invalidscope',
             matchingUri: true,
           },
         },

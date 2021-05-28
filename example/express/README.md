@@ -1,5 +1,4 @@
 # Example expressjs middleware
-![](../../keycloak-cross-client-authentication3.png)
 
 ## 1. Start Keycloak
 

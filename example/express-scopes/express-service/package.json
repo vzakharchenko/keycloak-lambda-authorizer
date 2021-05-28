@@ -1,10 +1,10 @@
 {
-  "name": "express-frontend",
+  "name": "express-scopes-service1",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "SERVICE_URL=http://localhost:3002/ node index.js",
+    "start": "node index.js",
     "lint": "eslint --quiet --ext .js index.js",
     "lint:fix": "eslint --fix --quiet --ext .js index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,10 +20,7 @@
     "axios": "*",
     "body-parser": "*",
     "express": "*",
-    "express-handlebars": "*",
-    "express-session": "*",
     "jsonwebtoken": "*",
-    "keycloak-connect": "*",
-    "path": "*"
+    "keycloak-lambda-authorizer": "../../../"
   }
 }

@@ -29,6 +29,7 @@ npm install keycloak-lambda-authorizer -S
 # Examples
  - [Serverless example (Api gateway with lambda authorizer)](example/keycloak-authorizer/README.md)
  - [Example of expressjs middleware](example/express)
+ - [Example of expressjs middleware with security resource scopes](example/express-scopes)
  - [Example of calling a chain of micro services, where each service is protected by its secured client](example/chain-service-calls)
  - [Example of calling the Admin API Using the regular User Permissions (Role or Resource)](example/userToAdminAPI)
  - [CloudFront with Lambda:Edge example](example/keycloak-cloudfront/README.md)

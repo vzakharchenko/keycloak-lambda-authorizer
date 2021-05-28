@@ -1,0 +1,10 @@
+{
+  "realm": "express-scopes",
+  "auth-server-url": "http://localhost:8090/auth/",
+  "ssl-required": "external",
+  "resource": "express-frontend",
+  "credentials": {
+    "secret": "secret-frontend"
+  },
+  "confidential-port": 0
+}

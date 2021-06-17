@@ -50,7 +50,7 @@ describe('testing clientAuthorization', () => {
     });
     restCalls.sendData.mockImplementation(async (url, method, data) => {
       if (url === 'token_endpoint') {
-        if (data === 'grant_type=client_credentials&client_id=lambda&client_secret=772decbe-0151-4b08-8171-bec6d097293b') {
+        if (data === 'grant_type=client_credentials&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_id=lambda&client_secret=772decbe-0151-4b08-8171-bec6d097293b') {
           return JSON.stringify({ access_token: 'access_token' });
         }
         if (data === 'grant_type=client_credentials&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_id=lambda-jwks&client_assertion=jwsSignature') {

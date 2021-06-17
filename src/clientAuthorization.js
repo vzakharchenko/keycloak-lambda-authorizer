@@ -125,9 +125,12 @@ async function clientAuthentication(uma2Config, options) {
   const key = `${keycloakJson.realm}:${keycloakJson.resource}`;
   let token = await options.cache.get('client_credentials', key);
   if (!token || isExpired(options, JSON.parse(token).decodedAccessToken)) {
+    const parsedToken = token ? JSON.parse(token) : null;
     const authorization = await clientIdAuthorization(options);
     let data = `grant_type=client_credentials&${authorization}`;
-    if (token && !isExpired(options, JSON.parse(token).decodedRefreshToken)) {
+    if (parsedToken
+      && parsedToken.decodedRefreshToken
+      && !isExpired(options, parsedToken.decodedRefreshToken)) {
       data = `refresh_token=${JSON.parse(token).refresh_token}&grant_type=refresh_token&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}`;
     }
     const res = await sendData(`${uma2Config.token_endpoint}`, 'POST', data);

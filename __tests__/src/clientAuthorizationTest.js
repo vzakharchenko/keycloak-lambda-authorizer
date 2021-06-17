@@ -53,7 +53,7 @@ describe('testing clientAuthorization', () => {
         if (data === 'grant_type=client_credentials&client_id=lambda&client_secret=772decbe-0151-4b08-8171-bec6d097293b') {
           return JSON.stringify({ access_token: 'access_token' });
         }
-        if (data === 'grant_type=client_credentials&client_id=lambda-jwks&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_assertion=jwsSignature') {
+        if (data === 'grant_type=client_credentials&client_id=lambda-jwks&client_assertion=jwsSignature') {
           return JSON.stringify({ access_token: 'access_token_jws' });
         }
         if (data === 'refresh_token=refresh_token&grant_type=refresh_token&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_id=lambda&client_secret=772decbe-0151-4b08-8171-bec6d097293b') {

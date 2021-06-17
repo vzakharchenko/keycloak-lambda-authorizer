@@ -29,6 +29,7 @@ function createJWS(options) {
   return {
     jti: v4(),
     sub: keycloakJson.resource,
+    iss: keycloakJson.resource,
     aud: `${getKeycloakUrl(keycloakJson)}/realms/${keycloakJson.realm}`,
     exp: timeSec + 30,
     iat: timeSec,
@@ -45,7 +46,7 @@ async function clientIdAuthorization(options) {
     }
   } else
   if (options.keys && options.keys.privateKey) {
-    authorization += `&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_assertion=${await clientJWT(createJWS(options), options)}`;
+    authorization += `&client_assertion=${await clientJWT(createJWS(options), options)}`;
   } else {
     throw new Error('Unsupported Credential Type');
   }

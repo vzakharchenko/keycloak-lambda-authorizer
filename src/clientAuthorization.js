@@ -127,7 +127,7 @@ async function clientAuthentication(uma2Config, options) {
   if (!token || isExpired(options, JSON.parse(token).decodedAccessToken)) {
     const parsedToken = token ? JSON.parse(token) : null;
     const authorization = await clientIdAuthorization(options);
-    let data = `grant_type=client_credentials&${authorization}`;
+    let data = `grant_type=client_credentials&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}`;
     if (parsedToken
       && parsedToken.decodedRefreshToken
       && !isExpired(options, parsedToken.decodedRefreshToken)) {

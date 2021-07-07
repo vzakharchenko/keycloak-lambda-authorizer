@@ -11,8 +11,8 @@
   },
   "scripts": {
     "test": "jest --verbose --maxWorkers=2 --coverage --coverageDirectory=.coverage/",
-    "lint": "eslint --quiet --ext .js index.js && eslint --quiet --ext .js src keycloak-cloudfront-dynamodb/DynamoDbSessionStorage.js",
-    "lint:fix": "eslint --fix --quiet --ext .js index.js && eslint --fix --quiet --ext .js  src __tests__ keycloak-cloudfront-dynamodb/DynamoDbSessionStorage.js"
+    "lint": "eslint --quiet --ext .js index.js && eslint --quiet --ext .js src",
+    "lint:fix": "eslint --fix --quiet --ext .js index.js && eslint --fix --quiet --ext .js  src __tests__"
   },
   "repository": {
     "type": "git",

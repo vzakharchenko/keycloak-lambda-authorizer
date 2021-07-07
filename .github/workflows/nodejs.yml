@@ -24,7 +24,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm i && cd keycloak-cloudfront-dynamodb && npm i
+    - run: npm i 
     - run: npm run lint
     - run: npm run test
     - run: cd example/keycloak-authorizer/serverless && npm i

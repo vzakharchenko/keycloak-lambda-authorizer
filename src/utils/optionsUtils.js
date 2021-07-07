@@ -1,5 +1,3 @@
-const { unauthorized, internalServerError } = require('./CustomPageUtils');
-
 const defaultCache = require('../cache/NodeCacheImpl');
 
 const defaultEnforcer = {
@@ -51,27 +49,6 @@ function commonOptions(options, keycloakJson) {
   };
 }
 
-function lambdaEdgeRouteOptions(options = {}, keycloakJson) {
-  const route = options.route || {};
-  return {
-    ...commonOptions(options, keycloakJson),
-    ...{
-      updateLoginPage: options.updateLoginPage || function (url) { return url; },
-      route: {
-        unauthorized: route.unauthorized || unauthorized,
-        internalServerError: route.internalServerError || internalServerError,
-
-      },
-    },
-  };
-}
-
-function lambdaEdgeOptions(sessionManager) {
-  return { ...lambdaEdgeRouteOptions(sessionManager.sessionOptions), sessionManager };
-}
-
 module.exports = {
   commonOptions,
-  lambdaEdgeOptions,
-  lambdaEdgeRouteOptions,
 };

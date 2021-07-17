@@ -1,6 +1,6 @@
 {
   "name": "keycloak-lambda-authorizer",
-  "version": "0.6.0",
+  "version": "1.0.0",
   "description": "Keycloak Cloud Adapter",
   "main": "index.js",
   "homepage": "https://github.com/vzakharchenko/keycloak-lambda-authorizer",
@@ -11,6 +11,7 @@
   },
   "scripts": {
     "test": "jest --verbose --maxWorkers=2 --coverage --coverageDirectory=.coverage/",
+    "build": "tsc --build",
     "lint": "eslint --quiet --ext .js index.js && eslint --quiet --ext .js src",
     "lint:fix": "eslint --fix --quiet --ext .js index.js && eslint --fix --quiet --ext .js  src __tests__"
   },
@@ -22,9 +23,6 @@
     "keycloak",
     "lambda",
     "authorizer",
-    "cloudfront",
-    "lambda:edge",
-    "lambda@edge",
     "aws",
     "custom-authorizer",
     "adapter",
@@ -45,7 +43,9 @@
     "rules": {
       "no-undef": 0,
       "no-unused-vars": 0,
+      "class-methods-use-this": 0,
       "import/extensions": 0,
+      "import/no-unresolved": 0,
       "import/prefer-default-export": 0,
       "import/no-extraneous-dependencies": 0,
       "react/jsx-indent": 0,
@@ -58,12 +58,25 @@
     "@babel/plugin-transform-runtime": "^7.14.5",
     "@babel/polyfill": "^7.12.1",
     "@babel/runtime": "^7.14.6",
+    "@shopify/eslint-plugin": "^40.3.0",
+    "@types/cookie": "^0.4.1",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/jest": "^26.0.24",
+    "@types/jsonwebtoken": "^8.5.4",
+    "@types/jws": "^3.2.4",
+    "@types/node-forge": "^0.10.1",
+    "@types/uuid": "^8.3.1",
+    "@typescript-eslint/eslint-plugin": "^4.28.2",
+    "@typescript-eslint/parser": "^4.28.2",
     "babel-eslint": "^10.1.0",
     "coveralls": "^3.1.1",
     "eslint": "^7.30.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-plugin-import": "^2.23.4",
-    "jest": "^27.0.6"
+    "eslint-plugin-no-loops": "^0.3.0",
+    "jest": "^27.0.6",
+    "ts-jest": "^27.0.3",
+    "typescript": "^4.3.5"
   },
   "dependencies": {
     "aws-arn-parser": "^1.0.1",

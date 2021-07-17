@@ -10,6 +10,7 @@ jspm_packages
 .serverless
 .idea/
 public
+dist
 
 */temp/*
 

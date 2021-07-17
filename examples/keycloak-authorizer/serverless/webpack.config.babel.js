@@ -20,8 +20,9 @@ const config = {
   },
   module: {
     rules: [{
-      test: /\.(js|jsx)$/,
-      use: ['babel-loader'],
+      test: /\.tsx?$/,
+      use: 'ts-loader',
+      exclude: /node_modules/,
     },
     ],
   },
@@ -40,6 +41,7 @@ const config = {
     }),
   ],
   resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
     modules: [
       path.join(__dirname, '.'),
       'node_modules',

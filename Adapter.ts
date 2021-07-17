@@ -7,6 +7,7 @@ import { SecurityAdapter } from './typescript/adapters/SecurityAdapter';
 import { ApigatewayAdapter, DefaultApigatewayAdapter } from './typescript/adapters/ApigatewayAdapter';
 import { ServiceAccount } from './typescript/serviceaccount/ServiceAccount';
 import { DefaultMiddlewareAdapter, MiddlewareAdapter } from './typescript/adapters/MiddlewareAdapter';
+import { JWKS } from './typescript/jwks/JWKS';
 
 export interface KeycloakAdapter {
     getDefaultAdapter(): SecurityAdapter;
@@ -17,6 +18,8 @@ export interface KeycloakAdapter {
     getAWSLambdaAdapter(): ApigatewayAdapter;
 
     getServiceAccount():ServiceAccount;
+
+    getJWKS():JWKS;
 }
 
 export default class DefaultKeycloakAdapter implements KeycloakAdapter {
@@ -24,6 +27,10 @@ export default class DefaultKeycloakAdapter implements KeycloakAdapter {
 
     constructor(options: AdapterDependencies) {
       this.options = updateOptions(options);
+    }
+
+    getJWKS(): JWKS {
+      return this.options.jwks;
     }
 
     getServiceAccount(): ServiceAccount {

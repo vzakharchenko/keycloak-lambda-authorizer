@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-function getPolicyDocument(name) {
+function getPolicyDocument(name:string) {
   try {
     return JSON.parse(fs.readFileSync(`${__dirname}/policy${name}Document.json`, 'utf8'));
   } catch (e) {
@@ -13,7 +13,7 @@ function getPolicyDocument(name) {
 }
 
 // extract user_id from the autho0 userInfo and return it for AWS principalId
-async function getPrincipalId(userInfo) {
+async function getPrincipalId(userInfo:any) {
   if (!userInfo || (!userInfo.email && !userInfo.preferred_username)) {
     throw new Error('No email returned from authentication service');
   }
@@ -22,14 +22,14 @@ async function getPrincipalId(userInfo) {
   return userInfo.email || userInfo.preferred_username;
 }
 
-async function getUserInfo(jwt) {
+async function getUserInfo(jwt:any) {
   if (!jwt) {
     throw new Error('data empty return');
   }
   if (jwt === 'Unauthorized') {
     throw new Error('Unauthorized');
   }
-  const user = {};
+  const user:any = {};
   user.name = jwt.name;
   user.email = jwt.email;
   user.preferred_username = jwt.preferred_username;
@@ -43,7 +43,7 @@ async function getUserInfo(jwt) {
   return user;
 }
 
-export async function getAuthentication(jwt, name) {
+export async function getAuthentication(jwt:any, name:string) {
   const userInfo = await getUserInfo(jwt);
   return {
     principalId: userInfo.principalId,

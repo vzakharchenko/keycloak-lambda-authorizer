@@ -1,8 +1,9 @@
 import fs from 'fs';
 import jsonwebtoken from 'jsonwebtoken';
-import { apigateway, adapter } from 'keycloak-lambda-authorizer';
+import KeycloakAdapter from 'keycloak-lambda-authorizer';
 import { getAuthentication } from '../serverless/authorizerUtil';
 import { publicKey, privateKey } from './rsaUtils';
+import {AdapterContent, KeycloakJsonStructure, RequestContent} from "../../../typescript/Options";
 
 function getKeycloakJSON() {
   return new Promise(((resolve, reject) => {
@@ -13,7 +14,22 @@ function getKeycloakJSON() {
   }));
 }
 
-function getToken(event) {
+const keycloakAdapter = new KeycloakAdapter({
+  keycloakJson: async (options: AdapterContent, requestContent: RequestContent) => {
+    const keycloakJson = await getKeycloakJSON();
+    return <KeycloakJsonStructure> keycloakJson;
+  },
+  keys: {
+    privateKey: {
+      key: privateKey,
+    },
+    publicKey: {
+      key: publicKey,
+    },
+  }
+});
+
+function getToken(event:any) {
   const tokenString = event.authorizationToken || event.headers.Authorization;
   if (!tokenString) {
     throw new Error('Expected \'event.authorizationToken\' parameter to be set');
@@ -26,8 +42,8 @@ function getToken(event) {
   return jsonwebtoken.decode(tokenStringValue);
 }
 
-export function hello(event, context, callback) {
-  const token = getToken(event);
+export function hello(event:any, context:any, callback:any) {
+  const token:any = getToken(event);
   callback(null, {
     statusCode: 200,
     body: JSON.stringify(
@@ -38,30 +54,18 @@ export function hello(event, context, callback) {
   });
 }
 
-export async function auth0(event) {
-  const keycloakJSON = await getKeycloakJSON();
-  const token = await apigateway.awsAdapter(event, keycloakJSON, {
-    keys: {
-      privateKey: {
-        key: privateKey,
-      },
-      publicKey: {
-        key: publicKey,
-      },
-    },
-    enforce: {
-      enabled: true,
+export async function auth0(event:any) {
+  const token = await keycloakAdapter.getAPIGateWayAdapter().validate(event, {
       resource: {
         name: 'LambdaResource',
         uri: 'LambdaResource123',
         matchingUri: true,
-      },
     },
   });
-  return token.payload;
+  return token.token.payload;
 }
 
-function getDecodedToken(event) {
+function getDecodedToken(event:any) {
   try {
     return getToken(event);
   } catch (e) {
@@ -69,7 +73,7 @@ function getDecodedToken(event) {
   }
 }
 
-export function auth(event, context, callback) {
+export function auth(event:any, context:any, callback:any) {
   const token = getDecodedToken(event);
   if (token) {
     auth0(event).then((jwt) => {
@@ -97,10 +101,12 @@ export function auth(event, context, callback) {
   }
 }
 
-export function cert(event, context, callback) {
-  const jwksResponse = adapter.jwksUrl(publicKey);
+export function cert(event:any, context:any, callback:any) {
+  const jwksResponse = keycloakAdapter.getJWKS().json({
+    key: publicKey,
+  });
   callback(null, {
     statusCode: 200,
-    body: jwksResponse,
+    body: JSON.stringify(jwksResponse),
   });
 }

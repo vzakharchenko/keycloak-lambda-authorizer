@@ -47,14 +47,14 @@ export function hello(event:any, context:any, callback:any) {
 }
 
 export async function auth0(event:any) {
-  const token = await keycloakAdapter.getAPIGateWayAdapter().validate(event, {
+  const requestContent = await keycloakAdapter.getAPIGateWayAdapter().validate(event, {
     resource: {
       name: 'LambdaResource',
       uri: 'LambdaResource123',
       matchingUri: true,
     },
   });
-  return token.token.payload;
+  return requestContent.token.payload;
 }
 
 function getDecodedToken(event:any) {

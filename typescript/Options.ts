@@ -77,7 +77,6 @@ export type SecurityResource = {
     deep?: boolean,
     first?: number,
     max?: number,
-
 };
 
 // eslint-disable-next-line no-use-before-define
@@ -106,7 +105,6 @@ export type EnforcerFunction = (EnforcerFunc | Enforcer);
 export type AdapterContent = {
     keys: ClientJwtKeys,
     keycloakJson: keycloakJsonFunction,
-    token: any,
     logger: LoggerType,
     cache: AdapterCache,
     restClient: RestCalls,

@@ -12,7 +12,7 @@ Implementation [Keycloak](https://www.keycloak.org/) adapter for Cloud
 - supports AWS API Gateway
 - Resource based authorization ( [Keycloak Authorization Services](https://www.keycloak.org/docs/latest/authorization_services/) )
 - works with non amazon services.
-- [Service to Service communication](./example/userToAdminAPI).
+- [Service to Service communication](./examples/userToAdminAPI).
 - validate expiration of JWT token
 - validate JWS signature
 - supports "clientId/secret" and "client-jwt" credential types
@@ -26,66 +26,67 @@ Implementation [Keycloak](https://www.keycloak.org/) adapter for Cloud
 npm install keycloak-lambda-authorizer -S
 ```
 # Examples
- - [Serverless example (Api gateway with lambda authorizer)](example/keycloak-authorizer/README.md)
- - [Example of expressjs middleware](example/express)
- - [Example of expressjs middleware with security resource scopes](example/express-scopes)
- - [Example of calling a chain of micro services, where each service is protected by its secured client](example/chain-service-calls)
- - [Example of calling the Admin API Using the regular User Permissions (Role or Resource)](example/userToAdminAPI)
- - [CloudFront with Lambda:Edge example](example/keycloak-cloudfront/README.md)
- - [CloudFront with portal authorization (switching between security realms)](example/keycloak-cloudfront-portal)
+ - [Serverless example (Api gateway with lambda authorizer)](examples/keycloak-authorizer/README.md)
+ - [Example of expressjs middleware](examples/express)
+ - [Example of expressjs middleware with security resource scopes](examples/express-scopes)
+ - [Example of calling a chain of micro services, where each service is protected by its secured client](examples/chain-service-calls)
+ - [Example of calling the Admin API Using the regular User Permissions (Role or Resource)](examples/userToAdminAPI)
+ - [CloudFront with Lambda:Edge example](examples/keycloak-cloudfront/README.md)
+ - [CloudFront with portal authorization (switching between security realms)](examples/keycloak-cloudfront-portal)
 # How to use
 
 ### Role Based
 ```javascript
-import { apigateway } from 'keycloak-lambda-authorizer';
+import  KeycloakAdapter from 'keycloak-lambda-authorizer';
 
-export function authorizer(event, context, callback) {
-    const keycloakJSON = ...; // read Keycloak.json
-  awsAdapter.awsHandler(event, keycloakJSON, {
-    enforce: { enabled: true, role: 'SOME_ROLE' },
-  }).then((token)=>{
-      // Success
-  }).catch((e)=>{
-    // Failed
-  });
+const keycloakJSON = ...; // read Keycloak.json
+
+const keycloakAdapter = new KeycloakAdapter({
+  keycloakJson: keycloakJSON,
+});
+
+export async  function authorizer(event, context, callback) {
+
+    const requestContent = await keycloakAdapter.getAPIGateWayAdapter().validate(event, {
+     role: 'SOME_ROLE',
+    });
 }
 ```
 ### Client Role Based
 ```javascript
-import { apigateway } from 'keycloak-lambda-authorizer';
+import  KeycloakAdapter from 'keycloak-lambda-authorizer';
 
-export function authorizer(event, context, callback) {
-    const keycloakJSON = ...; // read Keycloak.json
-  awsAdapter.awsHandler(event, keycloakJSON, {
-    enforce: { enabled: true,  clientRole: {roleName: 'SOME_ROLE',clientId: 'Client Name',}, },
-  }).then((token)=>{
-      // Success
-  }).catch((e)=>{
-    // Failed
-  });
+const keycloakJSON = ...; // read Keycloak.json
+
+const keycloakAdapter = new KeycloakAdapter({
+  keycloakJson: keycloakJSON,
+});
+
+export async  function authorizer(event, context, callback) {
+    const requestContent = await keycloakAdapter.getAPIGateWayAdapter().validate(event, {
+     clientRole:{role: 'SOME_ROLE', clientId: 'Client Name'}
+    });
 }
 ```
 
 ### Resource Based (Keycloak Authorization Services)
 ```javascript
-import { apigateway } from 'keycloak-lambda-authorizer';
+import  KeycloakAdapter from 'keycloak-lambda-authorizer';
+
+const keycloakJSON = ...; // read Keycloak.json
+
+const keycloakAdapter = new KeycloakAdapter({
+  keycloakJson: keycloakJSON,
+});
 
 export function authorizer(event, context, callback) {
-    const keycloakJSON = ...; // read Keycloak.json
-  apigateway.awsHandler(event, keycloakJSON, {
-    enforce: {
-      enabled: true,
-      resource: {
-        name: 'SOME_RESOURCE',
-        uri: 'RESOURCE_URI',
-        matchingUri: true,
-      },
+    const requestContent = await keycloakAdapter.getAPIGateWayAdapter().validate(event, {
+    resource: {
+    name: 'SOME_RESOURCE',
+    uri: 'RESOURCE_URI',
+    matchingUri: true,
     },
-  }).then((token)=>{
-      // Success
-  }).catch((e)=>{
-    // Failed
-  });
+   });
 }
 ```
 
@@ -93,63 +94,32 @@ export function authorizer(event, context, callback) {
 
 ## Option structure:
 ```javascript
-{
-   "cache":"defaultCache",
-   "logger":console,
-   "keys":{
-      "privateKey":{
-        "key": privateKey,
-        "passphrase": 'privateKey passphrase'
-      },
-      "publicKey":{
-        "key": publicKey,
-      }
-    },
-   "enforce":{
-      "enabled":true,
-      "resource":{
-         "name":"SOME_RESOURCE",
-         "uri":"/test",
-         "owner":"...",
-         "type":"...",
-         "scope":"...",
-         "matchingUri":false,
-         "deep":false
-      },
-      "resources":[
-         {
-            "name":"SOME_RESOURCE1",
-            "uri":"/test1",
-            "owner":"...",
-            "type":"...",
-            "scope":"...",
-            "matchingUri":false,
-            "deep":false
-         },
-         {
-            "name":"SOME_RESOURCE2",
-            "uri":"/test2",
-            "owner":"...",
-            "type":"...",
-            "scope":"...",
-            "matchingUri":false,
-            "deep":false
-         }
-      ]
-   }
-}
-}
+    keys: ClientJwtKeys,
+    keycloakJson: keycloakJsonFunction,
+    logger: LoggerType,
+    cache: AdapterCache,
+    restClient: RestCalls,
+    enforcer: EnforcerAction,
+    umaConfiguration: UmaConfiguration,
+    clientAuthorization: ClientAuthorization,
+    serviceAccount: ServiceAccount,
+    securityAdapter: SecurityAdapter,
+    resourceChecker: ResourceChecker,
+    jwks: JWKS,
 ```
 ## Resource Structure:
 
 ```javascript
 {
-   "name":"",
-   "uri":"",
-   "owner":"",
-   "type":"",
-   "scope":"",
-   "matchingUri":false
+    name?: string,
+    uri?: string,
+    owner?: string,
+    type?: string,
+    scope?: string,
+    matchingUri?: boolean,
+    deep?: boolean,
+    first?: number,
+    max?: number,
 }
 ```
 - **name** : unique name of resource
@@ -163,51 +133,41 @@ export function authorizer(event, context, callback) {
 
 ## Change logger
 ```javascript
-awsHandler(event, keycloakJSON, {
-      logger:winston,
-      ...
-  }).then().catch()
-```
-```javascript
-const winston from 'winston';
-import { awsHandler } from 'keycloak-lambda-authorizer';
+import  KeycloakAdapter from 'keycloak-lambda-authorizer';
+import winston from 'winston';
 
-export function authorizer(event, context, callback) {
-    const keycloakJSON = ...; // read Keycloak.json
-  awsHandler(event, keycloakJSON, {
-      logger:winston
-  }).then((token)=>{
-      // Success
-  }).catch((e)=>{
-    // Failed
-  });
-}
+const keycloakJSON = ...; // read Keycloak.json
+
+const keycloakAdapter = new KeycloakAdapter({
+  keycloakJson: keycloakJSON,
+  logger:winston
+});
+
 ```
 
 ## ExpressJS middleware
 
 ```js
-const fs = require('fs');
-const { middlewareAdapter } = require('keycloak-lambda-authorizer');
+import fs from 'fs';
+import express from 'express';
+import KeycloakAdapter from 'keycloak-lambda-authorizer';
 
 function getKeycloakJSON() {
   return JSON.parse(fs.readFileSync(`${__dirname}/keycloak.json`, 'utf8'));
 }
 
+const keycloakAdapter = new KeycloakAdapter({
+  keycloakJson: getKeycloakJSON(),
+});
+
 const app = express();
 
-app.get('/expressServiceApi', middlewareAdapter(
-  getKeycloakJSON(),
-  {
-    enforce: {
-      enabled: true,
-      resource: {
-        name: 'service-api',
-      },
-    },
+app.get('/expressServiceApi', keycloakAdapter.getExpressMiddlewareAdapter().middleware({
+  resource: {
+    name: 'service-api',
   },
-).middleware,
-async (request, response) => {
+}),
+async (request:any, response) => {
   response.json({
     message: `Hi ${request.jwt.payload.preferred_username}. Your function executed successfully!`,
   });
@@ -217,121 +177,94 @@ async (request, response) => {
 ## Get Service Account Token
  - ExpressJS
 ```js
-const fs = require('fs');
-const { middlewareAdapter } = require('keycloak-lambda-authorizer');
+
+import fs from 'fs';
+import express from 'express';
+import KeycloakAdapter from 'keycloak-lambda-authorizer';
 
 function getKeycloakJSON() {
   return JSON.parse(fs.readFileSync(`${__dirname}/keycloak.json`, 'utf8'));
 }
 
+const expressMiddlewareAdapter = new KeycloakAdapter({
+  keycloakJson: getKeycloakJSON(),
+}).getExpressMiddlewareAdapter();
+
 const app = express();
 
-app.get('/expressServiceApi', middlewareAdapter(
-  getKeycloakJSON(),
+app.get('/expressServiceApi', expressMiddlewareAdapter.middleware(
   {
-    enforce: {
-      enabled: true,
-      resource: {
-        name: 'service-api',
-      },
+    resource: {
+      name: 'service-api',
     },
   },
-).middleware,
-async (request, response) => {
-  const serviceAccountToken = await request.serviceAccountJWT();
-  ...
+),
+async (request:any, response) => {
+  const serviceJWT = await request.serviceAccountJWT();
+ ...
 });
 ```
 - AWS Lambda/Serverless or another cloud
 
 ```js
-const { serviceAccountJWT } = require('keycloak-lambda-authorizer/src/serviceAccount');
+import KeycloakAdapter from 'keycloak-lambda-authorizer';
 
-const keycloakJSON = ...
+const keycloakJson = ...;
+
+const keycloakAdapter = new KeycloakAdapter({
+  keycloakJson: keycloakJson,
+});
 
 async function getServiceAccountJWT(){
-   return serviceAccountJWT(keycloakJSON);
+   return await keycloakAdapter.serviceAccountJWT();
 }
-
 ...
-
 const serviceAccountToken = await getServiceAccountJWT();
+...
 ```
 
 - AWS Lambda/Serverless or another cloud with Signed JWT
 
 ```js
-const { serviceAccountJWT } = require('keycloak-lambda-authorizer/src/serviceAccount');
+import KeycloakAdapter from 'keycloak-lambda-authorizer';
 
-const keycloakJSON = ...
-const options = {
-    "keys":{
-          "privateKey":{
-            "key": privateKey,
-            "passphrase": 'privateKey passphrase'
-          },
-          "publicKey":{
-            "key": publicKey,
-          }
-        }
-}
+const keycloakJson = ...;
+
+const keycloakAdapter = new KeycloakAdapter({
+  keycloakJson: keycloakJson,
+  keys: {
+      privateKey: {
+        key: privateKey,
+      },
+      publicKey: {
+        key: publicKey,
+      },
+    }
+});
 
 async function getServiceAccountJWT(){
-   return serviceAccountJWT(keycloakJSON,options);
+   return await keycloakAdapter.serviceAccountJWT();
 }
-
 ...
 
 const serviceAccountToken = await getServiceAccountJWT();
+
 ```
-
-
-
 
 ## Cache
 Example of cache:
 ```javascript
-const NodeCache = require('node-cache');
 
-const defaultCache = new NodeCache({ stdTTL: 180, checkperiod: 0, errorOnMissing: false });
-const rptCache = new NodeCache({ stdTTL: 1800, checkperiod: 0, errorOnMissing: false });
-const resourceCache = new NodeCache({ stdTTL: 30, checkperiod: 0, errorOnMissing: false });
+export class DefaultCache implements AdapterCache {
+  async get(region: string, key: string): Promise<string | undefined> {
+    ...
+  }
 
-async function put(region, key, value, ttl) {
-  if (region === 'publicKey') {
-    defaultCache.set(key, value, ttl);
-  } else if (region === 'uma2-configuration') {
-    defaultCache.set(key, value, ttl);
-  } else if (region === 'client_credentials') {
-    defaultCache.set(key, value, ttl);
-  } else if (region === 'resource') {
-    resourceCache.set(key, value, ttl);
-  } else if (region === 'rpt') {
-    rptCache.set(key, value, ttl);
-  } else {
-    throw new Error('Unsupported Region');
+  async put(region: string, key: string, value: any, ttl: number): Promise<void> {
+    ...
   }
 }
 
-async function get(region, key) {
-  if (region === 'publicKey') {
-    return defaultCache.get(key);
-  } if (region === 'uma2-configuration') {
-    return defaultCache.get(key);
-  } if (region === 'client_credentials') {
-    return defaultCache.get(key);
-  } if (region === 'resource') {
-    return resourceCache.get(key);
-  } if (region === 'rpt') {
-    return rptCache.get(key);
-  }
-  throw new Error('Unsupported Region');
-}
-
-module.exports = {
-  put,
-  get,
-};
 ```
 ### Cache Regions:
 
@@ -344,18 +277,15 @@ module.exports = {
 ### Change Cache:
 
 ```javascript
-import { awsHandler } from 'keycloak-lambda-authorizer';
 
-export function authorizer(event, context, callback) {
-    const keycloakJSON = ...; // read Keycloak.json
-  awsHandler(event, keycloakJSON, {
-      cache: newCache,
-  }).then((token)=>{
-      // Success
-  }).catch((e)=>{
-    // Failed
-  });
-}
+import  KeycloakAdapter from 'keycloak-lambda-authorizer';
+
+const keycloakJSON = ...; // read Keycloak.json
+
+const keycloakAdapter = new KeycloakAdapter({
+  keycloakJson: keycloakJSON,
+  cache:newCache
+});
 ```
 
 ## Client Jwt Credential Type
@@ -397,15 +327,29 @@ functions:
 ```
  - lambda function (handler.cert)
 ```javascript
-import { jwksUrl } from 'keycloak-lambda-authorizer';
+import KeycloakAdapter from 'keycloak-lambda-authorizer';
 
-export function cert(event, context, callback) {
-  const jwksResponse = jwksUrl(publicKey);
+const keycloakJson = ...;
+
+const keycloakAdapter = new KeycloakAdapter({
+  keycloakJson: keycloakJson,
+  keys: {
+      privateKey: {
+        key: privateKey,
+      },
+      publicKey: {
+        key: publicKey,
+      },
+    }
+});
+
+  const jwksResponse = keycloakAdapter.getJWKS().json({
+    key: publicKey,
+  });
   callback(null, {
     statusCode: 200,
-    body: jwksResponse,
+    body: JSON.stringify(jwksResponse),
   });
-}
 ```
  - Keycloak Settings
 ![Keycloak Admin Console 2020-04-12 13-30-26](docs/Keycloak%20Admin%20Console%202020-04-12%2013-30-26.png)
@@ -414,39 +358,30 @@ export function cert(event, context, callback) {
 ### Create Api GateWay Authorizer function
 
 ```javascript
-import { awsHandler } from 'keycloak-lambda-authorizer';
+import KeycloakAdapter from 'keycloak-lambda-authorizer';
 
-export function authorizer(event, context, callback) {
-    const keycloakJSON = ...; // read Keycloak.json
-  awsHandler(event, keycloakJSON, {
-    keys:{
-      privateKey:{
-        key: privateKey,
-      },
-      publicKey:{
-        key: publicKey,
-      }
-    },
-    enforce: {
-      enabled: true,
-      resource: {
-        name: 'SOME_RESOURCE',
-        uri: 'RESOURCE_URI',
-        matchingUri: true,
-      },
-    },
-  }).then((token)=>{
-      // Success
-  }).catch((e)=>{
-    // Failed
-  });
+const keycloakJson = ...;
+
+const keycloakAdapter = new KeycloakAdapter({
+  keycloakJson: keycloakJson
+});
+
+export async function authorizer(event, context, callback) {
+   const requestContent = await keycloakAdapter.getAPIGateWayAdapter().validate(event, {
+       resource: {
+         name: 'LambdaResource',
+         uri: 'LambdaResource123',
+         matchingUri: true,
+     },
+   });
+   return requestContent.token.payload;
 }
 ```
 
 # Implementation For Custom Service or non amazon cloud
 
 ```javascript
-import { adapter } from 'keycloak-lambda-authorizer';
+import KeycloakAdapter from 'keycloak-lambda-authorizer';
 
 const keycloakJson = {
    "realm": "lambda-authorizer",
@@ -461,6 +396,11 @@ const keycloakJson = {
    "policy-enforcer": {}
 }
 
+const keycloakAdapter = new KeycloakAdapter({
+  keycloakJson: keycloakJson
+}).getDefaultAdapter();
+
+
 async function handler(request,response) {
   const authorization = request.headers.Authorization;
   const match = authorization.match(/^Bearer (.*)$/);
@@ -468,15 +408,12 @@ async function handler(request,response) {
     throw new Error(`Invalid Authorization token - '${authorization}' does not match 'Bearer .*'`);
   }
   const jwtToken =  match[1];
-  await adapter(jwtToken,keycloakJson, {
-                                        enforce: {
-                                          enabled: true,
+  await keycloakAdapter.validate(jwtToken, {
                                           resource: {
                                             name: 'SOME_RESOURCE',
                                             uri: 'RESOURCE_URI',
                                             matchingUri: true,
                                           },
-                                        },
                                       });
 ...
 }

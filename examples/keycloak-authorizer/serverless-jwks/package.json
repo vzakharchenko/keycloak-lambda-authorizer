@@ -7,6 +7,7 @@
     "build": "NODE_ENV=production webpack --config webpack.config.babel.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "offline": "SLS_DEBUG=* serverless offline --host 0.0.0.0 --httpPort 3004 --dontPrintOutput",
+    "start": "SLS_DEBUG=* serverless offline --host 0.0.0.0 --httpPort 3004 --dontPrintOutput",
     "keys": "openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -subj \"/C=US/ST=Denial/L=Springfield/O=Dis/CN=lambda-jwks\" -keyout ../../resources/server.key -out ../../resources/server.crt",
     "deploy": "serverless deploy --aws-profile aws-home",
     "link:dep": "cd ../../.. && npm link && cd example/keycloak-authorizer/serverless-jwks && npm link keycloak-lambda-authorizer",
@@ -34,9 +35,11 @@
     "serverless-offline": "*",
     "serverless-webpack": "*",
     "webpack": "^5.39.0",
-    "webpack-cli": "^4.7.2"
+    "webpack-cli": "^4.7.2",
+    "ts-loader": "*",
+    "typescript": "*"
   },
   "dependencies": {
-    "keycloak-lambda-authorizer": "*"
+    "keycloak-lambda-authorizer": "../../.."
   }
 }

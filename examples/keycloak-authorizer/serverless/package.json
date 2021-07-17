@@ -7,6 +7,7 @@
     "build": "NODE_ENV=production webpack --config webpack.config.babel.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "offline": "SLS_DEBUG=* serverless offline --host 0.0.0.0 --httpPort 3003 --lambdaPort=3019 --dontPrintOutput",
+    "start": "SLS_DEBUG=* serverless offline --host 0.0.0.0 --httpPort 3003 --lambdaPort=3019 --dontPrintOutput",
     "deploy": "serverless deploy --aws-profile aws-home",
     "lint": "eslint --quiet --ext .js handler.js",
     "lint:fix": "eslint --fix --quiet --ext .js handler.js"
@@ -14,14 +15,14 @@
   "author": "vzakharchenko",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@babel/core": "^7.14.0",
-    "@babel/plugin-proposal-decorators": "^7.13.15",
-    "@babel/plugin-proposal-object-rest-spread": "^7.13.8",
-    "@babel/plugin-transform-async-to-generator": "^7.13.0",
-    "@babel/plugin-transform-runtime": "^7.13.15",
-    "@babel/preset-env": "^7.14.0",
-    "@babel/register": "^7.13.16",
-    "@babel/runtime": "^7.14.0",
+    "@babel/core": "^7.14.6",
+    "@babel/plugin-proposal-decorators": "^7.14.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.14.7",
+    "@babel/plugin-transform-async-to-generator": "^7.14.5",
+    "@babel/plugin-transform-runtime": "^7.14.5",
+    "@babel/preset-env": "^7.14.7",
+    "@babel/register": "^7.14.5",
+    "@babel/runtime": "^7.14.6",
     "babel-loader": "^8.2.2",
     "copy-webpack-plugin": "*",
     "eslint": "*",
@@ -31,8 +32,10 @@
     "serverless": "*",
     "serverless-offline": "*",
     "serverless-webpack": "*",
-    "webpack": "^5.36.2",
-    "webpack-cli": "^4.6.0"
+    "webpack": "^5.45.1",
+    "webpack-cli": "^4.7.2",
+    "ts-loader": "*",
+    "typescript": "*"
   },
   "dependencies": {
     "keycloak-lambda-authorizer": "../../.."

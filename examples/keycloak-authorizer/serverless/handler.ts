@@ -1,8 +1,9 @@
 import fs from 'fs';
 import jsonwebtoken from 'jsonwebtoken';
-import { apigateway } from 'keycloak-lambda-authorizer';
+import KeycloakAdapter from 'keycloak-lambda-authorizer';
 
 import { getAuthentication } from './authorizerUtil';
+import {AdapterContent, KeycloakJsonStructure, RequestContent} from '../../../typescript/Options';
 
 function getKeycloakJSON() {
   return new Promise(((resolve, reject) => {
@@ -13,7 +14,14 @@ function getKeycloakJSON() {
   }));
 }
 
-function getToken(event) {
+const keycloakAdapter = new KeycloakAdapter({
+  keycloakJson: async (options: AdapterContent, requestContent: RequestContent) => {
+    const keycloakJson = await getKeycloakJSON();
+    return <KeycloakJsonStructure> keycloakJson;
+  },
+});
+
+function getToken(event:any) {
   const tokenString = event.authorizationToken || event.headers.Authorization;
   if (!tokenString) {
     throw new Error('Expected \'event.authorizationToken\' parameter to be set');
@@ -26,8 +34,8 @@ function getToken(event) {
   return jsonwebtoken.decode(tokenStringValue);
 }
 
-export function hello(event, context, callback) {
-  const token = getToken(event);
+export function hello(event:any, context:any, callback:any) {
+  const token:any = getToken(event);
   callback(null, {
     statusCode: 200,
     body: JSON.stringify(
@@ -38,22 +46,18 @@ export function hello(event, context, callback) {
   });
 }
 
-export async function auth0(event) {
-  const keycloakJSON = await getKeycloakJSON();
-  const token = await apigateway.awsAdapter(event, keycloakJSON, {
-    enforce: {
-      enabled: true,
-      resource: {
-        name: 'LambdaResource',
-        uri: 'LambdaResource123',
-        matchingUri: true,
-      },
+export async function auth0(event:any) {
+  const token = await keycloakAdapter.getAPIGateWayAdapter().validate(event, {
+    resource: {
+      name: 'LambdaResource',
+      uri: 'LambdaResource123',
+      matchingUri: true,
     },
   });
-  return token.payload;
+  return token.token.payload;
 }
 
-function getDecodedToken(event) {
+function getDecodedToken(event:any) {
   try {
     return getToken(event);
   } catch (e) {
@@ -61,7 +65,7 @@ function getDecodedToken(event) {
   }
 }
 
-export function auth(event, context, callback) {
+export function auth(event:any, context:any, callback:any) {
   const token = getDecodedToken(event);
   if (token) {
     auth0(event).then((jwt) => {

@@ -25,50 +25,50 @@ jobs:
       - store_artifacts:
           path: .coverage
       - run:
-          name: build example/keycloak-authorizer serverless
-          command: cd example/keycloak-authorizer/serverless && npm i
+          name: build examples/keycloak-authorizer serverless
+          command: cd examples/keycloak-authorizer/serverless && npm i
       - run:
-          name: lint example/keycloak-authorizer serverless
-          command: cd example/keycloak-authorizer/serverless && npm run lint
+          name: lint examples/keycloak-authorizer serverless
+          command: cd examples/keycloak-authorizer/serverless && npm run lint
       - run:
-          name: build example/keycloak-authorizer serverless-jwks
-          command: cd example/keycloak-authorizer/serverless-jwks && npm i
+          name: build examples/keycloak-authorizer serverless-jwks
+          command: cd examples/keycloak-authorizer/serverless-jwks && npm i
       - run:
-          name: lint example/keycloak-authorizer serverless-jwks
-          command: cd example/keycloak-authorizer/serverless-jwks && npm run lint
+          name: lint examples/keycloak-authorizer serverless-jwks
+          command: cd examples/keycloak-authorizer/serverless-jwks && npm run lint
       - run:
-          name: build example/keycloak-authorizer ui
-          command: cd example/keycloak-authorizer/ui && npm i
+          name: build examples/keycloak-authorizer ui
+          command: cd examples/keycloak-authorizer/ui && npm i
       - run:
-          name: lint example/keycloak-authorizer ui
-          command: cd example/keycloak-authorizer/ui && npm run lint
+          name: lint examples/keycloak-authorizer ui
+          command: cd examples/keycloak-authorizer/ui && npm run lint
       - run:
-          name: lint example/chain-service-calls/frontend
-          command: cd example/chain-service-calls/frontend && npm i && npm run lint
+          name: lint examples/chain-service-calls/frontend
+          command: cd examples/chain-service-calls/frontend && npm i && npm run lint
       - run:
-          name: lint example/chain-service-calls/service1
-          command: cd example/chain-service-calls/service1 && npm i && npm run lint
+          name: lint examples/chain-service-calls/service1
+          command: cd examples/chain-service-calls/service1 && npm i && npm run lint
       - run:
-          name: lint example/chain-service-calls/service2
-          command: cd example/chain-service-calls/service2 && npm i && npm run lint
+          name: lint examples/chain-service-calls/service2
+          command: cd examples/chain-service-calls/service2 && npm i && npm run lint
       - run:
-          name: lint example/chain-service-calls/service3
-          command: cd example/chain-service-calls/service3 && npm i && npm run lint
+          name: lint examples/chain-service-calls/service3
+          command: cd examples/chain-service-calls/service3 && npm i && npm run lint
       - run:
-          name: lint example/express/frontend
-          command: cd example/express/frontend && npm i && npm run lint
+          name: lint examples/express/frontend
+          command: cd examples/express/frontend && npm i && npm run lint
       - run:
-          name: lint example/express/express-service
-          command: cd example/express/express-service && npm i && npm run lint
+          name: lint examples/express/express-service
+          command: cd examples/express/express-service && npm i && npm run lint
       - run:
-          name: lint example/express-scopes/frontend
-          command: cd example/express-scopes/frontend && npm i && npm run lint
+          name: lint examples/express-scopes/frontend
+          command: cd examples/express-scopes/frontend && npm i && npm run lint
       - run:
-          name: lint example/express-scopes/express-service
-          command: cd example/express-scopes/express-service && npm i && npm run lint
+          name: lint examples/express-scopes/express-service
+          command: cd examples/express-scopes/express-service && npm i && npm run lint
       - run:
-          name: lint example/userToAdminAPI/frontend
-          command: cd example/userToAdminAPI/frontend && npm i && npm run lint
+          name: lint examples/userToAdminAPI/frontend
+          command: cd examples/userToAdminAPI/frontend && npm i && npm run lint
       - run:
-          name: lint example/userToAdminAPI/express-service
-          command: cd example/userToAdminAPI/express-service && npm i && npm run lint
+          name: lint examples/userToAdminAPI/express-service
+          command: cd examples/userToAdminAPI/express-service && npm i && npm run lint

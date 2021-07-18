@@ -1,8 +1,8 @@
 const NodeCache = require('node-cache');
 
-const defaultCache = new NodeCache({ stdTTL: 180, errorOnMissing: false });
-const rptCache = new NodeCache({ stdTTL: 1800, errorOnMissing: false });
-const resourceCache = new NodeCache({ stdTTL: 30, errorOnMissing: false });
+const defaultCache = new NodeCache({stdTTL: 180, errorOnMissing: false});
+const rptCache = new NodeCache({stdTTL: 1800, errorOnMissing: false});
+const resourceCache = new NodeCache({stdTTL: 30, errorOnMissing: false});
 
 async function put(region, key, value, ttl) {
   if (region === 'publicKey') {

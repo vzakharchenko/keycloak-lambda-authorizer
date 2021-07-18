@@ -1,10 +1,8 @@
 jest.mock('../../../src/keycloakAuthorizer');
 jest.mock('../../../src/Jwks');
 const keycloakAuthorizer = require('../../../src/keycloakAuthorizer');
-
 const jwks = require('../../../src/Jwks');
-
-const { lambdaAdapter, jwksUrl } = require('../../../src/adapter/adapter');
+const {lambdaAdapter, jwksUrl} = require('../../../src/adapter/adapter');
 
 describe('testing adapter', () => {
   beforeEach(() => {

@@ -1,13 +1,14 @@
 jest.mock('axios');
 
 const fetch = require('axios');
+
 const restCalls = require('../../../src/utils/restCalls');
 
 describe('testing restCallTest', () => {
   beforeEach(() => {
     fetch.mockImplementation(async (data) => {
       data.transformResponse('test');
-      return { data: JSON.stringify({ response: 'test' }) };
+      return {data: JSON.stringify({response: 'test'})};
     });
   });
 

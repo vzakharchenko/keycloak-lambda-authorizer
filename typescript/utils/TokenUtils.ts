@@ -1,16 +1,19 @@
 import jsonwebtoken, {Secret} from 'jsonwebtoken';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import KeyCloakCerts from 'get-keycloak-public-key';
+
 import {AdapterContent, JWTToken, RequestContent} from '../Options';
-import { getKeycloakUrl, getUrl } from './KeycloakUtils';
+
+import {getKeycloakUrl, getUrl} from './KeycloakUtils';
 
 export function decodeToken(tokenString:string):JWTToken {
-  const token:any = jsonwebtoken.decode(tokenString, { complete: true });
+  const token:any = jsonwebtoken.decode(tokenString, {complete: true});
   if (!token || !token.header) {
     throw new Error('invalid token (header part)');
   } else {
-    const { kid } = token.header;
-    const { alg } = token.header;
+    const {kid} = token.header;
+    const {alg} = token.header;
     if (alg.toLowerCase() === 'none' || !kid) {
       throw new Error('invalid token');
     }
@@ -22,7 +25,7 @@ export function decodeToken(tokenString:string):JWTToken {
 async function getKeyFromKeycloak(requestContent:RequestContent,
                                   options:AdapterContent,
                                   kid:string) {
-  let cache = options.cache;
+  const cache = options.cache;
   let publicKey = await cache.get('publicKey', kid);
   if (!publicKey) {
     const kJson = await options.keycloakJson(options, requestContent);
@@ -37,8 +40,9 @@ async function getKeyFromKeycloak(requestContent:RequestContent,
 
 export async function verifyToken(requestContent:RequestContent,
                                   options:AdapterContent):Promise<JWTToken> {
-  const { kid } = requestContent.token.header;
-  const { alg } = requestContent.token.header;
+  const {kid} = requestContent.token.header;
+  const {alg} = requestContent.token.header;
+  // eslint-disable-next-line no-negated-condition
   if (!alg.toLowerCase().startsWith('hs')) {
     // fetch the PEM Public Key
     const key:Secret = <Secret> await getKeyFromKeycloak(requestContent, options, kid);

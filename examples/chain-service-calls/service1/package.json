@@ -7,8 +7,8 @@
     "start": "SERVICE2_URL=http://localhost:3003/dev/ SERVICE3_URL=http://localhost:3004/dev/  node .",
     "build": "tsc",
     "prestart": "npm run build",
-    "lint": "eslint --quiet --ext .js index.js",
-    "lint:fix": "eslint --fix --quiet --ext .js index.js",
+    "lint": "eslint --quiet --ext .ts index.ts",
+    "lint:fix": "eslint --fix --quiet --ext .ts index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "vzakharchenko",

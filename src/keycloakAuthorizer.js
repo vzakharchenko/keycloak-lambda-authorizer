@@ -1,9 +1,9 @@
 const jsonwebtoken = require('jsonwebtoken');
-
 const KeyCloakCerts = require('get-keycloak-public-key');
-const { getKeycloakUrl, getUrl } = require('./utils/restCalls');
-const { enforce } = require('./umaConfiguration');
-const { commonOptions } = require('./utils/optionsUtils');
+
+const {getKeycloakUrl, getUrl} = require('./utils/restCalls');
+const {enforce} = require('./umaConfiguration');
+const {commonOptions} = require('./utils/optionsUtils');
 
 async function getKeyFromKeycloak(options, kid) {
   let publicKey = await options.cache.get('publicKey', kid);
@@ -19,7 +19,7 @@ async function getKeyFromKeycloak(options, kid) {
 }
 
 function getAuthHeader(event) {
-  const { headers } = event;
+  const {headers} = event;
   return headers ? headers.Authorization : null;
 }
 
@@ -36,8 +36,8 @@ function getTokenString(event) {
 }
 
 async function verifyToken(token, options) {
-  const { kid } = token.header;
-  const { alg } = token.header;
+  const {kid} = token.header;
+  const {alg} = token.header;
   if (!alg.toLowerCase().startsWith('hs')) {
     // fetch the PEM Public Key
     const key = await getKeyFromKeycloak(options, kid);
@@ -56,12 +56,12 @@ async function verifyToken(token, options) {
 }
 
 function decodeToken(tokenString) {
-  const token = jsonwebtoken.decode(tokenString, { complete: true });
+  const token = jsonwebtoken.decode(tokenString, {complete: true});
   if (!token || !token.header) {
     throw new Error('invalid token (header part)');
   } else {
-    const { kid } = token.header;
-    const { alg } = token.header;
+    const {kid} = token.header;
+    const {alg} = token.header;
     if (alg.toLowerCase() === 'none' || !kid) {
       throw new Error('invalid token');
     }

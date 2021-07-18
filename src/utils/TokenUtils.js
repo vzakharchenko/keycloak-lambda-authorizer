@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
-const { lambdaAdapter } = require('../adapter/adapter');
-const { keycloakRefreshToken } = require('../clientAuthorization');
+const {lambdaAdapter} = require('../adapter/adapter');
+const {keycloakRefreshToken} = require('../clientAuthorization');
 
 function decodeAccessToken(externalToken) {
   const token = externalToken.access_token ? externalToken.access_token : externalToken;

@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node .",
-    "lint": "eslint --quiet --ext .js index.js",
+    "lint": "eslint --quiet --ext .ts index.ts",
     "build": "tsc",
     "prestart": "npm run build",
-    "lint:fix": "eslint --fix --quiet --ext .js index.js",
+    "lint:fix": "eslint --fix --quiet --ext .ts index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "vzakharchenko",

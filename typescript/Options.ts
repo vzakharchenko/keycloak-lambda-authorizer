@@ -1,16 +1,18 @@
-import { AdapterCache } from './cache/AdapterCache';
-import { RestCalls } from './utils/restCalls';
-import { DefaultRestCalls } from './utils/DefaultRestCalls';
-import { DefaultEnforcer, EnforcerAction } from './enforcer/Enforcer';
-import { DefaultUmaConfiguration, UmaConfiguration } from './uma/UmaConfiguration';
-import { ClientAuthorization, DefaultClientAuthorization } from './clients/ClientAuthorization';
-import { DefaultJWKS, JWKS } from './jwks/JWKS';
-import { DefaultServiceAccount, ServiceAccount } from './serviceaccount/ServiceAccount';
-import { SecurityAdapter } from './adapters/SecurityAdapter';
-import { DefaultAdapter } from './adapters/DefaultAdapter';
-import { DefaultResourceChecker, ResourceChecker } from './enforcer/resource/Resource';
-import { DefaultCache } from './cache/DefaultCache';
-import { AwsAuthorizationEvent, AwsEvent } from './adapters/ApigatewayAdapter';
+/* eslint-disable babel/camelcase, @typescript-eslint/ban-ts-comment
+*/
+import {AdapterCache} from './cache/AdapterCache';
+import {RestCalls} from './utils/restCalls';
+import {DefaultRestCalls} from './utils/DefaultRestCalls';
+import {DefaultEnforcer, EnforcerAction} from './enforcer/Enforcer';
+import {DefaultUmaConfiguration, UmaConfiguration} from './uma/UmaConfiguration';
+import {ClientAuthorization, DefaultClientAuthorization} from './clients/ClientAuthorization';
+import {DefaultJWKS, JWKS} from './jwks/JWKS';
+import {DefaultServiceAccount, ServiceAccount} from './serviceaccount/ServiceAccount';
+import {SecurityAdapter} from './adapters/SecurityAdapter';
+import {DefaultAdapter} from './adapters/DefaultAdapter';
+import {DefaultResourceChecker, ResourceChecker} from './enforcer/resource/Resource';
+import {DefaultCache} from './cache/DefaultCache';
+import {AwsAuthorizationEvent, AwsEvent} from './adapters/ApigatewayAdapter';
 
 export type LoggerType = {
     log: (...data: any[]) => void,
@@ -99,7 +101,6 @@ export type Enforcer = {
 // eslint-disable-next-line no-use-before-define
 export type EnforcerFunc = (options: AdapterContent, requestContent: RequestContent) =>
     (Promise<Enforcer> | Enforcer);
-// eslint-disable-next-line no-use-before-define
 export type EnforcerFunction = (EnforcerFunc | Enforcer);
 
 export type AdapterContent = {
@@ -142,7 +143,7 @@ export function updateOptions(opts: AdapterDependencies): AdapterContent {
   // @ts-ignore
   const options: AdapterContent = opts;
   if (typeof options.keycloakJson !== 'function') {
-    const { keycloakJson } = options;
+    const {keycloakJson} = options;
     options.keycloakJson = (adapterOptions: AdapterContent) => keycloakJson;
   }
   if (!options.restClient) {

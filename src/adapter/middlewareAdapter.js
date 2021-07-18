@@ -1,9 +1,9 @@
-const { decode } = require('jsonwebtoken');
-const { serviceAccountJWT } = require('../serviceAccount');
+const {decode} = require('jsonwebtoken');
 
-const { commonOptions } = require('../utils/optionsUtils');
-const { jwksUrlResponse } = require('../Jwks');
-const { adapter } = require('../keycloakAuthorizer');
+const {serviceAccountJWT} = require('../serviceAccount');
+const {commonOptions} = require('../utils/optionsUtils');
+const {jwksUrlResponse} = require('../Jwks');
+const {adapter} = require('../keycloakAuthorizer');
 
 const jwksRoute = new RegExp('(^)(\\/|)(/service/jwks)(/$|(\\?|$))', 'g');
 
@@ -20,7 +20,7 @@ function getTokenString(req) {
   if (!match || match.length < 2) {
     throw new Error(`Invalid Authorization token - '${tokenString}' does not match 'Bearer .*'`);
   }
-  req.jwt = { token: match[1], payload: decode(match[1]) };
+  req.jwt = {token: match[1], payload: decode(match[1])};
   return match[1];
 }
 
@@ -45,7 +45,7 @@ async function middleware(keycloakJson, options, middlewareParams) {
 function middlewareAdapter(keycloakJson, options) {
   return {
     async middleware(request, response, next) {
-      await middleware(keycloakJson, options, { request, response, next });
+      await middleware(keycloakJson, options, {request, response, next});
     },
   };
 }

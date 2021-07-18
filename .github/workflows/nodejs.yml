@@ -27,21 +27,21 @@ jobs:
     - run: npm i
     - run: npm run lint
     - run: npm run test
-    - run: cd example/keycloak-authorizer/serverless && npm i
-    - run: cd example/keycloak-authorizer/serverless && npm run lint
-    - run: cd example/keycloak-authorizer/serverless-jwks && npm i
-    - run: cd example/keycloak-authorizer/serverless-jwks && npm run lint
-    - run: cd example/keycloak-authorizer/ui && npm i
-    - run: cd example/keycloak-authorizer/ui && npm run lint
-    - run:  cd example/chain-service-calls/frontend && npm i && npm run lint
-    - run:  cd example/chain-service-calls/service1 && npm i && npm run lint
-    - run:  cd example/chain-service-calls/service2 && npm i && npm run lint
-    - run:  cd example/chain-service-calls/service3 && npm i && npm run lint
-    - run:  cd example/express/frontend && npm i && npm run lint
-    - run:  cd example/express/express-service && npm i && npm run lint
-    - run:  cd example/express-scopes/frontend && npm i && npm run lint
-    - run:  cd example/express-scopes/express-service && npm i && npm run lint
-    - run:  cd example/userToAdminAPI/frontend && npm i && npm run lint
-    - run:  cd example/userToAdminAPI/express-service && npm i && npm run lint
+    - run: cd examples/keycloak-authorizer/serverless && npm i
+    - run: cd examples/keycloak-authorizer/serverless && npm run lint
+    - run: cd examples/keycloak-authorizer/serverless-jwks && npm i
+    - run: cd examples/keycloak-authorizer/serverless-jwks && npm run lint
+    - run: cd examples/keycloak-authorizer/ui && npm i
+    - run: cd examples/keycloak-authorizer/ui && npm run lint
+    - run:  cd examples/chain-service-calls/frontend && npm i && npm run lint
+    - run:  cd examples/chain-service-calls/service1 && npm i && npm run lint
+    - run:  cd examples/chain-service-calls/service2 && npm i && npm run lint
+    - run:  cd examples/chain-service-calls/service3 && npm i && npm run lint
+    - run:  cd examples/express/frontend && npm i && npm run lint
+    - run:  cd examples/express/express-service && npm i && npm run lint
+    - run:  cd examples/express-scopes/frontend && npm i && npm run lint
+    - run:  cd examples/express-scopes/express-service && npm i && npm run lint
+    - run:  cd examples/userToAdminAPI/frontend && npm i && npm run lint
+    - run:  cd examples/userToAdminAPI/express-service && npm i && npm run lint
 
 

@@ -1,27 +1,33 @@
 import fs from 'fs';
+
 import jsonwebtoken from 'jsonwebtoken';
 import KeycloakAdapter from 'keycloak-lambda-authorizer';
 
-import { getAuthentication } from './authorizerUtil';
 import {AdapterContent, KeycloakJsonStructure, RequestContent} from '../../../typescript/Options';
+
+import {getAuthentication} from './authorizerUtil';
 
 function getKeycloakJSON() {
   return new Promise(((resolve, reject) => {
     fs.readFile(`${__dirname}/keycloak.json`, 'utf8', (err, data) => {
-      if (err) reject(err);
-      else resolve(JSON.parse(data));
+      if (err) {
+        reject(err);
+      } else {
+        resolve(JSON.parse(data));
+      }
     });
   }));
 }
 
 const keycloakAdapter = new KeycloakAdapter({
+  // eslint-disable-next-line no-unused-vars
   keycloakJson: async (options: AdapterContent, requestContent: RequestContent) => {
     const keycloakJson = await getKeycloakJSON();
-    return <KeycloakJsonStructure> keycloakJson;
+    return <KeycloakJsonStructure>keycloakJson;
   },
 });
 
-function getToken(event:any) {
+function getToken(event: any) {
   const tokenString = event.authorizationToken || event.headers.Authorization;
   if (!tokenString) {
     throw new Error('Expected \'event.authorizationToken\' parameter to be set');
@@ -34,19 +40,19 @@ function getToken(event:any) {
   return jsonwebtoken.decode(tokenStringValue);
 }
 
-export function hello(event:any, context:any, callback:any) {
-  const token:any = getToken(event);
+export function hello(event: any, context: any, callback: any) {
+  const token: any = getToken(event);
   callback(null, {
     statusCode: 200,
     body: JSON.stringify(
       {
         message: `Hi ${token.preferred_username}. Your function executed successfully!`,
       },
-    ),
+        ),
   });
 }
 
-export async function auth0(event:any) {
+export async function auth0(event: any) {
   const requestContent = await keycloakAdapter.getAPIGateWayAdapter().validate(event, {
     resource: {
       name: 'LambdaResource',
@@ -57,7 +63,7 @@ export async function auth0(event:any) {
   return requestContent.token.payload;
 }
 
-function getDecodedToken(event:any) {
+function getDecodedToken(event: any) {
   try {
     return getToken(event);
   } catch (e) {
@@ -65,7 +71,7 @@ function getDecodedToken(event:any) {
   }
 }
 
-export function auth(event:any, context:any, callback:any) {
+export function auth(event: any, context: any, callback: any) {
   const token = getDecodedToken(event);
   if (token) {
     auth0(event).then((jwt) => {
@@ -89,6 +95,7 @@ export function auth(event:any, context:any, callback:any) {
         });
     });
   } else {
-    callback('Unauthorized'); // Invalid Token. 401 error
+    // Invalid Token. 401 error
+    callback('Unauthorized');
   }
 }

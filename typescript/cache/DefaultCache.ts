@@ -1,9 +1,10 @@
 import NodeCache from 'node-cache';
-import { AdapterCache } from './AdapterCache';
 
-const defaultCache:NodeCache = new NodeCache({ stdTTL: 180, errorOnMissing: false });
-const rptCache = new NodeCache({ stdTTL: 1800, errorOnMissing: false });
-const resourceCache = new NodeCache({ stdTTL: 30, errorOnMissing: false });
+import {AdapterCache} from './AdapterCache';
+
+const defaultCache:NodeCache = new NodeCache({stdTTL: 180, errorOnMissing: false});
+const rptCache = new NodeCache({stdTTL: 1800, errorOnMissing: false});
+const resourceCache = new NodeCache({stdTTL: 30, errorOnMissing: false});
 
 export class DefaultCache implements AdapterCache {
   async get(region: string, key: string): Promise<string | undefined> {

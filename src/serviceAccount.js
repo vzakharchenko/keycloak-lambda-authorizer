@@ -1,6 +1,6 @@
-const { getUma2Configuration } = require('./umaConfiguration');
-const { commonOptions } = require('./utils/optionsUtils');
-const { clientAuthentication } = require('./clientAuthorization');
+const {getUma2Configuration} = require('./umaConfiguration');
+const {commonOptions} = require('./utils/optionsUtils');
+const {clientAuthentication} = require('./clientAuthorization');
 
 async function serviceAccountJWT(keycloakJson, options) {
   let newOptions = options;

@@ -1,12 +1,11 @@
-const { getRPT } = require('./clientAuthorization');
-const { getKeycloakUrl } = require('./utils/restCalls');
-const { clientAuthentication } = require('./clientAuthorization');
-
-const { fetchData } = require('./utils/restCalls');
+const {getRPT} = require('./clientAuthorization');
+const {getKeycloakUrl} = require('./utils/restCalls');
+const {clientAuthentication} = require('./clientAuthorization');
+const {fetchData} = require('./utils/restCalls');
 
 async function getUma2Configuration(options) {
   const keycloakJson = options.keycloakJson(options);
-  const { realm } = keycloakJson;
+  const {realm} = keycloakJson;
   let uma2Config = await options.cache.get('uma2-configuration', realm);
   if (!uma2Config) {
     const res = await fetchData(`${getKeycloakUrl(keycloakJson)}/realms/${realm}/.well-known/uma2-configuration`);
@@ -20,11 +19,11 @@ async function getUma2Configuration(options) {
 
 async function getResource(uma2Config,
   options, resourceObject) {
-  const { realm, resource } = options.keycloakJson(options);
+  const {realm, resource} = options.keycloakJson(options);
   const key = `${realm}:${resource}${JSON.stringify(resourceObject)}`;
   let resources = await options.cache.get('resource', key);
   if (!resources) {
-    const resourceRegistrationEndpoint = `${uma2Config.resource_registration_endpoint}?name=${resourceObject.name}&uri=${resourceObject.uri}&matchingUri=${!!resourceObject.matchingUri}&owner=${resourceObject.owner}&type=${resourceObject.type}&scope=${resourceObject.scope}&deep=${resourceObject.deep}&first=${resourceObject.first}&max=${resourceObject.max}`;
+    const resourceRegistrationEndpoint = `${uma2Config.resource_registration_endpoint}?name=${resourceObject.name}&uri=${resourceObject.uri}&matchingUri=${Boolean(resourceObject.matchingUri)}&owner=${resourceObject.owner}&type=${resourceObject.type}&scope=${resourceObject.scope}&deep=${resourceObject.deep}&first=${resourceObject.first}&max=${resourceObject.max}`;
     const jwt = await clientAuthentication(uma2Config, options);
     const res = await fetchData(resourceRegistrationEndpoint, 'GET', {
       Authorization: `Bearer ${jwt.access_token}`, // client authorizer
@@ -54,7 +53,7 @@ async function matchResource(uma2Config,
     }
     resources = resources.concat(resourceJson);
   }
-  let { payload } = token;
+  let {payload} = token;
   if (!payload.authorization) {
     const keycloakJson = await options.keycloakJson();
     const tkn = await getRPT(uma2Config, token, keycloakJson.resource, options);
@@ -62,14 +61,14 @@ async function matchResource(uma2Config,
   }
   let permission;
   const resource = resources.find((resId) => {
-    const { authorization } = payload;
+    const {authorization} = payload;
     if (authorization && authorization.permissions) {
       permission = authorization.permissions.find((p) => p.rsid === resId);
     }
     return permission;
   });
-  const hasScope = !permissions.find((p) => p.scope)
-    || permissions.every((p) => permission.scopes.includes(p.scope));
+  const hasScope = !permissions.find((p) => p.scope) ||
+    permissions.every((p) => permission.scopes.includes(p.scope));
   if (!resource || !hasScope) {
     throw new Error('Access is denied');
   }
@@ -84,7 +83,7 @@ async function enforce(token, options) {
       throw new Error('Access Denied');
     }
   } else if (options.enforce.clientRole) {
-    const { roles } = token.payload.resource_access[options.enforce.clientRole.clientId];
+    const {roles} = token.payload.resource_access[options.enforce.clientRole.clientId];
     const role = roles.find(
       (r) => r === options.enforce.clientRole.roleName,
     );

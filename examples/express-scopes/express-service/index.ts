@@ -1,4 +1,5 @@
 import fs from 'fs';
+
 import express from 'express';
 import KeycloakAdapter from 'keycloak-lambda-authorizer';
 import bodyParser from 'body-parser';
@@ -13,7 +14,7 @@ const keycloakAdapter = new KeycloakAdapter({
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/expressServiceApi1', keycloakAdapter.getExpressMiddlewareAdapter().middleware({
   resource: {
@@ -41,6 +42,8 @@ async (request:any, response) => {
 
 const server = app.listen(3002, () => {
   const host = 'localhost';
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
+  // eslint-disable-next-line no-console
   console.log('Example app listening at http://%s:%s', host, server.address().port);
 });

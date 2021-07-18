@@ -1,5 +1,7 @@
-import { AdapterContent, RequestContent } from '../Options';
-import { getKeycloakUrl } from '../utils/KeycloakUtils';
+/* eslint-disable babel/camelcase
+*/
+import {AdapterContent, RequestContent} from '../Options';
+import {getKeycloakUrl} from '../utils/KeycloakUtils';
 
 export type UMAResponse = {
     issuer:string,
@@ -24,23 +26,23 @@ export interface UmaConfiguration {
 }
 
 export class DefaultUmaConfiguration implements UmaConfiguration {
-    options: AdapterContent;
+  options: AdapterContent;
 
-    constructor(options: AdapterContent) {
-      this.options = options;
-    }
+  constructor(options: AdapterContent) {
+    this.options = options;
+  }
 
-    async getUma2Configuration(requestContent:RequestContent): Promise<UMAResponse> {
-      const keycloakJson = await this.options.keycloakJson(this.options, requestContent);
-      const { realm } = keycloakJson;
-      const { cache } = this.options;
-      let uma2Config = await cache.get('uma2-configuration', realm);
-      if (!uma2Config) {
-        const res = await this.options.restClient
+  async getUma2Configuration(requestContent:RequestContent): Promise<UMAResponse> {
+    const keycloakJson = await this.options.keycloakJson(this.options, requestContent);
+    const {realm} = keycloakJson;
+    const {cache} = this.options;
+    let uma2Config = await cache.get('uma2-configuration', realm);
+    if (!uma2Config) {
+      const res = await this.options.restClient
           .fetchData(`${getKeycloakUrl(keycloakJson)}/realms/${realm}/.well-known/uma2-configuration`);
-        uma2Config = res;
-        await cache.put('uma2-configuration', realm, res);
-      }
-      return JSON.parse(uma2Config);
+      uma2Config = res;
+      await cache.put('uma2-configuration', realm, res);
     }
+    return JSON.parse(uma2Config);
+  }
 }

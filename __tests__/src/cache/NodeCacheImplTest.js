@@ -1,4 +1,4 @@
-const { get, put } = require('../../../src/cache/NodeCacheImpl');
+const {get, put} = require('../../../src/cache/NodeCacheImpl');
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 

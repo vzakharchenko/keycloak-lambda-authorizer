@@ -1,5 +1,5 @@
-const { adapter } = require('../keycloakAuthorizer');
-const { jwksUrlResponse } = require('../Jwks');
+const {adapter} = require('../keycloakAuthorizer');
+const {jwksUrlResponse} = require('../Jwks');
 
 async function lambdaAdapter(tokenString, keycloakJson,
   options) {

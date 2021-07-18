@@ -1,4 +1,4 @@
-const { awsAdapter } = require('../keycloakAuthorizer');
+const {awsAdapter} = require('../keycloakAuthorizer');
 
 module.exports = {
   awsAdapter,

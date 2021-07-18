@@ -2,9 +2,8 @@ jest.mock('../../src/clientAuthorization');
 
 jest.mock('../../src/utils/restCalls');
 const restCalls = require('../../src/utils/restCalls');
-
-const { enforce } = require('../../src/umaConfiguration');
-const { clientAuthentication, getRPT } = require('../../src/clientAuthorization');
+const {enforce} = require('../../src/umaConfiguration');
+const {clientAuthentication, getRPT} = require('../../src/clientAuthorization');
 
 const cache = {
   get: async () => null,
@@ -27,8 +26,8 @@ const token = {
     },
     authorization: {
       permissions: [
-        { rsid: 'resourceId' },
-        { rsid: 'resourceId3', scopes: ['testscope'] },
+        {rsid: 'resourceId'},
+        {rsid: 'resourceId3', scopes: ['testscope']},
       ],
     },
   },
@@ -68,7 +67,7 @@ describe('testing umaConfiguration', () => {
   beforeEach(() => {
     restCalls.fetchData.mockImplementation(async (url) => {
       if (url === 'http://localhost:8090/auth/realms/lambda-authorizer/.well-known/uma2-configuration') {
-        return JSON.stringify({ resource_registration_endpoint: 'resourceEndpoint' });
+        return JSON.stringify({resource_registration_endpoint: 'resourceEndpoint'});
       }
       if (url === 'resourceEndpoint?name=resource&uri=/test&matchingUri=true&owner=undefined&type=undefined&scope=undefined&deep=undefined&first=undefined&max=undefined') {
         return JSON.stringify(['resourceId']);
@@ -86,7 +85,7 @@ describe('testing umaConfiguration', () => {
       throw new Error(`unsupported Url: ${url}`);
     });
     restCalls.getKeycloakUrl.mockImplementation(() => 'http://localhost:8090/auth');
-    clientAuthentication.mockImplementation(async () => ({ access_token: 'access_token' }));
+    clientAuthentication.mockImplementation(async () => ({access_token: 'access_token'}));
     getRPT.mockImplementation(async () => ({
       decodedAccessToken: token.payload,
     }));

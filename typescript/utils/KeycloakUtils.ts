@@ -1,4 +1,4 @@
-import { KeycloakJsonStructure } from '../Options';
+import {KeycloakJsonStructure} from '../Options';
 
 export function getUrl(url:string):string {
   return url.slice(url.length - 1) === '/'

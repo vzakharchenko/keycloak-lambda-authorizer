@@ -1,9 +1,9 @@
 const jsonwebtoken = require('jsonwebtoken');
 const jws = require('jws');
-const { v4 } = require('uuid');
+const {v4} = require('uuid');
 
-const { sendData } = require('./utils/restCalls');
-const { getKeycloakUrl } = require('./utils/restCalls');
+const {sendData} = require('./utils/restCalls');
+const {getKeycloakUrl} = require('./utils/restCalls');
 
 function isExpired(options, token) {
   const clockTimestamp = Math.floor(Date.now() / 1000);
@@ -11,7 +11,7 @@ function isExpired(options, token) {
 }
 const clientJWT = (payload, option) => new Promise((resolve, reject) => {
   jws.createSign({
-    header: { alg: 'RS256', typ: 'RSA' },
+    header: {alg: 'RS256', typ: 'RSA'},
     privateKey: option.keys.privateKey,
     payload,
   }).on('done', (signature) => {
@@ -40,7 +40,7 @@ async function clientIdAuthorization(options) {
   const keycloakJson = options.keycloakJson(options);
   let authorization = `client_id=${keycloakJson.resource}`;
   if (keycloakJson.credentials && keycloakJson.credentials.secret) {
-    const { secret } = keycloakJson.credentials;
+    const {secret} = keycloakJson.credentials;
     if (secret) {
       authorization += `&client_secret=${secret}`;
     }
@@ -61,7 +61,7 @@ async function getTokenByCode(code, host, options) {
   const tokenResponse = await sendData(url,
     'POST',
     data,
-    { 'Content-Type': 'application/x-www-form-urlencoded' });
+    {'Content-Type': 'application/x-www-form-urlencoded'});
   const tokenJson = tokenResponse;
   return JSON.parse(tokenJson);
 }
@@ -106,7 +106,7 @@ async function keycloakRefreshToken(token, options) {
       const tokenResponse = await sendData(url,
         'POST',
         data,
-        { 'Content-Type': 'application/x-www-form-urlencoded' });
+        {'Content-Type': 'application/x-www-form-urlencoded'});
       tokenJson = JSON.parse(tokenResponse);
       if (options.enforce.enabled && !options.enforce.role) {
         tokenJson = await exchangeRPT(tokenJson.access_token,
@@ -128,9 +128,9 @@ async function clientAuthentication(uma2Config, options) {
     const parsedToken = token ? JSON.parse(token) : null;
     const authorization = await clientIdAuthorization(options);
     let data = `grant_type=client_credentials&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}`;
-    if (parsedToken
-      && parsedToken.decodedRefreshToken
-      && !isExpired(options, parsedToken.decodedRefreshToken)) {
+    if (parsedToken &&
+      parsedToken.decodedRefreshToken &&
+      !isExpired(options, parsedToken.decodedRefreshToken)) {
       data = `refresh_token=${JSON.parse(token).refresh_token}&grant_type=refresh_token&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}`;
     }
     const res = await sendData(`${uma2Config.token_endpoint}`, 'POST', data);
@@ -178,7 +178,7 @@ async function logout(refreshToken, options) {
   await sendData(url,
     'POST',
     data,
-    { 'Content-Type': 'application/x-www-form-urlencoded' });
+    {'Content-Type': 'application/x-www-form-urlencoded'});
 }
 
 module.exports = {

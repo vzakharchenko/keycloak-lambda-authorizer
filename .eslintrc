@@ -1,0 +1,36 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint",
+    "no-loops"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@shopify/esnext"
+  ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ]
+      }
+    }
+  },
+  "rules": {
+    "no-undef": 0,
+    "no-process-env": 0,
+    "no-unused-vars": 0,
+    "require-await": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "id-length": 0,
+    "no-return-await": 0,
+    "@typescript-eslint/explicit-module-boundary-types": 0
+  }
+}

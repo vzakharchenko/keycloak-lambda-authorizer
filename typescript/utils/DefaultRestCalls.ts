@@ -1,5 +1,6 @@
 import fetch from 'axios';
-import { HTTPMethod, RestCalls } from './restCalls';
+
+import {HTTPMethod, RestCalls} from './restCalls';
 
 export class DefaultRestCalls implements RestCalls {
   async fetchData(url: string, method: HTTPMethod, headers?: any): Promise<string> {

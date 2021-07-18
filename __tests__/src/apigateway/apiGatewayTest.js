@@ -1,8 +1,7 @@
 jest.mock('../../../src/keycloakAuthorizer');
 
 const keycloakAuthorizer = require('../../../src/keycloakAuthorizer');
-
-const { awsAdapter } = require('../../../src/apigateway/apigateway');
+const {awsAdapter} = require('../../../src/apigateway/apigateway');
 
 describe('testing apigateway', () => {
   beforeEach(() => {

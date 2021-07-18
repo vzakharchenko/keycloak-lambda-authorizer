@@ -21,12 +21,12 @@ const defaultResource = {
 };
 
 function updateEnforcer(enforcer) {
-  const newEnforcer = { ...defaultEnforcer, ...enforcer };
+  const newEnforcer = {...defaultEnforcer, ...enforcer};
   if (newEnforcer.resource) {
-    newEnforcer.resource = { ...defaultResource, ...newEnforcer.resource };
+    newEnforcer.resource = {...defaultResource, ...newEnforcer.resource};
   }
   if (newEnforcer.resources) {
-    newEnforcer.resources = newEnforcer.resources.map((res) => ({ ...defaultResource, ...res }));
+    newEnforcer.resources = newEnforcer.resources.map((res) => ({...defaultResource, ...res}));
   }
   return newEnforcer;
 }

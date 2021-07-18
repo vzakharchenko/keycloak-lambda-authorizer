@@ -1,15 +1,19 @@
 import fs from 'fs';
+
 import jsonwebtoken from 'jsonwebtoken';
 import KeycloakAdapter from 'keycloak-lambda-authorizer';
 
-import { getAuthentication } from './authorizerUtil';
-import { fetchData } from './restCalls';
+import {getAuthentication} from './authorizerUtil';
+import {fetchData} from './restCalls';
 
-function getKeycloakJSON():any {
+function getKeycloakJSON(): any {
   return new Promise(((resolve, reject) => {
     fs.readFile(`${__dirname}/keycloak-service3.json`, 'utf8', (err, data) => {
-      if (err) reject(err);
-      else resolve(JSON.parse(data));
+      if (err) {
+        reject(err);
+      } else {
+        resolve(JSON.parse(data));
+      }
     });
   }));
 }
@@ -18,7 +22,7 @@ const keycloakAdapter = new KeycloakAdapter({
   keycloakJson: getKeycloakJSON(),
 });
 
-function getToken(event:any):any {
+function getToken(event: any): any {
   const tokenString = event.authorizationToken || event.headers.Authorization;
   if (!tokenString) {
     throw new Error('Expected \'event.authorizationToken\' parameter to be set');
@@ -28,14 +32,15 @@ function getToken(event:any):any {
     throw new Error(`Invalid Authorization token - '${tokenString}' does not match 'Bearer .*'`);
   }
   const tokenStringValue = match[1];
-  const decode:any = jsonwebtoken.decode(tokenStringValue);
-  return { ...decode, tokenString: tokenStringValue };
+  const decode: any = jsonwebtoken.decode(tokenStringValue);
+  return {...decode, tokenString: tokenStringValue};
 }
 
-export async function service3Api(event:any, context:any, callback:any) {
+export async function service3Api(event: any, context: any, callback: any) {
   const token = getToken(event);
-  const { message } = event.queryStringParameters;
+  const {message} = event.queryStringParameters;
 
+  // eslint-disable-next-line no-process-env
   const res = await fetchData(`${process.env.SERVICE2_URL}service2Api?message=${message}->service3`, 'GET', {
     Authorization: `Bearer ${token.tokenString}`,
   });
@@ -45,7 +50,7 @@ export async function service3Api(event:any, context:any, callback:any) {
   });
 }
 
-export async function auth0(event:any) {
+export async function auth0(event: any) {
   const token = await keycloakAdapter.getAWSLambdaAdapter().validate(event, {
     resource: {
       name: 'Service 3 Resource',
@@ -54,7 +59,7 @@ export async function auth0(event:any) {
   return token.token.payload;
 }
 
-function getDecodedToken(event:any) {
+function getDecodedToken(event: any) {
   try {
     return getToken(event);
   } catch (e) {
@@ -62,7 +67,7 @@ function getDecodedToken(event:any) {
   }
 }
 
-export function auth(event:any, context:any, callback:any) {
+export function auth(event: any, context: any, callback: any) {
   const token = getDecodedToken(event);
   if (token) {
     auth0(event).then((jwt) => {
@@ -86,6 +91,7 @@ export function auth(event:any, context:any, callback:any) {
         });
     });
   } else {
-    callback('Unauthorized'); // Invalid Token. 401 error
+    // Invalid Token. 401 error
+    callback('Unauthorized');
   }
 }

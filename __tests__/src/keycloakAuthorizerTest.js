@@ -4,7 +4,8 @@ jest.mock('../../src/utils/restCalls');
 jest.mock('../../src/umaConfiguration');
 const jsonwebtoken = require('jsonwebtoken');
 const KeyCloakCerts = require('get-keycloak-public-key');
-const { getKeycloakUrl } = require('../../src/utils/restCalls');
+
+const {getKeycloakUrl} = require('../../src/utils/restCalls');
 const keycloakAuthorizer = require('../../src/keycloakAuthorizer');
 
 const cache = {
@@ -94,7 +95,7 @@ describe('testing keycloakAuthorizer', () => {
   });
 
   test('test adapter  ', async () => {
-    const token = await keycloakAuthorizer.adapter('TOKEN', {}, { cache });
+    const token = await keycloakAuthorizer.adapter('TOKEN', {}, {cache});
     expect(token).toEqual({
       header: {
         alg: 'rsa256',
@@ -105,7 +106,7 @@ describe('testing keycloakAuthorizer', () => {
   });
 
   test('test adapter  enforce', async () => {
-    const token = await keycloakAuthorizer.adapter('TOKEN', {}, { cache, enforce: { enabled: true } });
+    const token = await keycloakAuthorizer.adapter('TOKEN', {}, {cache, enforce: {enabled: true}});
     expect(token).toEqual({
       header: {
         alg: 'rsa256',
@@ -116,7 +117,7 @@ describe('testing keycloakAuthorizer', () => {
   });
 
   test('test awsAdapter authorizer', async () => {
-    const token = await keycloakAuthorizer.awsAdapter({ authorizationToken: 'Bearer TOKEN' }, {}, { cache, enforce: { enabled: true } });
+    const token = await keycloakAuthorizer.awsAdapter({authorizationToken: 'Bearer TOKEN'}, {}, {cache, enforce: {enabled: true}});
     expect(token).toEqual({
       header: {
         alg: 'rsa256',
@@ -127,7 +128,7 @@ describe('testing keycloakAuthorizer', () => {
   });
 
   test('test awsAdapter Lambda@Edge', async () => {
-    const token = await keycloakAuthorizer.awsAdapter({ headers: { Authorization: 'Bearer TOKEN' } }, {}, { cache, enforce: { enabled: true } });
+    const token = await keycloakAuthorizer.awsAdapter({headers: {Authorization: 'Bearer TOKEN'}}, {}, {cache, enforce: {enabled: true}});
     expect(token).toEqual({
       header: {
         alg: 'rsa256',
@@ -139,7 +140,7 @@ describe('testing keycloakAuthorizer', () => {
 
   test('test awsAdapter authorizer wrong token', async () => {
     try {
-      const token = await keycloakAuthorizer.awsAdapter({ authorizationToken: 'TOKEN' }, {}, { cache, enforce: { enabled: true } });
+      const token = await keycloakAuthorizer.awsAdapter({authorizationToken: 'TOKEN'}, {}, {cache, enforce: {enabled: true}});
       expect(token).toEqual({
         header: {
           alg: 'rsa256',
@@ -156,7 +157,7 @@ describe('testing keycloakAuthorizer', () => {
   test('test awsAdapter authorizer without token', async () => {
     try {
       const token = await keycloakAuthorizer.awsAdapter({}, {},
-        { cache, enforce: { enabled: true } });
+        {cache, enforce: {enabled: true}});
       expect(token).toEqual({
         header: {
           alg: 'rsa256',

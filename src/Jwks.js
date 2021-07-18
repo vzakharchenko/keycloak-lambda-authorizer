@@ -14,7 +14,7 @@ function publicKeyTransform(publicKey) {
 
 function jwksUrlResponse(publicKey) {
   const newPk = publicKeyTransform(publicKey);
-  const pkey = JSON.stringify({ keys: [rsaPemToJwk(newPk, { use: 'sig' }, 'public')] });
+  const pkey = JSON.stringify({keys: [rsaPemToJwk(newPk, {use: 'sig'}, 'public')]});
   return pkey;
 }
 

@@ -1,8 +1,10 @@
 import fs from 'fs';
+
 import express from 'express';
 import KeycloakAdapter from 'keycloak-lambda-authorizer';
 import bodyParser from 'body-parser';
-import { fetchData } from './restCalls';
+
+import {fetchData} from './restCalls';
 
 function getKeycloakJSON() {
   return JSON.parse(fs.readFileSync(`${__dirname}/keycloak.json`, 'utf8'));
@@ -14,7 +16,7 @@ const keycloakAdapter = new KeycloakAdapter({
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/service1api1', keycloakAdapter.getExpressMiddlewareAdapter().middleware(
   {
@@ -31,7 +33,7 @@ async (request:any, response) => {
     response.json(JSON
       .parse(res));
   } catch (e) {
-    response.json({ message: e.message });
+    response.json({message: e.message});
   }
 });
 
@@ -50,13 +52,15 @@ async (request:any, response) => {
     response.json(JSON
       .parse(res));
   } catch (e) {
-    response.json({ message: e.message });
+    response.json({message: e.message});
   }
 });
 
 const server = app.listen(3002, () => {
   const host = 'localhost';
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const { port } = server.address();
+  const {port} = server.address();
+  // eslint-disable-next-line no-console
   console.log('Example app listening at http://%s:%s', host, port);
 });

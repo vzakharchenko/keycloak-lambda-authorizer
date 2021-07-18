@@ -9,8 +9,8 @@
     "offline": "SLS_DEBUG=* serverless offline --host 0.0.0.0 --httpPort 3003 --lambdaPort=3019 --dontPrintOutput",
     "start": "SLS_DEBUG=* serverless offline --host 0.0.0.0 --httpPort 3003 --lambdaPort=3019 --dontPrintOutput",
     "deploy": "serverless deploy --aws-profile aws-home",
-    "lint": "eslint --quiet --ext .js handler.js",
-    "lint:fix": "eslint --fix --quiet --ext .js handler.js"
+    "lint": "eslint --quiet --ext .ts handler.ts",
+    "lint:fix": "eslint --fix --quiet --ext .ts handler.ts"
   },
   "author": "vzakharchenko",
   "license": "Apache-2.0",
@@ -32,12 +32,13 @@
     "serverless": "*",
     "serverless-offline": "*",
     "serverless-webpack": "*",
-    "webpack": "^5.45.1",
-    "webpack-cli": "^4.7.2",
     "ts-loader": "*",
-    "typescript": "*"
+    "typescript": "*",
+    "webpack": "^5.45.1",
+    "webpack-cli": "^4.7.2"
   },
   "dependencies": {
+    "jsonwebtoken": "^8.5.1",
     "keycloak-lambda-authorizer": "../../.."
   }
 }

@@ -6,6 +6,7 @@ jest.mock('jsonwebtoken');
 
 const jsonwebtoken = require('jsonwebtoken');
 const jws = require('jws');
+
 const restCalls = require('../../src/utils/restCalls');
 const clientAuthentication = require('../../src/clientAuthorization');
 
@@ -51,13 +52,13 @@ describe('testing clientAuthorization', () => {
     restCalls.sendData.mockImplementation(async (url, method, data) => {
       if (url === 'token_endpoint') {
         if (data === 'grant_type=client_credentials&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_id=lambda&client_secret=772decbe-0151-4b08-8171-bec6d097293b') {
-          return JSON.stringify({ access_token: 'access_token' });
+          return JSON.stringify({access_token: 'access_token'});
         }
         if (data === 'grant_type=client_credentials&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_id=lambda-jwks&client_assertion=jwsSignature') {
-          return JSON.stringify({ access_token: 'access_token_jws' });
+          return JSON.stringify({access_token: 'access_token_jws'});
         }
         if (data === 'refresh_token=refresh_token&grant_type=refresh_token&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_id=lambda&client_secret=772decbe-0151-4b08-8171-bec6d097293b') {
-          return JSON.stringify({ access_token: 'access_token_refresh' });
+          return JSON.stringify({access_token: 'access_token_refresh'});
         }
         throw new Error(`unexpected token data: ${data}`);
       }
@@ -67,16 +68,16 @@ describe('testing clientAuthorization', () => {
 
       if (url === 'http://localhost:8090/auth/realms/lambda-authorizer/protocol/openid-connect/token') {
         if (data === 'grant_type=urn:ietf:params:oauth:grant-type:uma-ticket&response_include_resource_name=false&audience=lambda') {
-          return JSON.stringify({ access_token: 'access_token_uma' });
+          return JSON.stringify({access_token: 'access_token_uma'});
         }
         if (data === 'grant_type=urn:ietf:params:oauth:grant-type:uma-ticket&response_include_resource_name=false&audience=test') {
-          return JSON.stringify({ access_token: 'access_token_uma' });
+          return JSON.stringify({access_token: 'access_token_uma'});
         }
         if (data === 'code=code&grant_type=authorization_code&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_id=lambda&client_secret=772decbe-0151-4b08-8171-bec6d097293b&redirect_uri=host%2Flambda-authorizer%2Flambda%2Fcallback') {
-          return JSON.stringify({ access_token: 'access_token_code' });
+          return JSON.stringify({access_token: 'access_token_code'});
         }
         if (data === 'refresh_token=refresh_token&grant_type=refresh_token&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_id=lambda&client_secret=772decbe-0151-4b08-8171-bec6d097293b') {
-          return JSON.stringify({ access_token: 'access_token_refresh' });
+          return JSON.stringify({access_token: 'access_token_refresh'});
         }
         throw new Error(`unexpected token data: ${data}`);
       }
@@ -105,14 +106,14 @@ describe('testing clientAuthorization', () => {
   });
 
   test('test clientAuthorization secret success', async () => {
-    await clientAuthentication.clientAuthentication({ token_endpoint: 'token_endpoint' }, {
+    await clientAuthentication.clientAuthentication({token_endpoint: 'token_endpoint'}, {
       keycloakJson: keycloakJsonWithSecret,
       cache,
     });
   });
   test('test clientAuthorization jws Unsupported Credential Type', async () => {
     try {
-      await clientAuthentication.clientAuthentication({ token_endpoint: 'token_endpoint' }, {
+      await clientAuthentication.clientAuthentication({token_endpoint: 'token_endpoint'}, {
         keycloakJson: keycloakJsonWithJWS,
         cache,
       });
@@ -122,7 +123,7 @@ describe('testing clientAuthorization', () => {
   });
 
   test('test clientAuthorization jws success', async () => {
-    await clientAuthentication.clientAuthentication({ token_endpoint: 'token_endpoint' }, {
+    await clientAuthentication.clientAuthentication({token_endpoint: 'token_endpoint'}, {
       keys: {
         privateKey: {
           key: 'PRIVATE_KEY',
@@ -135,10 +136,10 @@ describe('testing clientAuthorization', () => {
   });
 
   test('test clientAuthorization  success withCache', async () => {
-    await clientAuthentication.clientAuthentication({ token_endpoint: 'token_endpoint' }, {
+    await clientAuthentication.clientAuthentication({token_endpoint: 'token_endpoint'}, {
       keycloakJson: keycloakJsonWithSecret,
       cache: {
-        get: async () => JSON.stringify({ decodedAccessToken: { exp: 1 }, refresh_token: 'refresh_token', decodedRefreshToken: { exp: Number.MAX_SAFE_INTEGER } }),
+        get: async () => JSON.stringify({decodedAccessToken: {exp: 1}, refresh_token: 'refresh_token', decodedRefreshToken: {exp: Number.MAX_SAFE_INTEGER}}),
         put: async () => {
         },
       },
@@ -161,7 +162,7 @@ describe('testing clientAuthorization', () => {
   });
 
   test('test clientJWT', async () => {
-    const signature = await clientAuthentication.clientJWT({ data: 'test' }, {
+    const signature = await clientAuthentication.clientJWT({data: 'test'}, {
       keys: {
         privateKey: {
           key: 'PRIVATE_KEY',
@@ -183,7 +184,7 @@ describe('testing clientAuthorization', () => {
   });
 
   test('test keycloakRefreshToken with enforcer', async () => {
-    const token = await clientAuthentication.keycloakRefreshToken({ access_token: 'access_token', refresh_token: 'refresh_token' }, {
+    const token = await clientAuthentication.keycloakRefreshToken({access_token: 'access_token', refresh_token: 'refresh_token'}, {
       keycloakJson: keycloakJsonWithSecret,
       cache,
       logger: console,
@@ -198,7 +199,7 @@ describe('testing clientAuthorization', () => {
   });
 
   test('test keycloakRefreshToken with enforcer custom clientId', async () => {
-    const token = await clientAuthentication.keycloakRefreshToken({ access_token: 'access_token', refresh_token: 'refresh_token' }, {
+    const token = await clientAuthentication.keycloakRefreshToken({access_token: 'access_token', refresh_token: 'refresh_token'}, {
       keycloakJson: keycloakJsonWithSecret,
       cache,
       logger: console,
@@ -214,7 +215,7 @@ describe('testing clientAuthorization', () => {
   });
 
   test('test keycloakRefreshToken without enforcer', async () => {
-    const token = await clientAuthentication.keycloakRefreshToken({ access_token: 'access_token', refresh_token: 'refresh_token' }, {
+    const token = await clientAuthentication.keycloakRefreshToken({access_token: 'access_token', refresh_token: 'refresh_token'}, {
       keycloakJson: keycloakJsonWithSecret,
       cache,
       logger: console,
@@ -231,17 +232,17 @@ describe('testing clientAuthorization', () => {
       },
     },
     'lambda',
-    {
-      keycloakJson: keycloakJsonWithSecret,
-      cache,
-      logger: console,
-      enforce: {
-        enabled: true,
-        resource: {
-          resource: 'testResource',
+      {
+        keycloakJson: keycloakJsonWithSecret,
+        cache,
+        logger: console,
+        enforce: {
+          enabled: true,
+          resource: {
+            resource: 'testResource',
+          },
         },
-      },
-    });
+      });
     expect(token.access_token).toEqual('access_token_uma');
   });
 });

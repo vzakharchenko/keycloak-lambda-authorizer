@@ -1,8 +1,9 @@
 import forge from 'node-forge';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import rsaPemToJwk from 'rsa-pem-to-jwk';
 
-import { RSAKey } from '../Options';
+import {RSAKey} from '../Options';
 
 export type JWKSType={
     keys:[any],
@@ -26,6 +27,6 @@ export class DefaultJWKS implements JWKS {
 
   json(publicKey: RSAKey): JWKSType {
     const newPk = this.publicKeyTransform(publicKey.key);
-    return { keys: [rsaPemToJwk(newPk, { use: 'sig' }, 'public')] };
+    return {keys: [rsaPemToJwk(newPk, {use: 'sig'}, 'public')]};
   }
 }

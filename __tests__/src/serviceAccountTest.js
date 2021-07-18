@@ -2,9 +2,8 @@ jest.mock('../../src/umaConfiguration');
 jest.mock('../../src/clientAuthorization');
 jest.mock('../../src/utils/optionsUtils');
 
-const { clientAuthentication } = require('../../src/clientAuthorization');
-
-const { serviceAccountJWT } = require('../../src/serviceAccount');
+const {clientAuthentication} = require('../../src/clientAuthorization');
+const {serviceAccountJWT} = require('../../src/serviceAccount');
 
 const keycloakJson = () => ({
   realm: 'lambda-authorizer',
@@ -21,7 +20,7 @@ const keycloakJson = () => ({
 
 describe('testing umaConfiguration', () => {
   beforeEach(() => {
-    clientAuthentication.mockImplementation(async () => ({ access_token: 'access_token' }));
+    clientAuthentication.mockImplementation(async () => ({access_token: 'access_token'}));
   });
 
   afterEach(() => {
@@ -33,7 +32,7 @@ describe('testing umaConfiguration', () => {
   });
 
   test('test serviceAccountJWT with options', async () => {
-    const token = await serviceAccountJWT(null, { keycloakJson });
+    const token = await serviceAccountJWT(null, {keycloakJson});
     expect(token).toEqual('access_token');
   });
 });

@@ -2,8 +2,7 @@ import fs from 'fs';
 
 import jsonwebtoken from 'jsonwebtoken';
 import KeycloakAdapter from 'keycloak-lambda-authorizer';
-
-import {AdapterContent, KeycloakJsonStructure, RequestContent} from '../../../typescript/Options';
+import {AdapterContent, KeycloakJsonStructure, RequestContent} from 'keycloak-lambda-authorizer/dist/src/Options';
 
 import {getAuthentication} from './authorizerUtil';
 

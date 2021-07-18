@@ -12,8 +12,8 @@
   "scripts": {
     "test": "jest --verbose --maxWorkers=2 --coverage --coverageDirectory=.coverage/",
     "build": "tsc --build",
-    "lint": "eslint --quiet --ext .ts typescript",
-    "lint:fix": "eslint --fix --quiet --ext .ts  typescript"
+    "lint": "eslint --quiet --ext .ts src",
+    "lint:fix": "eslint --fix --quiet --ext .ts  src"
   },
   "repository": {
     "type": "git",

@@ -44,7 +44,9 @@ app.set('views', path.join(__dirname, 'views'));
 
 function renderUI(request:any, response:any, data:any) {
   response.render('home', {
+    // eslint-disable-next-line no-process-env
     host: process.env.LAMBDA_URL,
+    // eslint-disable-next-line no-process-env
     hostJwks: process.env.LAMBDA_JWKS_URL,
     ...data,
   });
@@ -75,6 +77,7 @@ app.post('/lambda', keycloak.protect(), keycloak.enforcer(['uiResource']), async
   try {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
+    // eslint-disable-next-line no-process-env
     const res = await fetchData(process.env.LAMBDA_URL, 'GET', {
       Authorization: `Bearer ${lambdaJWT.access_token}`,
     });
@@ -98,6 +101,7 @@ app.post('/lambdaEnt', keycloak.protect(), keycloak.enforcer(['uiResource']), as
   try {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
+    // eslint-disable-next-line no-process-env
     const res = await fetchData(process.env.LAMBDA_URL, 'GET', {
       Authorization: `Bearer ${lambdaJWT.access_token}`,
     });
@@ -121,6 +125,7 @@ app.post('/lambdaJwks', keycloak.protect(), keycloak.enforcer(['uiResource']), a
   try {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
+    // eslint-disable-next-line no-process-env
     const res = await fetchData(process.env.LAMBDA_JWKS_URL, 'GET', {
       Authorization: `Bearer ${lambdaJWT.access_token}`,
     });
@@ -143,6 +148,7 @@ app.post('/lambdaJwksEnt', keycloak.protect(), keycloak.enforcer(['uiResource'])
   try {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
+    // eslint-disable-next-line no-process-env
     const res = await fetchData(process.env.LAMBDA_JWKS_URL, 'GET', {
       Authorization: `Bearer ${lambdaJWT.access_token}`,
     });

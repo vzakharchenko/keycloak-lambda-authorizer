@@ -40,7 +40,6 @@ export async function service3Api(event: any, context: any, callback: any) {
   const token = getToken(event);
   const {message} = event.queryStringParameters;
 
-  // eslint-disable-next-line no-process-env
   const res = await fetchData(`${process.env.SERVICE2_URL}service2Api?message=${message}->service3`, 'GET', {
     Authorization: `Bearer ${token.tokenString}`,
   });

@@ -7,7 +7,7 @@ const rptCache = new NodeCache({stdTTL: 1800, errorOnMissing: false});
 const resourceCache = new NodeCache({stdTTL: 30, errorOnMissing: false});
 
 export class DefaultCache implements AdapterCache {
-  async get(region: string, key: string): Promise<string | undefined> {
+  get(region: string, key: string): string|undefined {
     if (region === 'publicKey') {
       return defaultCache.get(key);
     } if (region === 'uma2-configuration') {
@@ -22,7 +22,7 @@ export class DefaultCache implements AdapterCache {
     throw new Error('Unsupported Region');
   }
 
-  async put(region: string, key: string, value: any, ttl: number): Promise<void> {
+  put(region: string, key: string, value: any, ttl: number): void {
     if (region === 'publicKey') {
       defaultCache.set(key, value, ttl);
     } else if (region === 'uma2-configuration') {

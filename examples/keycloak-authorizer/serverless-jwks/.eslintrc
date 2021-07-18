@@ -27,6 +27,7 @@
     "no-undef": 0,
     "id-length": 0,
     "promise/no-nesting": 0,
-    "no-console": 0
+    "no-console": 0,
+    "require-await": 0
   }
 }

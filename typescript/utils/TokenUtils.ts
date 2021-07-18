@@ -22,17 +22,24 @@ export function decodeToken(tokenString:string):JWTToken {
   return token;
 }
 
+async function getKeyFromKeycloak0(requestContent:RequestContent,
+                                  options:AdapterContent,
+                                  kid:string) {
+  const kJson = await options.keycloakJson(options, requestContent);
+  const keycloakUrl = new URL(getKeycloakUrl(kJson));
+  keycloakUrl.pathname = keycloakUrl.pathname.replace('/auth', '');
+  const publicKey = await KeyCloakCerts(getUrl(keycloakUrl.toString()),
+      kJson.realm).fetch(kid);
+  return publicKey;
+}
+
 async function getKeyFromKeycloak(requestContent:RequestContent,
                                   options:AdapterContent,
                                   kid:string) {
   const cache = options.cache;
   let publicKey = await cache.get('publicKey', kid);
   if (!publicKey) {
-    const kJson = await options.keycloakJson(options, requestContent);
-    const keycloakUrl = new URL(getKeycloakUrl(kJson));
-    keycloakUrl.pathname = keycloakUrl.pathname.replace('/auth', '');
-    publicKey = await KeyCloakCerts(getUrl(keycloakUrl.toString()),
-      kJson.realm).fetch(kid);
+    publicKey = await getKeyFromKeycloak0(requestContent, options, kid);
     await cache.put('publicKey', kid, publicKey);
   }
   return publicKey;
@@ -60,7 +67,7 @@ export async function verifyToken(requestContent:RequestContent,
   }
 }
 
-export function isExpired(options:AdapterContent, token:any) {
+export function isExpired(token:any) {
   const clockTimestamp = Math.floor(Date.now() / 1000);
   return clockTimestamp > token.exp - 30;
 }

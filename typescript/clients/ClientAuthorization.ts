@@ -47,7 +47,7 @@ export class DefaultClientAuthorization implements ClientAuthorization {
     let data = `grant_type=client_credentials&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}`;
     if (token && parsedToken &&
             parsedToken.decodedRefreshToken &&
-            !isExpired(this.options, parsedToken.decodedRefreshToken)) {
+            !isExpired(parsedToken.decodedRefreshToken)) {
       data = `refresh_token=${JSON.parse(token).refresh_token}&grant_type=refresh_token&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}`;
     }
     const umaConfig = await this.options.umaConfiguration.getUma2Configuration(requestContent);
@@ -62,7 +62,7 @@ export class DefaultClientAuthorization implements ClientAuthorization {
     const key = `${keycloakJson.realm}:${keycloakJson.resource}`;
     const {cache} = this.options;
     let token = await cache.get('client_credentials', key);
-    if (!token || isExpired(this.options, JSON.parse(token).decodedAccessToken)) {
+    if (!token || isExpired(JSON.parse(token).decodedAccessToken)) {
       const newToken = await this.clientAuthentication0(requestContent, token);
       token = JSON.stringify(newToken);
       await cache.put('client_credentials', key, token);
@@ -150,7 +150,7 @@ export class DefaultClientAuthorization implements ClientAuthorization {
       await cache.put('rpt', key, JSON.stringify(tkn0), tkn0.refresh_expires_in);
     } else {
       const parseToken:TokenJson = JSON.parse(tkn);
-      if (isExpired(this.options, parseToken.decodedAccessToken)) {
+      if (isExpired(parseToken.decodedAccessToken)) {
         if (parseToken.refresh_token) {
           tkn0 = await this.keycloakRefreshToken(parseToken, requestContent, enforcer);
         } else {
@@ -197,10 +197,10 @@ export class DefaultClientAuthorization implements ClientAuthorization {
     }
     const decodedAccessToken = jsonwebtoken.decode(token.access_token);
     const decodedRefreshToken = jsonwebtoken.decode(token.refresh_token);
-    if (isExpired(this.options, decodedRefreshToken)) {
+    if (isExpired(decodedRefreshToken)) {
       return null;
     }
-    if (!decodedAccessToken || isExpired(this.options, decodedAccessToken)) {
+    if (!decodedAccessToken || isExpired(decodedAccessToken)) {
       const keycloakJson = await this.options.keycloakJson(this.options, requestContent);
       const realmName = keycloakJson.realm;
       const umaConfig = await this.options.umaConfiguration.getUma2Configuration(requestContent);

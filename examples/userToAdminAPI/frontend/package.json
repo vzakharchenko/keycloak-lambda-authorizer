@@ -5,13 +5,18 @@
   "main": "index.js",
   "scripts": {
     "start": "SERVICE_URL=http://localhost:3002/ node index.js",
-    "lint": "eslint --quiet --ext .js index.js",
-    "lint:fix": "eslint --fix --quiet --ext .js index.js",
+    "build": "tsc",
+    "prestart": "npm run build",
+    "lint": "eslint --quiet --ext .ts index.ts",
+    "lint:fix": "eslint --fix --quiet --ext .ts index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "vzakharchenko",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@types/express-handlebars": "*",
+    "@types/express-session": "*",
+    "typescript": "*",
     "eslint": "*",
     "eslint-config-airbnb": "*",
     "eslint-plugin-import": "*"

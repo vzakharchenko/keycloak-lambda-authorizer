@@ -1,11 +1,13 @@
-const jsonwebtoken = require('jsonwebtoken');
-const express = require('express');
-const exphbs = require('express-handlebars');
-const Keycloak = require('keycloak-connect');
-const path = require('path');
-const bodyParser = require('body-parser');
-const session = require('express-session');
-const { fetchData, sendData } = require('./restCalls');
+import path from 'path';
+
+import jsonwebtoken from 'jsonwebtoken';
+import express from 'express';
+import exphbs from 'express-handlebars';
+import Keycloak from 'keycloak-connect';
+import bodyParser from 'body-parser';
+import session from 'express-session';
+
+import {fetchData, sendData} from './restCalls';
 
 const app = express();
 const memoryStore = new session.MemoryStore();
@@ -28,7 +30,7 @@ const keycloak = new Keycloak({
 
 app.use(keycloak.middleware());
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.engine('.hbs', exphbs({
   defaultLayout: 'main',
@@ -40,7 +42,7 @@ app.set('view engine', '.hbs');
 
 app.set('views', path.join(__dirname, 'views'));
 
-function renderUI(request, response, data) {
+function renderUI(request:any, response:any, data:any) {
   response.render('home', {
     host: process.env.LAMBDA_URL,
     hostJwks: process.env.LAMBDA_JWKS_URL,
@@ -48,8 +50,10 @@ function renderUI(request, response, data) {
   });
 }
 
-async function clientToRPTExchange(request, clientId) {
+async function clientToRPTExchange(request:any, clientId:any) {
   const token = JSON.parse(request.session['keycloak-token']).access_token;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const tokenUrl = `${keycloak.config.authServerUrl}/realms/${keycloak.config.realm}/protocol/openid-connect/token`;
   const data = `grant_type=urn:ietf:params:oauth:grant-type:uma-ticket&response_include_resource_name=false&audience=${clientId}`;
   try {
@@ -69,7 +73,9 @@ async function clientToRPTExchange(request, clientId) {
 app.post('/lambda', keycloak.protect(), keycloak.enforcer(['uiResource']), async (request, response) => {
   const lambdaJWT = await clientToRPTExchange(request, 'lambda');
   try {
-    res = await fetchData(process.env.LAMBDA_URL, 'GET', {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const res = await fetchData(process.env.LAMBDA_URL, 'GET', {
       Authorization: `Bearer ${lambdaJWT.access_token}`,
     });
     renderUI(request, response, {
@@ -87,10 +93,12 @@ app.post('/lambda', keycloak.protect(), keycloak.enforcer(['uiResource']), async
   }
 });
 
-app.post('/lambdaEnt', keycloak.protect(), keycloak.enforcer(['uiResource']), async (request, response) => {
+app.post('/lambdaEnt', keycloak.protect(), keycloak.enforcer(['uiResource']), async (request:any, response) => {
   const lambdaJWT = JSON.parse(request.session['keycloak-token']);
   try {
-    res = await fetchData(process.env.LAMBDA_URL, 'GET', {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const res = await fetchData(process.env.LAMBDA_URL, 'GET', {
       Authorization: `Bearer ${lambdaJWT.access_token}`,
     });
     renderUI(request, response, {
@@ -111,7 +119,9 @@ app.post('/lambdaEnt', keycloak.protect(), keycloak.enforcer(['uiResource']), as
 app.post('/lambdaJwks', keycloak.protect(), keycloak.enforcer(['uiResource']), async (request, response) => {
   const lambdaJWT = await clientToRPTExchange(request, 'lambda-jwks');
   try {
-    res = await fetchData(process.env.LAMBDA_JWKS_URL, 'GET', {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const res = await fetchData(process.env.LAMBDA_JWKS_URL, 'GET', {
       Authorization: `Bearer ${lambdaJWT.access_token}`,
     });
     renderUI(request, response, {
@@ -128,10 +138,12 @@ app.post('/lambdaJwks', keycloak.protect(), keycloak.enforcer(['uiResource']), a
     });
   }
 });
-app.post('/lambdaJwksEnt', keycloak.protect(), keycloak.enforcer(['uiResource']), async (request, response) => {
+app.post('/lambdaJwksEnt', keycloak.protect(), keycloak.enforcer(['uiResource']), async (request:any, response) => {
   const lambdaJWT = JSON.parse(request.session['keycloak-token']);
   try {
-    res = await fetchData(process.env.LAMBDA_JWKS_URL, 'GET', {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const res = await fetchData(process.env.LAMBDA_JWKS_URL, 'GET', {
       Authorization: `Bearer ${lambdaJWT.access_token}`,
     });
     renderUI(request, response, {
@@ -150,11 +162,14 @@ app.post('/lambdaJwksEnt', keycloak.protect(), keycloak.enforcer(['uiResource'])
 });
 
 app.get('/', keycloak.protect(), keycloak.enforcer(['uiResource']), (request, response) => {
-  renderUI(request, response, '', '');
+  renderUI(request, response, '');
 });
 
 const server = app.listen(3001, () => {
   const host = 'localhost';
-  const { port } = server.address();
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const {port} = server.address();
+  // eslint-disable-next-line no-console
   console.log('Example app listening at http://%s:%s', host, port);
 });

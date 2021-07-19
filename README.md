@@ -31,8 +31,8 @@ npm install keycloak-lambda-authorizer -S
  - [Example of expressjs middleware with security resource scopes](examples/express-scopes)
  - [Example of calling a chain of micro services, where each service is protected by its secured client](examples/chain-service-calls)
  - [Example of calling the Admin API Using the regular User Permissions (Role or Resource)](examples/userToAdminAPI)
- - [CloudFront with Lambda:Edge example](examples/keycloak-cloudfront/README.md)
- - [CloudFront with portal authorization (switching between security realms)](examples/keycloak-cloudfront-portal)
+ - [CloudFront with Lambda:Edge example](https://github.com/vzakharchenko/keycloak-api-gateway/blob/master/examples/reactJSExample)
+ - [CloudFront with portal authorization (switching between security realms)](https://github.com/vzakharchenko/keycloak-api-gateway/blob/master/examples/crossTenantReactJSExample)
 # How to use
 
 ### Role Based

@@ -3,7 +3,7 @@ import {
 } from '../../Options';
 
 export interface ResourceChecker {
-    matchResource(requestContent:RequestContent, enforcer?:Enforcer):Promise<any>;
+    matchResource(requestContent:RequestContent, enforcer?:Enforcer):Promise<void>;
     getResource(requestContent:RequestContent, permission:SecurityResource):Promise<any>
 }
 
@@ -42,7 +42,7 @@ export class DefaultResourceChecker implements ResourceChecker {
     return resources;
   }
 
-  async matchResource(requestContent:RequestContent, enforcer?:Enforcer): Promise<any> {
+  async matchResource(requestContent:RequestContent, enforcer?:Enforcer): Promise<void> {
     if (!enforcer) {
       throw new Error('enforcer does not exists');
     }

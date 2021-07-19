@@ -3,7 +3,8 @@
 
 import {AdapterCache} from "../cache/AdapterCache";
 import {ClientAuthorization, JWSPayload} from "../clients/ClientAuthorization";
-import {Enforcer, RequestContent, RSAKey, TokenJson} from "../Options";
+import {Enforcer, RequestContent, RSAKey, SecurityResource, TokenJson} from "../Options";
+import {ResourceChecker} from "../enforcer/resource/Resource";
 
 import {isExpired} from "./TokenUtils";
 import {HTTPMethod, RestCalls} from "./restCalls";
@@ -90,6 +91,17 @@ export class DummyClientAuthorization implements ClientAuthorization {
   }
 
   async logout(requestContent: RequestContent, refreshToken: any): Promise<void> {
+
+  }
+
+}
+
+export class DummyResourceChecker implements ResourceChecker {
+  async getResource(requestContent: RequestContent, permission: SecurityResource): Promise<any> {
+    return {};
+  }
+
+  async matchResource(requestContent: RequestContent, enforcer?: Enforcer): Promise<void> {
 
   }
 

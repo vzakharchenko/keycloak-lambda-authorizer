@@ -17,9 +17,13 @@ export class ClientRoleEnforcer implements EnforcerAction {
       throw new Error('enforcer does not provided');
     }
     if (!enforcer.clientRole) {
-      throw new Error('Realm Role is Empty');
+      throw new Error('Client Role is Empty');
     }
-    const {roles} = requestContent.token.payload.resource_access[enforcer.clientRole.clientId];
+    const resourceAccess = requestContent.token.payload.resource_access[enforcer.clientRole.clientId];
+    if (!resourceAccess) {
+      throw new Error('Access Denied');
+    }
+    const {roles} = resourceAccess;
     const role = roles.find(
         (r:string) => r === enforcer.clientRole?.clientRole,
       );

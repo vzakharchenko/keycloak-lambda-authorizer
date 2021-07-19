@@ -1,6 +1,6 @@
 {
   "name": "keycloak-lambda-authorizer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Keycloak Cloud Adapter",
   "main": "index.js",
   "homepage": "https://github.com/vzakharchenko/keycloak-lambda-authorizer",
@@ -11,6 +11,7 @@
   },
   "scripts": {
     "test": "jest --verbose --maxWorkers=2 --coverage --coverageDirectory=.coverage/",
+    "test:valid": "rm -rf dist && jest --verbose --maxWorkers=2 --coverage --coverageDirectory=.coverage/",
     "build": "tsc --build",
     "lint": "eslint --quiet --ext .ts src",
     "lint:fix": "eslint --fix --quiet --ext .ts  src"

@@ -94,18 +94,10 @@ export function authorizer(event, context, callback) {
 
 ## Option structure:
 ```javascript
+ {
     keys: ClientJwtKeys,
-    keycloakJson: keycloakJsonFunction,
-    logger: LoggerType,
-    cache: AdapterCache,
-    restClient: RestCalls,
-    enforcer: EnforcerAction,
-    umaConfiguration: UmaConfiguration,
-    clientAuthorization: ClientAuthorization,
-    serviceAccount: ServiceAccount,
-    securityAdapter: SecurityAdapter,
-    resourceChecker: ResourceChecker,
-    jwks: JWKS,
+    keycloakJson: keycloakJsonFunction
+ }
 ```
 ## Resource Structure:
 

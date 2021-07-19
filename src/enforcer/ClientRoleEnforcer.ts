@@ -24,8 +24,11 @@ export class ClientRoleEnforcer implements EnforcerAction {
       throw new Error('Access Denied');
     }
     const {roles} = resourceAccess;
+
     const role = roles.find(
-        (r:string) => r === enforcer.clientRole?.clientRole,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        (r:string) => r === enforcer.clientRole.clientRole,
       );
     if (!role) {
       throw new Error('Access Denied');

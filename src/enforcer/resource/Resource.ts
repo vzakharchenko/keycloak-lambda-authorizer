@@ -3,7 +3,7 @@ import {
 } from '../../Options';
 
 export interface ResourceChecker {
-    matchResource(requestContent:RequestContent, enforcer?:Enforcer):Promise<void>;
+    matchResource(requestContent:RequestContent, enforcer:Enforcer):Promise<void>;
     getResource(requestContent:RequestContent, permission:SecurityResource):Promise<any>
 }
 
@@ -42,7 +42,7 @@ export class DefaultResourceChecker implements ResourceChecker {
     return resources;
   }
 
-  async matchResource(requestContent:RequestContent, enforcer?:Enforcer): Promise<void> {
+  async matchResource(requestContent:RequestContent, enforcer:Enforcer): Promise<void> {
     if (!enforcer) {
       throw new Error('enforcer does not exists');
     }
@@ -53,14 +53,10 @@ export class DefaultResourceChecker implements ResourceChecker {
     let resources:any[] = [];
     for (let i = 0; i < permissions.length; i++) {
       const resourceJson = await this.getResource(requestContent, permissions[i]);
-      if (enforcer.resourceHandler) {
-        enforcer.resourceHandler(resourceJson, this.options);
-      }
       resources = resources.concat(resourceJson);
     }
-    let {payload} = requestContent.token.payload;
+    let {payload} = requestContent.token;
     if (!payload.authorization) {
-      const keycloakJson = await this.options.keycloakJson(this.options, requestContent);
       const tkn = await this.options.clientAuthorization.getRPT(requestContent, enforcer);
       // eslint-disable-next-line require-atomic-updates
       payload = tkn.decodedAccessToken;
@@ -68,13 +64,16 @@ export class DefaultResourceChecker implements ResourceChecker {
     let permission:any;
     const resource = resources.find((resId) => {
       const {authorization} = payload;
-      if (authorization && authorization.permissions) {
+      if (authorization.permissions) {
         permission = authorization.permissions.find((p:any) => p.rsid === resId);
       }
       return permission;
     });
-    const hasScope = !permissions.find((p) => p.scope) ||
-            permissions.every((p) => permission.scopes.includes(p.scope));
+    let hasScope = true;
+    if (resource) {
+      hasScope = !permissions.find((p) => p.scope) ||
+          permissions.every((p) => permission.scopes.includes(p.scope));
+    }
     if (!resource || !hasScope) {
       throw new Error('Access is denied');
     }

@@ -7,7 +7,7 @@ import {ClientRoleEnforcer} from './ClientRoleEnforcer';
 import {ResourceEnforcer} from './ResourceEnforcer';
 
 export interface EnforcerAction {
-    enforce(requestContent: RequestContent, enforcer?:EnforcerFunc): Promise<void>
+    enforce(requestContent: RequestContent, enforcer:EnforcerFunc): Promise<void>
 }
 
 export class DefaultEnforcer implements EnforcerAction {

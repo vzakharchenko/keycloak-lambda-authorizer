@@ -1,23 +1,44 @@
-/* eslint-disable  require-await, no-empty-function, @typescript-eslint/ban-ts-comment, @typescript-eslint/no-empty-function
+/* eslint-disable  require-await,  no-negated-condition,  no-empty-function, @typescript-eslint/ban-ts-comment, @typescript-eslint/no-empty-function
  */
 
 import {AdapterCache} from "../cache/AdapterCache";
 import {ClientAuthorization, JWSPayload} from "../clients/ClientAuthorization";
-import {Enforcer, RequestContent, RSAKey, SecurityResource, TokenJson} from "../Options";
+import {
+  Enforcer,
+  EnforcerFunc,
+  EnforcerFunction,
+  RequestContent,
+  RSAKey,
+  SecurityResource,
+  TokenJson,
+} from "../Options";
 import {ResourceChecker} from "../enforcer/resource/Resource";
+import {UmaConfiguration, UMAResponse} from "../uma/UmaConfiguration";
+import {ServiceAccount} from "../serviceaccount/ServiceAccount";
+import {EnforcerAction} from "../enforcer/Enforcer";
+import {SecurityAdapter} from "../adapters/SecurityAdapter";
+import {JWKS, JWKSType} from "../jwks/JWKS";
 
 import {isExpired} from "./TokenUtils";
 import {HTTPMethod, RestCalls} from "./restCalls";
 
-export class DummyCache implements AdapterCache {
-  value?:string;
+export type GetFunc =(region: string, key: string)=>string|undefined
 
-  constructor(value?: string) {
-    this.value = value;
+export class DummyCache implements AdapterCache {
+  value:GetFunc;
+
+  constructor(value?: string| GetFunc) {
+    if (!value) {
+      // @ts-ignore
+      this.value = (region, key) => undefined;
+    } else {
+      this.value = typeof value === 'string' ? (region: string, key: string) => value
+          : value;
+    }
   }
 
   get(region: string, key: string): string | undefined {
-    return this.value;
+    return this.value(region, key);
   }
 
   put(region: string, key: string, value: any, ttl?: number): void {
@@ -103,6 +124,67 @@ export class DummyResourceChecker implements ResourceChecker {
 
   async matchResource(requestContent: RequestContent, enforcer?: Enforcer): Promise<void> {
 
+  }
+
+}
+
+export class DummyUmaConfiguration implements UmaConfiguration {
+  umaResponse?:UMAResponse;
+
+  constructor(umaResponse?: UMAResponse) {
+    this.umaResponse = umaResponse;
+  }
+
+  async getUma2Configuration(requestContent: RequestContent): Promise<UMAResponse> {
+    // @ts-ignore
+    return this.umaResponse || {};
+  }
+
+}
+
+export class DummyServiceAccount implements ServiceAccount {
+  accessToken:string;
+
+  constructor(accessToken: string) {
+    this.accessToken = accessToken;
+  }
+
+  async getServiceAccountToken(requestContent: RequestContent): Promise<string> {
+    return this.accessToken;
+  }
+
+}
+
+export class DummyEnforcerAction implements EnforcerAction {
+  async enforce(requestContent: RequestContent, enforcer: EnforcerFunc): Promise<void> {
+
+  }
+
+}
+
+export class DummySecurityAdapter implements SecurityAdapter {
+  requestContent?:RequestContent;
+
+  constructor(requestContent?: RequestContent) {
+    this.requestContent = requestContent;
+  }
+
+  async validate(request: string | RequestContent, enforcer?: EnforcerFunction): Promise<RequestContent> {
+    return this.requestContent || {token: {payload: {}, header: {alg: 'alg', kid: '1'}, tokenString: 'JWT'}, tokenString: 'JWT'};
+  }
+
+}
+
+export class DummyJWKS implements JWKS {
+
+  jWKSType?:JWKSType;
+
+  constructor(jWKSType?: JWKSType) {
+    this.jWKSType = jWKSType;
+  }
+
+  json(publicKey: RSAKey): JWKSType {
+    return this.jWKSType || {keys: [{test: 'test'}]};
   }
 
 }

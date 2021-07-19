@@ -19,13 +19,13 @@ export class DefaultMiddlewareAdapter implements MiddlewareAdapter {
   }
 
   isJwksRoute(req:any):boolean {
-    return req.baseUrl.match(this.jwksRoute);
+    return (req.baseUrl || req.originalUrl).match(this.jwksRoute);
   }
 
   getTokenString(req:any) {
     const tokenString = req.headers.authorization;
     if (!tokenString) {
-      throw new Error('Expected \'event.authorizationToken\' parameter to be set');
+      throw new Error('Expected \'headers.authorization\' parameter to be set');
     }
     const match = tokenString.match(/^Bearer (.*)$/);
     if (!match || match.length < 2) {
@@ -39,7 +39,7 @@ export class DefaultMiddlewareAdapter implements MiddlewareAdapter {
     const {securityAdapter} = this.options;
     return async (request:any, response:any, next:any) => {
       if (this.options.keys && this.options.keys.publicKey && this.isJwksRoute(request)) {
-        response.json(this.options.jwks.json(this.options.keys.publicKey));
+        response.json(await this.options.jwks.json(this.options.keys.publicKey));
         return;
       }
       try {

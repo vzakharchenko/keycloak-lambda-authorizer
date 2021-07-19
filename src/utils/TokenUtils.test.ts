@@ -1,9 +1,47 @@
-/* eslint-disable require-await, @typescript-eslint/ban-ts-comment
+/* eslint-disable require-await, @typescript-eslint/ban-ts-comment, no-empty-function, @typescript-eslint/no-empty-function
  */
-import {isExpired} from "./TokenUtils";
+// @ts-ignore
+import KeyCloakCerts from 'get-keycloak-public-key';
+import jsonwebtoken from 'jsonwebtoken';
+
+import {AdapterCache} from "../cache/AdapterCache";
+import {RequestContent} from "../Options";
+
+import {decodeToken, isExpired, verifyToken} from "./TokenUtils";
+import {DummyCache} from "./DummyImplementations.test";
+// import keycloakUtils from './KeycloakUtils';
+
+jest.mock('get-keycloak-public-key', () => jest.fn(() => ({fetch: async () => {}})));
+jest.mock('./KeycloakUtils', () => ({getKeycloakUrl: jest.fn(() => 'http://url.com'), getUrl: jest.fn(() => 'http://url.com')}));
+let verifyError = false;
+// @ts-ignore
+let decodeTokenJson;
+// @ts-ignore
+jest.mock('jsonwebtoken', () => ({verify: jest.fn(() => {
+  if (verifyError) {
+    throw new Error("111");
+  } else {
+    return true;
+  }
+}),
+  decode: jest.fn(() => {
+    // @ts-ignore
+    return decodeTokenJson;
+  })}));
+
+let cache: AdapterCache;
 
 describe('TokenUtils tests', () => {
   beforeEach(async () => {
+    jest.clearAllMocks();
+    cache = new DummyCache();
+    verifyError = false;
+    decodeTokenJson = {
+      header: {
+        alg: 'rsa',
+        kid: '1',
+      },
+    };
     // @ts-ignore
   });
 
@@ -12,6 +50,152 @@ describe('TokenUtils tests', () => {
   });
   test('test isExpired', async () => {
     expect(isExpired({exp: 1})).toEqual(true);
+  });
+
+  test('test verifyToken', async () => {
+
+    // @ts-ignore
+    const jwtToken = await verifyToken({
+      token: {
+        header: {alg: 'rsa', kid: '1'}, payload: {}, tokenString: 'token'},
+      tokenString: "token",
+          // @ts-ignore
+    }, {cache,
+      // @ts-ignore
+      keycloakJson: async (arg1:AdapterCache, arg2:RequestContent) => { return {}; },
+      logger: console});
+    expect(jwtToken).toEqual({
+      header: {
+        alg: "rsa",
+        kid: "1",
+      },
+      payload: {},
+      tokenString: "token",
+    });
+  });
+
+  test('test verifyToken error1', async () => {
+    let error = false;
+    try {
+      await verifyToken({
+        token: {
+          header: {alg: 'hs256', kid: '1'}, payload: {}, tokenString: 'token'},
+        tokenString: "token",
+        // @ts-ignore
+      }, {cache, logger: console});
+    } catch (e) {
+      expect(e.message).toEqual('invalid token');
+      error = true;
+    }
+    if (!error) {
+      throw new Error('invalid test');
+    }
+  });
+
+  test('test verifyToken error2', async () => {
+    let error = false;
+    cache = new DummyCache("key");
+    try {
+      verifyError = true;
+      // @ts-ignore
+      await verifyToken({
+        token: {
+          header: {alg: 'rsa', kid: '1'}, payload: {}, tokenString: 'token'},
+        tokenString: "token",
+        // @ts-ignore
+      }, {cache, logger: console});
+    } catch (e) {
+      expect(e.message).toEqual('invalid token: Error: 111');
+      error = true;
+    }
+    if (!error) {
+      throw new Error('invalid test');
+    }
+  });
+
+  test('test verifyToken Cache ', async () => {
+    cache = new DummyCache("key");
+    const jwtToken = await verifyToken({
+      token: {
+        header: {alg: 'rsa', kid: '1'}, payload: {}, tokenString: 'token'},
+      tokenString: "token",
+      // @ts-ignore
+    }, {cache, logger: console});
+    expect(jwtToken).toEqual({
+      header: {
+        alg: "rsa",
+        kid: "1",
+      },
+      payload: {},
+      tokenString: "token",
+    });
+  });
+
+  test('test decodetoken ', async () => {
+    const token = decodeToken("token");
+    expect(token).toEqual({
+      header: {
+        alg: "rsa",
+        kid: "1",
+      },
+      tokenString: "token",
+    });
+  });
+
+  test('test decodetoken error1', async () => {
+    let error = false;
+    try {
+      decodeTokenJson = null;
+      decodeToken("token");
+    } catch (e) {
+      expect(e.message).toEqual('invalid token (header part)');
+      error = true;
+    }
+    if (!error) {
+      throw new Error('invalid test');
+    }
+  });
+
+  test('test decodetoken error2', async () => {
+    let error = false;
+    try {
+      decodeTokenJson = {header: null};
+      decodeToken("token");
+    } catch (e) {
+      expect(e.message).toEqual('invalid token (header part)');
+      error = true;
+    }
+    if (!error) {
+      throw new Error('invalid test');
+    }
+  });
+
+  test('test decodetoken error3', async () => {
+    let error = false;
+    try {
+      decodeTokenJson = {header: {alg: 'none'}};
+      decodeToken("token");
+    } catch (e) {
+      expect(e.message).toEqual('invalid token');
+      error = true;
+    }
+    if (!error) {
+      throw new Error('invalid test');
+    }
+  });
+
+  test('test decodetoken error4', async () => {
+    let error = false;
+    try {
+      decodeTokenJson = {header: {alg: 'rsa', kid: null}};
+      decodeToken("token");
+    } catch (e) {
+      expect(e.message).toEqual('invalid token');
+      error = true;
+    }
+    if (!error) {
+      throw new Error('invalid test');
+    }
   });
 
 });

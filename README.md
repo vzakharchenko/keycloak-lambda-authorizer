@@ -310,7 +310,7 @@ const keycloakAdapter = new KeycloakAdapter({
 ###  RSA keys generation example using openssl
 
 ```bash
-openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=lambda-jwks" -keyout server.key -out server.crt
+openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -subj "/CN=<CLIENT-ID>" -keyout server.key -out server.crt
 ```
 
 ### Create JWKS endpoint by AWS API Gateway

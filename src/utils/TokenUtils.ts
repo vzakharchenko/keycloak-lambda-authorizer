@@ -1,4 +1,4 @@
-import jsonwebtoken, {Secret} from 'jsonwebtoken';
+import jsonwebtoken from 'jsonwebtoken';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import KeyCloakCerts from 'get-keycloak-public-key';
@@ -52,7 +52,7 @@ export async function verifyToken(requestContent:RequestContent,
   // eslint-disable-next-line no-negated-condition
   if (!alg.toLowerCase().startsWith('hs')) {
     // fetch the PEM Public Key
-    const key:Secret = <Secret> await getKeyFromKeycloak(requestContent, options, kid);
+    const key:jsonwebtoken.Secret = <jsonwebtoken.Secret> await getKeyFromKeycloak(requestContent, options, kid);
     try {
       // Verify and decode the token
       jsonwebtoken.verify(requestContent.token.tokenString, key);

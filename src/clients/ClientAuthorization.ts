@@ -55,6 +55,7 @@ export class DefaultClientAuthorization implements ClientAuthorization {
     const newToken = JSON.parse(res);
     newToken.decodedAccessToken = jsonwebtoken.decode(newToken.access_token);
     newToken.decodedRefreshToken = jsonwebtoken.decode(newToken.refresh_token);
+    return newToken;
   }
 
   async clientAuthentication(requestContent:RequestContent): Promise<any> {

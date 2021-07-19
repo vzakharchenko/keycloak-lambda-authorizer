@@ -2,7 +2,6 @@ import {AdapterContent, Enforcer, RequestContent} from '../Options';
 import {decodeToken} from "../utils/TokenUtils";
 
 import {SecurityAdapter} from './SecurityAdapter';
-import {DefaultAdapter} from './DefaultAdapter';
 
 
 export type AwsEvent = {

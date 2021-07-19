@@ -10,7 +10,7 @@ export type JWKSType={
 }
 
 export interface JWKS {
-    json(publicKey:RSAKey):JWKSType;
+    json(publicKey:RSAKey):Promise<JWKSType>| JWKSType;
 }
 
 export class DefaultJWKS implements JWKS {

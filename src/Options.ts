@@ -94,7 +94,6 @@ export type Enforcer = {
     clientRole?: ClientRole,
     clientId?: string,
     resource?: SecurityResource,
-    resourceHandler?: ResourceHandlerFunc,
     resources?: SecurityResource[],
 };
 

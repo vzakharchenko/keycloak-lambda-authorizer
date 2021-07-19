@@ -14,7 +14,7 @@ export class DefaultAdapter implements SecurityAdapter {
 
   async validate(request: string|RequestContent, enforcer?:EnforcerFunction): Promise<RequestContent> {
     let requestContent:RequestContent;
-    if (request instanceof String) {
+    if (request instanceof String || typeof request === 'string') {
       const tokenString:string = <string>request;
       const token = decodeToken(tokenString);
       requestContent = {

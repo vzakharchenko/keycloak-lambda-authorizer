@@ -1,4 +1,4 @@
-/* eslint-disable require-await, @typescript-eslint/ban-ts-comment, no-empty-function, @typescript-eslint/no-empty-function
+/* eslint-disable require-await, babel/camelcase, @typescript-eslint/ban-ts-comment, no-empty-function, @typescript-eslint/no-empty-function
  */
 // @ts-ignore
 import KeyCloakCerts from 'get-keycloak-public-key';
@@ -7,7 +7,7 @@ import jsonwebtoken from 'jsonwebtoken';
 import {AdapterCache} from "../cache/AdapterCache";
 import {RequestContent} from "../Options";
 
-import {decodeToken, isExpired, verifyToken} from "./TokenUtils";
+import {decodeToken, isExpired, transformRequestToRefresh, transformResfreshToRequest, verifyToken} from "./TokenUtils";
 import {DummyCache} from "./DummyImplementations.test";
 // import keycloakUtils from './KeycloakUtils';
 
@@ -139,6 +139,40 @@ describe('TokenUtils tests', () => {
         kid: "1",
       },
       tokenString: "token",
+    });
+  });
+  test('test transformResfreshToRequest ', async () => {
+
+    const token = transformResfreshToRequest(
+        // @ts-ignore
+        {token: {access_token: 'token'}},
+);
+
+    expect(token).toEqual({
+      token: {
+        header: {
+          alg: "rsa",
+          kid: "1",
+        },
+        tokenString: "token",
+      },
+      tokenString: "token",
+    });
+  });
+
+  test('test transformRequestToRefresh ', async () => {
+
+    const token = transformRequestToRefresh(
+        // @ts-ignore
+        {token: {access_token: 'token'}},
+        {},
+);
+    expect(token).toEqual({
+      token: {
+        token: {
+          access_token: "token",
+        },
+      },
     });
   });
 

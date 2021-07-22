@@ -2,10 +2,15 @@
  */
 
 
-import {RequestContent} from "../Options";
-import {DummyCache, DummyRestCalls, DummyUmaConfiguration} from "../utils/DummyImplementations.test";
+import {RefreshContext, RequestContent, TokenJson} from "../Options";
+import {
+  DummyCache,
+  DummyEnforcerAction,
+  DummyRestCalls,
+  DummyUmaConfiguration,
+} from "../utils/DummyImplementations.test";
 import {AdapterCache} from "../cache/AdapterCache";
-import {isExpired} from "../utils/TokenUtils";
+import {decodeToken, isExpired, transformRequestToRefresh, transformResfreshToRequest} from "../utils/TokenUtils";
 import {UmaConfiguration} from "../uma/UmaConfiguration";
 import {RestCalls} from "../utils/restCalls";
 
@@ -34,10 +39,30 @@ const keycloakJsonKeys = () => {
   };
 };
 
+
+// @ts-ignore
+transformResfreshToRequest.mockImplementation((refreshContext:RefreshContext):RequestContent => {
+  return {
+    tokenString: refreshContext.token.access_token,
+    token: decodeToken(refreshContext.token.access_token),
+    request: refreshContext.request,
+    realm: refreshContext.realm,
+  };
+});
+// @ts-ignore
+transformRequestToRefresh.mockImplementation((token:TokenJson, requestContext:RequestContent):RefreshContext => {
+  return {
+    token,
+    request: requestContext.request,
+    realm: requestContext.realm,
+  };
+});
+
 let requestContent: RequestContent;
 let cache: AdapterCache;
 let umaConfiguration: UmaConfiguration;
 let restClient: RestCalls;
+
 describe('ClientAuthorization tests', () => {
   beforeEach(async () => {
     umaConfiguration = new DummyUmaConfiguration();
@@ -156,6 +181,7 @@ describe('ClientAuthorization tests', () => {
         });
   });
 
+
   test('ClientAuthorization test token expired', async () => {
         // @ts-ignore
         // @ts-ignore
@@ -273,6 +299,7 @@ describe('ClientAuthorization tests', () => {
           decodedRefreshToken: null,
         });
   });
+
   test('ClientAuthorization test getRPT enforce', async () => {
         // @ts-ignore
     cache = new DummyCache();
@@ -324,7 +351,89 @@ describe('ClientAuthorization tests', () => {
           decodedRefreshToken: null,
         });
   });
+
   test('ClientAuthorization test getRPT Not able to refresh token', async () => {
+        // @ts-ignore
+    isExpired.mockImplementation(() => true);
+    cache = new DummyCache((region: string, key: string) => {
+      if (region === 'rpt') {
+        return JSON.stringify({
+          decodedAccessToken: {},
+          refresh_token: 'token',
+        });
+      } else {
+        return undefined;
+      }
+    });
+    let error = false;
+    try {
+      await new DefaultClientAuthorization({
+                // @ts-ignore
+        keycloakJson: keycloakJsonSecret,
+        cache,
+        umaConfiguration,
+        restClient,
+      }).getRPT(
+                requestContent,
+                {},
+            );
+    } catch (e) {
+      error = true;
+      expect(e.message).toEqual('Not able to refresh token');
+    }
+    expect(error).toEqual(true);
+  });
+
+  test('ClientAuthorization test getRPT Not able to refresh token 2', async () => {
+    // @ts-ignore
+    transformRequestToRefresh.mockImplementation((token:TokenJson, requestContext:RequestContent):RefreshContext => {
+      return {
+        // @ts-ignore
+        token: null,
+        request: requestContext.request,
+        realm: requestContext.realm,
+      };
+    });
+        // @ts-ignore
+    isExpired.mockImplementation(() => true);
+    cache = new DummyCache((region: string, key: string) => {
+      if (region === 'rpt') {
+        return JSON.stringify({
+          decodedAccessToken: {},
+          refresh_token: 'token',
+        });
+      } else {
+        return undefined;
+      }
+    });
+    let error = false;
+    try {
+      await new DefaultClientAuthorization({
+                // @ts-ignore
+        keycloakJson: keycloakJsonSecret,
+        cache,
+        umaConfiguration,
+        restClient,
+      }).getRPT(
+                requestContent,
+                {},
+            );
+    } catch (e) {
+      error = true;
+      expect(e.message).toEqual('Not able to refresh token');
+    }
+    expect(error).toEqual(true);
+  });
+  test('ClientAuthorization test getRPT Not able to refresh token 3', async () => {
+    // @ts-ignore
+    transformRequestToRefresh.mockImplementation((token:TokenJson, requestContext:RequestContent):RefreshContext => {
+      return {
+
+        token: {...token, ...{refresh_token: undefined}},
+        request: requestContext.request,
+        realm: requestContext.realm,
+      };
+    });
         // @ts-ignore
     isExpired.mockImplementation(() => true);
     cache = new DummyCache((region: string, key: string) => {
@@ -380,17 +489,18 @@ describe('ClientAuthorization tests', () => {
       cache,
       umaConfiguration,
       restClient,
+      enforcer: new DummyEnforcerAction(),
       logger: console,
-    }).keycloakRefreshToken(
-      {
+    }).keycloakRefreshToken({
+      token: {
         access_token: 'access_token',
         refresh_token: 'refresh_token',
         decodedAccessToken: {},
         decodedRefreshToken: {},
         refresh_expires_in: 10,
-      },
-            requestContent,
-        )).toEqual({});
+      }})).toEqual({
+        token: {},
+      });
   });
 
   test('ClientAuthorization test keycloakRefreshToken enforce', async () => {
@@ -400,18 +510,21 @@ describe('ClientAuthorization tests', () => {
       keycloakJson: keycloakJsonSecret,
       cache,
       umaConfiguration,
+      enforcer: new DummyEnforcerAction(),
       restClient,
       logger: console,
     }).keycloakRefreshToken(
       {
-        access_token: 'access_token',
-        refresh_token: 'refresh_token',
-        decodedAccessToken: {},
-        decodedRefreshToken: {},
-        refresh_expires_in: 10,
-      },
-            requestContent, {resource: {}},
-        )).toEqual({});
+        token: {
+          access_token: 'access_token',
+          refresh_token: 'refresh_token',
+          decodedAccessToken: {},
+          decodedRefreshToken: {},
+          refresh_expires_in: 10,
+        }}, () => ({resource: {}}),
+        )).toEqual({
+          token: {},
+        });
   });
 
 
@@ -422,18 +535,21 @@ describe('ClientAuthorization tests', () => {
       keycloakJson: keycloakJsonSecret,
       cache,
       umaConfiguration,
+      enforcer: new DummyEnforcerAction(),
       restClient,
       logger: console,
     }).keycloakRefreshToken(
       {
-        access_token: 'access_token',
-        refresh_token: 'refresh_token',
-        decodedAccessToken: {},
-        decodedRefreshToken: {},
-        refresh_expires_in: 10,
-      },
-            requestContent, {realmRole: 'realmRole'},
-        )).toEqual({});
+        token: {
+          access_token: 'access_token',
+          refresh_token: 'refresh_token',
+          decodedAccessToken: {},
+          decodedRefreshToken: {},
+          refresh_expires_in: 10,
+        }}, () => ({realmRole: 'realmRole'}),
+        )).toEqual({
+          token: {},
+        });
   });
   test('ClientAuthorization test keycloakRefreshToken enforce skip 2', async () => {
         // @ts-ignore
@@ -442,18 +558,22 @@ describe('ClientAuthorization tests', () => {
       keycloakJson: keycloakJsonSecret,
       cache,
       umaConfiguration,
+      enforcer: new DummyEnforcerAction(),
       restClient,
       logger: console,
     }).keycloakRefreshToken(
       {
-        access_token: 'access_token',
-        refresh_token: 'refresh_token',
-        decodedAccessToken: {},
-        decodedRefreshToken: {},
-        refresh_expires_in: 10,
-      },
-            requestContent, {clientRole: {clientRole: 'clientRole', clientId: 'clientId'}},
-        )).toEqual({});
+        token: {
+          access_token: 'access_token',
+          refresh_token: 'refresh_token',
+          decodedAccessToken: {},
+          decodedRefreshToken: {},
+          refresh_expires_in: 10,
+          // @ts-ignore
+        }}, () => ({clientRole: {clientRole: 'clientRole', clientId: 'clientId'}}),
+        )).toEqual({
+          token: {},
+        });
   });
 
   test('ClientAuthorization test keycloakRefreshToken null', async () => {
@@ -466,14 +586,14 @@ describe('ClientAuthorization tests', () => {
       restClient,
       logger: console,
     }).keycloakRefreshToken(
-            // @ts-ignore
-            undefined,
-            requestContent, {clientRole: {clientRole: 'clientRole', clientId: 'clientId'}},
+      {
+        // @ts-ignore
+        token: undefined}, {clientRole: {clientRole: 'clientRole', clientId: 'clientId'}},
         )).toEqual(null);
   });
 
   test('ClientAuthorization test keycloakRefreshToken error null', async () => {
-        // @ts-ignore
+     // @ts-ignore
     expect(await new DefaultClientAuthorization({
             // @ts-ignore
       keycloakJson: keycloakJsonSecret,
@@ -483,13 +603,13 @@ describe('ClientAuthorization tests', () => {
       logger: console,
     }).keycloakRefreshToken(
       {
-        access_token: 'access_token',
-        refresh_token: 'refresh_token',
-        decodedAccessToken: {},
-        decodedRefreshToken: {},
-        refresh_expires_in: 10,
-      },
-            requestContent,
+        token: {
+          access_token: 'access_token',
+          refresh_token: 'refresh_token',
+          decodedAccessToken: {},
+          decodedRefreshToken: {},
+          refresh_expires_in: 10,
+        }},
         )).toEqual(null);
   });
 

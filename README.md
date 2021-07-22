@@ -410,5 +410,46 @@ async function handler(request,response) {
 ...
 }
 ```
+# Validate and Refresh Token
+
+```javascript
+import KeycloakAdapter from 'keycloak-lambda-authorizer';
+
+const keycloakJson = {
+   "realm": "lambda-authorizer",
+   "auth-server-url": "http://localhost:8090/auth",
+   "ssl-required": "external",
+   "resource": "lambda",
+   "verify-token-audience": true,
+   "credentials": {
+     "secret": "772decbe-0151-4b08-8171-bec6d097293b"
+   },
+   "confidential-port": 0,
+   "policy-enforcer": {}
+}
+
+const keycloakAdapter = new KeycloakAdapter({
+  keycloakJson: keycloakJson
+}).getDefaultAdapter();
+
+
+async function handler(request,response) {
+  let tokenJson:TokenJson = readCurrentToken();
+  const authorization = {
+                          resource: {
+                            name: 'SOME_RESOURCE',
+                            uri: 'RESOURCE_URI',
+                            matchingUri: true,
+                          },
+                         }
+  try{
+    await keycloakAdapter.validate(tokenJson.access_token, authorization);
+  } catch(e){
+   tokenJson =  await keycloakAdapter.refreshToken(tokenJson, authorization);
+   writeToken(tokenJson)
+  }
+...
+}
+```
 
 # If you find these useful, please [Donate](https://secure.wayforpay.com/button/b18610f33a01c)!

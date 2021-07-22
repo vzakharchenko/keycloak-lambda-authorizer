@@ -1,5 +1,5 @@
 import {
-    AdapterContent, EnforcerFunction, RequestContent, updateEnforce,
+  AdapterContent, EnforcerFunction, RefreshContext, RequestContent, TokenJson, updateEnforce,
 } from '../Options';
 import {decodeToken, verifyToken} from '../utils/TokenUtils';
 
@@ -10,6 +10,20 @@ export class DefaultAdapter implements SecurityAdapter {
 
   constructor(options: AdapterContent) {
     this.options = options;
+  }
+
+  async refreshToken(tokenJson: TokenJson|RefreshContext, enforcer?:EnforcerFunction): Promise<RefreshContext|null> {
+    let refreshContext:RefreshContext;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (tokenJson.access_token) {
+      refreshContext = {
+        token: <TokenJson>tokenJson,
+      };
+    } else {
+      refreshContext = <RefreshContext> tokenJson;
+    }
+    return await this.options.clientAuthorization.keycloakRefreshToken(refreshContext, enforcer ? updateEnforce(enforcer) : undefined);
   }
 
   async validate(request: string|RequestContent, enforcer?:EnforcerFunction): Promise<RequestContent> {

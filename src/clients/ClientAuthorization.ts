@@ -3,10 +3,18 @@ import jws from 'jws';
 import {v4} from 'uuid';
 
 import {
-  AdapterContent, Enforcer, RequestContent, RSAKey, TokenJson,
+  AdapterContent,
+  Enforcer,
+  EnforcerFunc,
+  EnforcerFunction,
+  RefreshContext,
+  RequestContent,
+  RSAKey,
+  TokenJson,
+  updateEnforce,
 } from '../Options';
 import {getKeycloakUrl} from '../utils/KeycloakUtils';
-import {isExpired} from '../utils/TokenUtils';
+import {isExpired, transformRequestToRefresh, transformResfreshToRequest} from '../utils/TokenUtils';
 
 export type JWSPayload = {
     jti: string,
@@ -23,14 +31,13 @@ export interface ClientAuthorization {
     createJWS(requestContent:RequestContent):Promise<JWSPayload>;
     getTokenByCode(requestContent:RequestContent,
                    code:string,
-                   host:string):Promise<TokenJson>;
+                   redirectUri:string):Promise<TokenJson>;
     exchangeRPT(requestContent:RequestContent,
                 accessToken:string, clientId:string):Promise<any>;
-    keycloakRefreshToken(token:TokenJson,
-                         requestContent:RequestContent,
-                         enforcer?:Enforcer):Promise<any>;
+    keycloakRefreshToken(refreshContext: RefreshContext,
+                         enforcerFunc?:EnforcerFunc):Promise<RefreshContext|null>;
     clientAuthentication(requestContent:RequestContent):Promise<any>;
-    getRPT(requestContent: RequestContent, enforcer:Enforcer):Promise<any>;
+    getRPT(requestContent: RequestContent, enforcerFunc:EnforcerFunction):Promise<any>;
     logout(requestContent: RequestContent, refreshToken:any):Promise<void>;
 }
 
@@ -135,8 +142,10 @@ export class DefaultClientAuthorization implements ClientAuthorization {
     }
   }
 
-  async getRPT(requestContent: RequestContent, enforcer:Enforcer): Promise<any> {
+  async getRPT(requestContent: RequestContent, enforcerFunction:EnforcerFunction): Promise<any> {
     const keycloakJson = await this.options.keycloakJson(this.options, requestContent);
+    const enforceFunc = updateEnforce(enforcerFunction);
+    const enforcer = await (enforceFunc(this.options, requestContent));
     const clientId = enforcer.clientId || keycloakJson.resource;
     const key = `${keycloakJson.realm}:${clientId}:${requestContent.token.payload.jti}`;
     const {cache} = this.options;
@@ -153,7 +162,8 @@ export class DefaultClientAuthorization implements ClientAuthorization {
       const parseToken:TokenJson = JSON.parse(tkn);
       if (isExpired(parseToken.decodedAccessToken)) {
         if (parseToken.refresh_token) {
-          tkn0 = await this.keycloakRefreshToken(parseToken, requestContent, enforcer);
+          const refreshContext = await this.keycloakRefreshToken(transformRequestToRefresh(parseToken, requestContent), enforceFunc);
+          tkn0 = refreshContext ? refreshContext.token : null;
         } else {
           tkn0 = await this.exchangeRPT(requestContent,
               requestContent.tokenString, clientId);
@@ -173,12 +183,12 @@ export class DefaultClientAuthorization implements ClientAuthorization {
 
   async getTokenByCode(requestContent:RequestContent,
       code: string,
-      host: string): Promise<TokenJson> {
+                       redirectUri: string): Promise<TokenJson> {
     const keycloakJson = await this.options.keycloakJson(this.options, requestContent);
     const umaConfig = await this.options.umaConfiguration.getUma2Configuration(requestContent);
     const url = `${umaConfig.token_endpoint}`;
     const authorization = await this.clientIdAuthorization(requestContent);
-    const data = `code=${code}&grant_type=authorization_code&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}&redirect_uri=${encodeURIComponent(`${host}/${keycloakJson.realm}/${keycloakJson.resource}/callback`)}`;
+    const data = `code=${code}&grant_type=authorization_code&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}&redirect_uri=${encodeURIComponent(redirectUri)}`;
     const tokenResponse = await this.options.restClient.sendData(url,
         'POST',
         data,
@@ -189,43 +199,42 @@ export class DefaultClientAuthorization implements ClientAuthorization {
     return tokenJson;
   }
 
-  async keycloakRefreshToken(token: TokenJson,
-      requestContent:RequestContent,
-      enforcer?:Enforcer): Promise<TokenJson|null> {
-    let tokenJson:TokenJson = token;
+  async keycloakRefreshToken(refreshContext: RefreshContext,
+                             enforcerFunc?:EnforcerFunc): Promise<RefreshContext|null> {
+    let tokenJson:TokenJson = refreshContext.token;
     if (!tokenJson) {
       return null;
     }
-    const decodedAccessToken = jsonwebtoken.decode(token.access_token);
-    const decodedRefreshToken = jsonwebtoken.decode(token.refresh_token);
+    const decodedAccessToken = jsonwebtoken.decode(tokenJson.access_token);
+    const decodedRefreshToken = jsonwebtoken.decode(tokenJson.refresh_token);
     if (isExpired(decodedRefreshToken)) {
       return null;
     }
     if (!decodedAccessToken || isExpired(decodedAccessToken)) {
+      const requestContent = transformResfreshToRequest(refreshContext);
       const keycloakJson = await this.options.keycloakJson(this.options, requestContent);
       const realmName = keycloakJson.realm;
       const umaConfig = await this.options.umaConfiguration.getUma2Configuration(requestContent);
       const url = `${umaConfig.token_endpoint}`;
       this.options.logger.debug(`Token Request Url: ${url}`);
       const authorization = await this.clientIdAuthorization(requestContent);
-      const data = `refresh_token=${token.refresh_token}&grant_type=refresh_token&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}`;
+      const data = `refresh_token=${tokenJson.refresh_token}&grant_type=refresh_token&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&${authorization}`;
       try {
         const tokenResponse = await this.options.restClient.sendData(url,
             'POST',
             data,
             {'Content-Type': 'application/x-www-form-urlencoded'});
         tokenJson = JSON.parse(tokenResponse);
-        if (enforcer &&
-              !enforcer.realmRole && !enforcer.clientRole) {
-          tokenJson = await this.exchangeRPT(requestContent, tokenJson.access_token,
-              enforcer.clientId || keycloakJson.resource);
+        const enforcer = enforcerFunc ? await enforcerFunc(this.options, requestContent) : null;
+        if (enforcer) {
+          await this.options.enforcer.enforce(requestContent, updateEnforce(enforcer));
         }
       } catch (e) {
         this.options.logger.error(`wrong refresh token for ${realmName}`, e);
         return null;
       }
     }
-    return tokenJson;
+    return {...refreshContext, ...{token: tokenJson}};
   }
 
   async logout(requestContent: RequestContent, refreshToken: any): Promise<void> {

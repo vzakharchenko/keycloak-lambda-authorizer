@@ -3,7 +3,7 @@ import jsonwebtoken from 'jsonwebtoken';
 // @ts-ignore
 import KeyCloakCerts from 'get-keycloak-public-key';
 
-import {AdapterContent, JWTToken, RequestContent} from '../Options';
+import {AdapterContent, JWTToken, RefreshContext, RequestContent, TokenJson} from '../Options';
 
 import {getKeycloakUrl, getUrl} from './KeycloakUtils';
 
@@ -70,4 +70,21 @@ export async function verifyToken(requestContent:RequestContent,
 export function isExpired(token:any) {
   const clockTimestamp = Math.floor(Date.now() / 1000);
   return clockTimestamp > token.exp - 30;
+}
+
+export function transformResfreshToRequest(refreshContext:RefreshContext):RequestContent {
+  return {
+    tokenString: refreshContext.token.access_token,
+    token: decodeToken(refreshContext.token.access_token),
+    request: refreshContext.request,
+    realm: refreshContext.realm,
+  };
+}
+
+export function transformRequestToRefresh(token:TokenJson, requestContext:RequestContent):RefreshContext {
+  return {
+    token,
+    request: requestContext.request,
+    realm: requestContext.realm,
+  };
 }

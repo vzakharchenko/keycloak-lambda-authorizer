@@ -65,6 +65,12 @@ export type RequestContent = {
     realm?: string,
 }
 
+export type RefreshContext = {
+    token: TokenJson,
+    request?: any,
+    realm?: string,
+}
+
 // eslint-disable-next-line no-use-before-define
 export type keycloakJsonFunction = (options: AdapterContent, requestContent: RequestContent) =>
     Promise<KeycloakJsonStructure> | KeycloakJsonStructure;

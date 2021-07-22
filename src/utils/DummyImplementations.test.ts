@@ -6,7 +6,7 @@ import {ClientAuthorization, JWSPayload} from "../clients/ClientAuthorization";
 import {
   Enforcer,
   EnforcerFunc,
-  EnforcerFunction,
+  EnforcerFunction, RefreshContext,
   RequestContent,
   RSAKey,
   SecurityResource,
@@ -97,7 +97,7 @@ export class DummyClientAuthorization implements ClientAuthorization {
     return this.token;
   }
 
-  async getRPT(requestContent: RequestContent, enforcer: Enforcer): Promise<any> {
+  async getRPT(requestContent: RequestContent, enforcerFunc:EnforcerFunc): Promise<any> {
     return this.token;
   }
 
@@ -107,7 +107,7 @@ export class DummyClientAuthorization implements ClientAuthorization {
     return {access_token: this.token, refresh_token: this.token};
   }
 
-  async keycloakRefreshToken(token: TokenJson, requestContent: RequestContent, enforcer?: Enforcer): Promise<any> {
+  async keycloakRefreshToken(refreshContext: RefreshContext, enforcerFunc?:EnforcerFunc): Promise<any> {
     return this.token;
   }
 
@@ -171,6 +171,19 @@ export class DummySecurityAdapter implements SecurityAdapter {
 
   async validate(request: string | RequestContent, enforcer?: EnforcerFunction): Promise<RequestContent> {
     return this.requestContent || {token: {payload: {}, header: {alg: 'alg', kid: '1'}, tokenString: 'JWT'}, tokenString: 'JWT'};
+  }
+
+  async refreshToken(tokenJson: TokenJson|RefreshContext, enforcer?: EnforcerFunction): Promise<RefreshContext|null> {
+    let refreshContext:RefreshContext;
+    // @ts-ignore
+    if (tokenJson.access_token) {
+      refreshContext = {
+        token: <TokenJson>tokenJson,
+      };
+    } else {
+      refreshContext = <RefreshContext> tokenJson;
+    }
+    return refreshContext;
   }
 
 }

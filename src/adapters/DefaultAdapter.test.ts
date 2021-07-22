@@ -2,7 +2,7 @@
  */
 import {decodeToken, verifyToken} from '../utils/TokenUtils';
 import {RequestContent} from "../Options";
-import {DummyEnforcerAction} from "../utils/DummyImplementations.test";
+import {DummyClientAuthorization, DummyEnforcerAction} from "../utils/DummyImplementations.test";
 
 import {DefaultAdapter} from "./DefaultAdapter";
 
@@ -57,4 +57,38 @@ describe('DefaultAdapter tests', () => {
     });
   });
 
+
+  test('validate test refreshToken with authorization', async () => {
+    // @ts-ignore
+    const ret = await new DefaultAdapter({
+      enforcer: new DummyEnforcerAction(),
+      clientAuthorization: new DummyClientAuthorization({}),
+      // @ts-ignore
+    }).refreshToken({}, {});
+    expect(ret).toEqual({
+    });
+  });
+
+  test('validate test refreshToken with authorization 2', async () => {
+    // @ts-ignore
+    const ret = await new DefaultAdapter({
+      enforcer: new DummyEnforcerAction(),
+      clientAuthorization: new DummyClientAuthorization({}),
+      // @ts-ignore
+      // eslint-disable-next-line babel/camelcase
+    }).refreshToken({access_token: {}}, {});
+    expect(ret).toEqual({
+    });
+  });
+
+  test('validate test refreshToken without authorization', async () => {
+    // @ts-ignore
+    const ret = await new DefaultAdapter({
+      enforcer: new DummyEnforcerAction(),
+      clientAuthorization: new DummyClientAuthorization({}),
+      // @ts-ignore
+    }).refreshToken({});
+    expect(ret).toEqual({
+    });
+  });
 });

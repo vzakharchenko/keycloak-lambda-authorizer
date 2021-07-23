@@ -80,5 +80,28 @@ describe('RealmRoleEnforcer tests', () => {
       throw new Error('invalid test ');
     }
   });
+  test('RealmRoleEnforcer Error 4', async () => {
+    let error = false;
+    try {
+
+
+      // @ts-ignore
+      await new RealmRoleEnforcer({}).enforce({
+        // @ts-ignore
+        token: {
+          payload: {
+          },
+        },
+      }, () => {
+        return {realmRole: 'realmRole'};
+      });
+    } catch (e) {
+      error = true;
+      expect(e.message).toEqual('Access Denied');
+    }
+    if (!error) {
+      throw new Error('invalid test ');
+    }
+  });
 
 });

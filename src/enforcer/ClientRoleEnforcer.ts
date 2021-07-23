@@ -19,7 +19,8 @@ export class ClientRoleEnforcer implements EnforcerAction {
     if (!enforcer.clientRole) {
       throw new Error('Client Role is Empty');
     }
-    const resourceAccess = requestContent.token.payload.resource_access[enforcer.clientRole.clientId];
+    const resourceAccess = requestContent.token.payload.resource_access &&
+        requestContent.token.payload.resource_access[enforcer.clientRole.clientId];
     if (!resourceAccess) {
       throw new Error('Access Denied');
     }

@@ -19,7 +19,8 @@ export class RealmRoleEnforcer implements EnforcerAction {
     if (!enforcer.realmRole) {
       throw new Error('Realm Role is Empty');
     }
-    const role = requestContent.token.payload.realm_access.roles.find(
+    const role = requestContent.token.payload.realm_access &&
+        requestContent.token.payload.realm_access.roles.find(
         (r:string) => r === enforcer.realmRole,
       );
     if (!role) {

@@ -104,5 +104,29 @@ describe('ClientRoleEnforcer tests', () => {
       throw new Error('invalid test ');
     }
   });
+  test('ClientRoleEnforcer Error 5', async () => {
+    let error = false;
+    try {
+
+
+      // @ts-ignore
+      await new ClientRoleEnforcer({}).enforce({
+        // @ts-ignore
+        token: {
+          payload: {
+          },
+        },
+      }, () => {
+        return {
+          clientRole: {clientRole: 'clientRole', clientId: 'clientId'}};
+      });
+    } catch (e) {
+      error = true;
+      expect(e.message).toEqual('Access Denied');
+    }
+    if (!error) {
+      throw new Error('invalid test ');
+    }
+  });
 
 });

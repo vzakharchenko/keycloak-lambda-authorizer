@@ -1,6 +1,6 @@
 {
   "name": "keycloak-lambda-authorizer",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Keycloak Cloud Adapter",
   "main": "index.js",
   "homepage": "https://github.com/vzakharchenko/keycloak-lambda-authorizer",

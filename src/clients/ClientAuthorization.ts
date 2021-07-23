@@ -210,8 +210,8 @@ export class DefaultClientAuthorization implements ClientAuthorization {
     if (isExpired(decodedRefreshToken)) {
       return null;
     }
+    const requestContent = transformResfreshToRequest(refreshContext);
     if (!decodedAccessToken || isExpired(decodedAccessToken)) {
-      const requestContent = transformResfreshToRequest(refreshContext);
       const keycloakJson = await this.options.keycloakJson(this.options, requestContent);
       const realmName = keycloakJson.realm;
       const umaConfig = await this.options.umaConfiguration.getUma2Configuration(requestContent);
@@ -225,14 +225,14 @@ export class DefaultClientAuthorization implements ClientAuthorization {
             data,
             {'Content-Type': 'application/x-www-form-urlencoded'});
         tokenJson = JSON.parse(tokenResponse);
-        const enforcer = enforcerFunc ? await enforcerFunc(this.options, requestContent) : null;
-        if (enforcer) {
-          await this.options.enforcer.enforce(requestContent, updateEnforce(enforcer));
-        }
       } catch (e) {
         this.options.logger.error(`wrong refresh token for ${realmName}`, e);
         return null;
       }
+    }
+    const enforcer = enforcerFunc ? await enforcerFunc(this.options, requestContent) : null;
+    if (enforcer) {
+      await this.options.enforcer.enforce(requestContent, updateEnforce(enforcer));
     }
     return {...refreshContext, ...{token: tokenJson}};
   }

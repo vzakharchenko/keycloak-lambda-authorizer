@@ -69,9 +69,5 @@
     "forceConsistentCasingInFileNames": true        /* Disallow inconsistently-cased references to the same file. */
   },
   "exclude": [
-    "examples/**",
-    "example/**",
-    "src",
-    "__tests__",
   ]
 }

@@ -1,7 +1,7 @@
-import {AdapterContent, RequestContent} from '../Options';
+import {AdapterContent, RequestContent, RequestContext} from '../Options';
 
 export interface ServiceAccount {
-    getServiceAccountToken(requestContent:RequestContent):Promise<string>;
+    getServiceAccountToken(requestContent:RequestContext):Promise<string>;
 }
 
 export class DefaultServiceAccount implements ServiceAccount {
@@ -11,9 +11,9 @@ export class DefaultServiceAccount implements ServiceAccount {
     this.options = options;
   }
 
-  async getServiceAccountToken(requestContent:RequestContent): Promise<string> {
+  async getServiceAccountToken(requestContent:RequestContext): Promise<string> {
     const serviceAccountToken = await this.options
-        .clientAuthorization.clientAuthentication(requestContent);
+        .clientAuthorization.clientAuthentication(<RequestContent> requestContent);
     return serviceAccountToken.access_token;
   }
 }

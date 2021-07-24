@@ -65,6 +65,13 @@ export type RequestContent = {
     realm?: string,
 }
 
+export type RequestContext = {
+    tokenString?: string,
+    token?: JWTToken,
+    request?: AwsEvent | AwsAuthorizationEvent | any,
+    realm?: string,
+}
+
 export type RefreshContext = {
     token: TokenJson,
     request?: any,

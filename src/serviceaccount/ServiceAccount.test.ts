@@ -24,4 +24,17 @@ describe('ServiceAccount tests', () => {
     });
   });
 
+  test('ServiceAccount test 2', async () => {
+   // @ts-ignore
+    const defaultServiceAccount = new DefaultServiceAccount({
+      // eslint-disable-next-line babel/camelcase
+      clientAuthorization: new DummyClientAuthorization({access_token: {test: 'test'}}),
+    });
+    // @ts-ignore
+    const token = await defaultServiceAccount.getServiceAccountToken();
+    expect(token).toEqual({
+      test: "test",
+    });
+  });
+
 });

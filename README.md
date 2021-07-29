@@ -3,6 +3,8 @@
 - [![Coverage Status](https://coveralls.io/repos/github/vzakharchenko/keycloak-lambda-authorizer/badge.svg?branch=master)](https://coveralls.io/github/vzakharchenko/keycloak-lambda-authorizer?branch=master)
 - [![Maintainability](https://api.codeclimate.com/v1/badges/0b56148967afc99a64df/maintainability)](https://codeclimate.com/github/vzakharchenko/keycloak-lambda-authorizer/maintainability)
 - [![Node.js 10.x, 12.x, 13.x, 14.x, 15.x CI](https://github.com/vzakharchenko/keycloak-lambda-authorizer/actions/workflows/nodejs.yml/badge.svg)](https://github.com/vzakharchenko/keycloak-lambda-authorizer/actions/workflows/nodejs.yml)
+- [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=vzakharchenko_keycloak-lambda-authorizer&metric=bugs)](https://sonarcloud.io/dashboard?id=vzakharchenko_keycloak-lambda-authorizer)
+- [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=vzakharchenko_keycloak-lambda-authorizer&metric=sqale_index)](https://sonarcloud.io/dashboard?id=vzakharchenko_keycloak-lambda-authorizer)
 - [![donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://secure.wayforpay.com/button/b18610f33a01c)
 
 

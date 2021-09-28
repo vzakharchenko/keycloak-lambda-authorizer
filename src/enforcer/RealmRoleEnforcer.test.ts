@@ -38,6 +38,7 @@ describe('RealmRoleEnforcer tests', () => {
       });
     } catch (e) {
       error = true;
+      // @ts-ignore
       expect(e.message).toEqual('enforcer does not provided');
     }
     if (!error) {
@@ -56,6 +57,7 @@ describe('RealmRoleEnforcer tests', () => {
       });
     } catch (e) {
       error = true;
+      // @ts-ignore
       expect(e.message).toEqual('Realm Role is Empty');
     }
     if (!error) {
@@ -74,6 +76,7 @@ describe('RealmRoleEnforcer tests', () => {
       });
     } catch (e) {
       error = true;
+      // @ts-ignore
       expect(e.message).toEqual('Access Denied');
     }
     if (!error) {
@@ -97,6 +100,7 @@ describe('RealmRoleEnforcer tests', () => {
       });
     } catch (e) {
       error = true;
+      // @ts-ignore
       expect(e.message).toEqual('Access Denied');
     }
     if (!error) {

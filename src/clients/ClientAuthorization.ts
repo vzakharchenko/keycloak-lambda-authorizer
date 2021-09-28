@@ -137,7 +137,7 @@ export class DefaultClientAuthorization implements ClientAuthorization {
           'Content-Type': 'application/x-www-form-urlencoded',
         });
       return JSON.parse(response);
-    } catch (e) {
+    } catch (e:any) {
       throw new Error(e);
     }
   }
@@ -225,6 +225,8 @@ export class DefaultClientAuthorization implements ClientAuthorization {
             data,
             {'Content-Type': 'application/x-www-form-urlencoded'});
         tokenJson = JSON.parse(tokenResponse);
+        tokenJson.decodedAccessToken = jsonwebtoken.decode(tokenJson.access_token);
+        tokenJson.decodedRefreshToken = jsonwebtoken.decode(tokenJson.refresh_token);
       } catch (e) {
         this.options.logger.error(`wrong refresh token for ${realmName}`, e);
         return null;

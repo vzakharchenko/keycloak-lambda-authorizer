@@ -65,7 +65,7 @@ async function clientToRPTExchange(request:any, clientId:any) {
         'Content-Type': 'application/x-www-form-urlencoded',
       });
     return JSON.parse(response);
-  } catch (e) {
+  } catch (e:any) {
     throw new Error(e);
   }
 }
@@ -84,7 +84,7 @@ app.post('/lambda', keycloak.protect(), keycloak.enforcer(['uiResource']), async
       statusToken: JSON
         .stringify(jsonwebtoken.decode(lambdaJWT.access_token), null, 2),
     });
-  } catch (e) {
+  } catch (e:any) {
     renderUI(request, response, {
       status: e,
       statusToken: JSON
@@ -107,7 +107,7 @@ app.post('/lambdaEnt', keycloak.protect(), keycloak.enforcer(['uiResource']), as
       statusTokenEnt: JSON
         .stringify(jsonwebtoken.decode(lambdaJWT.access_token), null, 2),
     });
-  } catch (e) {
+  } catch (e:any) {
     renderUI(request, response, {
       statusEnt: e,
       statusTokenEnt: JSON
@@ -130,7 +130,7 @@ app.post('/lambdaJwks', keycloak.protect(), keycloak.enforcer(['uiResource']), a
       statusTokenJwks: JSON
         .stringify(jsonwebtoken.decode(lambdaJWT.access_token), null, 2),
     });
-  } catch (e) {
+  } catch (e:any) {
     renderUI(request, response, {
       statusJwks: e,
       statusTokenJwks: JSON
@@ -152,7 +152,7 @@ app.post('/lambdaJwksEnt', keycloak.protect(), keycloak.enforcer(['uiResource'])
       statusTokenJwksEnt: JSON
         .stringify(jsonwebtoken.decode(lambdaJWT.access_token), null, 2),
     });
-  } catch (e) {
+  } catch (e:any) {
     renderUI(request, response, {
       statusJwksEnt: e,
       statusTokenJwksEnt: JSON

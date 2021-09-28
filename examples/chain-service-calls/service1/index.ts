@@ -32,7 +32,7 @@ async (request:any, response) => {
     });
     response.json(JSON
       .parse(res));
-  } catch (e) {
+  } catch (e:any) {
     response.json({message: e.message});
   }
 });
@@ -51,7 +51,7 @@ async (request:any, response) => {
     });
     response.json(JSON
       .parse(res));
-  } catch (e) {
+  } catch (e:any) {
     response.json({message: e.message});
   }
 });

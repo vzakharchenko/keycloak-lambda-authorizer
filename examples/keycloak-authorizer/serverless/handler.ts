@@ -65,7 +65,7 @@ export async function auth0(event: any) {
 function getDecodedToken(event: any) {
   try {
     return getToken(event);
-  } catch (e) {
+  } catch (e:any) {
     return null;
   }
 }

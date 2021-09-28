@@ -3,7 +3,7 @@ import fs from 'fs';
 function getPrivateKey() {
   try {
     return fs.readFileSync(`${__dirname}/server.key`, 'utf8');
-  } catch (e) {
+  } catch (e:any) {
     if (e.code === 'ENOENT') {
       console.log('Expected server.key to be included in Lambda deployment package');
       // fallthrough
@@ -15,7 +15,7 @@ function getPrivateKey() {
 export function getPublicKey() {
   try {
     return fs.readFileSync(`${__dirname}/server.crt`, 'utf8');
-  } catch (e) {
+  } catch (e:any) {
     if (e.code === 'ENOENT') {
       console.log('Expected server.key to be included in Lambda deployment package');
       // fallthrough

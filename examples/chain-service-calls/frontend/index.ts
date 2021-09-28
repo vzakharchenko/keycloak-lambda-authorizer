@@ -68,7 +68,7 @@ app.post('/service1api1', keycloak.protect(), async (request:any, response) => {
       status1Token: JSON
         .stringify(jsonwebtoken.decode(lambdaJWT.access_token), null, 2),
     });
-  } catch (e) {
+  } catch (e:any) {
     renderUI(request, response, {
       status1: e,
       status1Token: JSON
@@ -89,7 +89,7 @@ app.post('/service1api2', keycloak.protect(), async (request:any, response) => {
       status2Token: JSON
         .stringify(jsonwebtoken.decode(lambdaJWT.access_token), null, 2),
     });
-  } catch (e) {
+  } catch (e:any) {
     renderUI(request, response, {
       status2: e,
       status2Token: JSON
@@ -110,7 +110,7 @@ app.post('/service2api', keycloak.protect(), async (request:any, response) => {
       status3Token: JSON
         .stringify(jsonwebtoken.decode(lambdaJWT.access_token), null, 2),
     });
-  } catch (e) {
+  } catch (e:any) {
     renderUI(request, response, {
       status3: e,
       status3Token: JSON
@@ -131,7 +131,7 @@ app.post('/service3api', keycloak.protect(), async (request:any, response) => {
       status4Token: JSON
         .stringify(jsonwebtoken.decode(lambdaJWT.access_token), null, 2),
     });
-  } catch (e) {
+  } catch (e:any) {
     renderUI(request, response, {
       status4: e,
       status4Token: JSON

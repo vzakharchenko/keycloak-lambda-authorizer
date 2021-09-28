@@ -3,7 +3,7 @@ import fs from 'fs';
 function getPolicyDocument(name:string) {
   try {
     return JSON.parse(fs.readFileSync(`${__dirname}/policy${name}Document.json`, 'utf8'));
-  } catch (e) {
+  } catch (e:any) {
     if (e.code === 'ENOENT') {
       console.error(`Expected policy${name}Document.json to be included in Lambda deployment package`);
       // fallthrough

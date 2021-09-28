@@ -61,7 +61,7 @@ app.post('/getUserList', keycloak.protect(), async (request:any, response) => {
       status1Token: JSON
         .stringify(jsonwebtoken.decode(lambdaJWT.access_token), null, 2),
     });
-  } catch (e) {
+  } catch (e:any) {
     renderUI(request, response, {
       users: [{name: e}],
       status1Token: JSON
@@ -85,7 +85,7 @@ app.post('/getClientList', keycloak.protect(), async (request:any, response) => 
         });
         clients[i].type = JSON.parse(res2).type;
         clients[i].secret = JSON.parse(res2).value;
-      } catch (e) {
+      } catch (e:any) {
         clients[i].secret = e;
       }
     }
@@ -94,7 +94,7 @@ app.post('/getClientList', keycloak.protect(), async (request:any, response) => 
       status1Token: JSON
         .stringify(jsonwebtoken.decode(lambdaJWT.access_token), null, 2),
     });
-  } catch (e) {
+  } catch (e:any) {
     renderUI(request, response, {
       clients: [{name: e}],
       status1Token: JSON

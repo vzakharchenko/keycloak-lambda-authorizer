@@ -60,7 +60,7 @@ app.post('/express', keycloak.protect(), async (request:any, response) => {
       status1Token: JSON
         .stringify(jsonwebtoken.decode(lambdaJWT.access_token), null, 2),
     });
-  } catch (e) {
+  } catch (e:any) {
     renderUI(request, response, {
       status1: e,
       status1Token: JSON

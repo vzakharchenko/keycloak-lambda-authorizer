@@ -97,6 +97,7 @@ describe('Resource tests', () => {
         resources: [],
         resource: {scope: 'WRITE'}});
     } catch (e) {
+      // @ts-ignore
       expect(e.message).toEqual('Access is denied');
       error = true;
     }
@@ -124,6 +125,7 @@ describe('Resource tests', () => {
         resources: [],
         resource: {scope: 'READ'}});
     } catch (e) {
+      // @ts-ignore
       expect(e.message).toEqual('Access is denied');
       error = true;
     }
@@ -145,6 +147,7 @@ describe('Resource tests', () => {
         resources: [],
         resource: {scope: 'READ'}});
     } catch (e) {
+      // @ts-ignore
       expect(e.message).toEqual('Access is denied');
       error = true;
     }
@@ -175,6 +178,7 @@ describe('Resource tests', () => {
       await dr.matchResource({token: {payload: {}}}, {
         resources: []});
     } catch (e) {
+      // @ts-ignore
       expect(e.message).toEqual('Access is denied');
       error = true;
     }
@@ -204,6 +208,7 @@ describe('Resource tests', () => {
     // @ts-ignore
       await dr.matchResource({token: {payload: {}}}, {});
     } catch (e) {
+      // @ts-ignore
       expect(e.message).toEqual('Access is denied');
       error = true;
     }
@@ -220,6 +225,7 @@ describe('Resource tests', () => {
       // @ts-ignore
       await dr.matchResource({token: {payload: {}}}, null);
     } catch (e) {
+      // @ts-ignore
       expect(e.message).toEqual('enforcer does not exists');
       error = true;
     }

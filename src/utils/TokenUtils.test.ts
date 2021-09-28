@@ -83,7 +83,7 @@ describe('TokenUtils tests', () => {
         tokenString: "token",
         // @ts-ignore
       }, {cache, logger: console});
-    } catch (e) {
+    } catch (e:any) {
       expect(e.message).toEqual('invalid token');
       error = true;
     }
@@ -104,7 +104,7 @@ describe('TokenUtils tests', () => {
         tokenString: "token",
         // @ts-ignore
       }, {cache, logger: console});
-    } catch (e) {
+    } catch (e:any) {
       expect(e.message).toEqual('invalid token: Error: 111');
       error = true;
     }
@@ -181,7 +181,7 @@ describe('TokenUtils tests', () => {
     try {
       decodeTokenJson = null;
       decodeToken("token");
-    } catch (e) {
+    } catch (e:any) {
       expect(e.message).toEqual('invalid token (header part)');
       error = true;
     }
@@ -195,7 +195,7 @@ describe('TokenUtils tests', () => {
     try {
       decodeTokenJson = {header: null};
       decodeToken("token");
-    } catch (e) {
+    } catch (e:any) {
       expect(e.message).toEqual('invalid token (header part)');
       error = true;
     }
@@ -209,7 +209,7 @@ describe('TokenUtils tests', () => {
     try {
       decodeTokenJson = {header: {alg: 'none'}};
       decodeToken("token");
-    } catch (e) {
+    } catch (e:any) {
       expect(e.message).toEqual('invalid token');
       error = true;
     }
@@ -223,7 +223,8 @@ describe('TokenUtils tests', () => {
     try {
       decodeTokenJson = {header: {alg: 'rsa', kid: null}};
       decodeToken("token");
-    } catch (e) {
+    } catch (e:any) {
+      // @ts-ignore
       expect(e.message).toEqual('invalid token');
       error = true;
     }

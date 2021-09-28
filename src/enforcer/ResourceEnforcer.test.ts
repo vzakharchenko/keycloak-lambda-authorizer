@@ -26,6 +26,7 @@ describe('ResourceEnforcer tests', () => {
       });
     } catch (e) {
       error = true;
+      // @ts-ignore
       expect(e.message).toEqual('enforcer does not provided');
     }
     if (!error) {

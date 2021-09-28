@@ -42,6 +42,7 @@ describe('ClientRoleEnforcer tests', () => {
       });
     } catch (e) {
       error = true;
+      // @ts-ignore
       expect(e.message).toEqual('enforcer does not provided');
     }
     if (!error) {
@@ -60,6 +61,7 @@ describe('ClientRoleEnforcer tests', () => {
       });
     } catch (e) {
       error = true;
+      // @ts-ignore
       expect(e.message).toEqual('Client Role is Empty');
     }
     if (!error) {
@@ -79,6 +81,7 @@ describe('ClientRoleEnforcer tests', () => {
       });
     } catch (e) {
       error = true;
+      // @ts-ignore
       expect(e.message).toEqual('Access Denied');
     }
     if (!error) {
@@ -98,6 +101,7 @@ describe('ClientRoleEnforcer tests', () => {
       });
     } catch (e) {
       error = true;
+      // @ts-ignore
       expect(e.message).toEqual('Access Denied');
     }
     if (!error) {
@@ -122,6 +126,7 @@ describe('ClientRoleEnforcer tests', () => {
       });
     } catch (e) {
       error = true;
+      // @ts-ignore
       expect(e.message).toEqual('Access Denied');
     }
     if (!error) {

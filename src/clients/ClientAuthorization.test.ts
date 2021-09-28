@@ -157,7 +157,7 @@ describe('ClientAuthorization tests', () => {
       }).clientIdAuthorization(
                 requestContent,
             );
-    } catch (e) {
+    } catch (e:any) {
       error = true;
       expect(e.message).toEqual('Unsupported Credential Type');
     }
@@ -238,8 +238,9 @@ describe('ClientAuthorization tests', () => {
       }).clientJWT(
                 {id: 'test'}, {key: 'test'},
             );
-    } catch (e) {
+    } catch (e:any) {
       error = true;
+      // @ts-ignore
       expect(e.message).toEqual('error:0909006C:PEM routines:get_name:no start line');
     }
     expect(error).toEqual(true);
@@ -275,8 +276,9 @@ describe('ClientAuthorization tests', () => {
       }).exchangeRPT(
                 requestContent, "token", 'clientId',
             );
-    } catch (e) {
+    } catch (e:any) {
       error = true;
+      // @ts-ignore
       expect(e.message).toEqual('SyntaxError: Unexpected token d in JSON at position 0');
     }
     expect(error).toEqual(true);
@@ -377,7 +379,7 @@ describe('ClientAuthorization tests', () => {
                 requestContent,
                 {},
             );
-    } catch (e) {
+    } catch (e:any) {
       error = true;
       expect(e.message).toEqual('Not able to refresh token');
     }
@@ -418,8 +420,9 @@ describe('ClientAuthorization tests', () => {
                 requestContent,
                 {},
             );
-    } catch (e) {
+    } catch (e:any) {
       error = true;
+      // @ts-ignore
       expect(e.message).toEqual('Not able to refresh token');
     }
     expect(error).toEqual(true);
@@ -458,8 +461,9 @@ describe('ClientAuthorization tests', () => {
                 requestContent,
                 {},
             );
-    } catch (e) {
+    } catch (e:any) {
       error = true;
+      // @ts-ignore
       expect(e.message).toEqual('Not able to refresh token');
     }
     expect(error).toEqual(true);
@@ -499,7 +503,10 @@ describe('ClientAuthorization tests', () => {
         decodedRefreshToken: {},
         refresh_expires_in: 10,
       }})).toEqual({
-        token: {},
+        token: {
+          decodedAccessToken: null,
+          decodedRefreshToken: null,
+        },
       });
   });
 
@@ -523,7 +530,10 @@ describe('ClientAuthorization tests', () => {
           refresh_expires_in: 10,
         }}, () => ({resource: {}}),
         )).toEqual({
-          token: {},
+          token: {
+            decodedAccessToken: null,
+            decodedRefreshToken: null,
+          },
         });
   });
 
@@ -548,7 +558,10 @@ describe('ClientAuthorization tests', () => {
           refresh_expires_in: 10,
         }}, () => ({realmRole: 'realmRole'}),
         )).toEqual({
-          token: {},
+          token: {
+            decodedAccessToken: null,
+            decodedRefreshToken: null,
+          },
         });
   });
   test('ClientAuthorization test keycloakRefreshToken enforce skip 2', async () => {
@@ -572,7 +585,10 @@ describe('ClientAuthorization tests', () => {
           // @ts-ignore
         }}, () => ({clientRole: {clientRole: 'clientRole', clientId: 'clientId'}}),
         )).toEqual({
-          token: {},
+          token: {
+            decodedAccessToken: null,
+            decodedRefreshToken: null,
+          },
         });
   });
 

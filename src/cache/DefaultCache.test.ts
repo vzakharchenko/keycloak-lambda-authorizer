@@ -52,7 +52,7 @@ describe('KeycloakUtils tests', () => {
     let error = false;
     try {
       cache.put('error', 'key', 100);
-    } catch (e) {
+    } catch (e:any) {
       error = true;
       expect(e.message).toEqual('Unsupported Region');
     }
@@ -70,6 +70,7 @@ describe('KeycloakUtils tests', () => {
       cache.get('error', 'key');
     } catch (e) {
       error = true;
+      // @ts-ignore
       expect(e.message).toEqual('Unsupported Region');
     }
     if (!error) {

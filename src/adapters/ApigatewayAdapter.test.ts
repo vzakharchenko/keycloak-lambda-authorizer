@@ -61,7 +61,7 @@ describe('ApigatewayAdapter tests', () => {
         // @ts-ignore
         authorizationToken: null,
       });
-    } catch (e) {
+    } catch (e:any) {
       expect(e.message).toEqual('Expected \'event.authorizationToken\' parameter to be set');
       error = true;
     }
@@ -78,7 +78,7 @@ describe('ApigatewayAdapter tests', () => {
       await new DefaultApigatewayAdapter({securityAdapter: new DummySecurityAdapter()}).validate({
         authorizationToken: "JWT",
       });
-    } catch (e) {
+    } catch (e:any) {
       expect(e.message).toEqual('Invalid Authorization token - \'JWT\' does not match \'Bearer .*\'');
       error = true;
     }
@@ -95,7 +95,7 @@ describe('ApigatewayAdapter tests', () => {
       await new DefaultApigatewayAdapter({securityAdapter: new DummySecurityAdapter()}).validate({
         authorizationToken: "Bearer",
       });
-    } catch (e) {
+    } catch (e:any) {
       expect(e.message).toEqual('Invalid Authorization token - \'Bearer\' does not match \'Bearer .*\'');
       error = true;
     }

@@ -2,7 +2,7 @@
 - [![npm version](https://badge.fury.io/js/keycloak-lambda-authorizer.svg)](https://badge.fury.io/js/keycloak-lambda-authorizer)
 - [![Coverage Status](https://coveralls.io/repos/github/vzakharchenko/keycloak-lambda-authorizer/badge.svg?branch=master)](https://coveralls.io/github/vzakharchenko/keycloak-lambda-authorizer?branch=master)
 - [![Maintainability](https://api.codeclimate.com/v1/badges/0b56148967afc99a64df/maintainability)](https://codeclimate.com/github/vzakharchenko/keycloak-lambda-authorizer/maintainability)
-- [![Node.js 10.x, 12.x, 13.x, 14.x, 15.x CI](https://github.com/vzakharchenko/keycloak-lambda-authorizer/actions/workflows/nodejs.yml/badge.svg)](https://github.com/vzakharchenko/keycloak-lambda-authorizer/actions/workflows/nodejs.yml)
+- [![Node.js 12.x, 14.x, 15.x, 17.x CI](https://github.com/vzakharchenko/keycloak-lambda-authorizer/actions/workflows/nodejs.yml/badge.svg)](https://github.com/vzakharchenko/keycloak-lambda-authorizer/actions/workflows/nodejs.yml)
 - [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=vzakharchenko_keycloak-lambda-authorizer&metric=bugs)](https://sonarcloud.io/dashboard?id=vzakharchenko_keycloak-lambda-authorizer)
 - [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=vzakharchenko_keycloak-lambda-authorizer&metric=sqale_index)](https://sonarcloud.io/dashboard?id=vzakharchenko_keycloak-lambda-authorizer)
 - [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=vzakharchenko_keycloak-lambda-authorizer&metric=security_rating)](https://sonarcloud.io/dashboard?id=vzakharchenko_keycloak-lambda-authorizer)

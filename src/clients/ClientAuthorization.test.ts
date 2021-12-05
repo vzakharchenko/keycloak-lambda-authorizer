@@ -241,7 +241,7 @@ describe('ClientAuthorization tests', () => {
     } catch (e:any) {
       error = true;
       // @ts-ignore
-      expect(e.message).toEqual('error:0909006C:PEM routines:get_name:no start line');
+      expect(e.message).toContain('error:');
     }
     expect(error).toEqual(true);
 

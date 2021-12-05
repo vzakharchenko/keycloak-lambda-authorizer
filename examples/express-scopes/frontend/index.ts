@@ -2,7 +2,7 @@ import path from 'path';
 
 import jsonwebtoken from 'jsonwebtoken';
 import express from 'express';
-import exphbs from 'express-handlebars';
+import {engine} from 'express-handlebars';
 import Keycloak from 'keycloak-connect';
 import bodyParser from 'body-parser';
 import session from 'express-session';
@@ -31,12 +31,9 @@ app.use(keycloak.middleware());
 
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.engine('.hbs', exphbs({
-  defaultLayout: 'main',
-  extname: '.hbs',
-  layoutsDir: path.join(__dirname, 'views/layouts'),
-}));
-
+app.engine('handlebars', engine());
+app.set('view engine', 'handlebars');
+app.set('main', './views');
 app.set('view engine', '.hbs');
 
 app.set('views', path.join(__dirname, 'views'));

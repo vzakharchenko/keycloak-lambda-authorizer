@@ -19,7 +19,8 @@
     "typescript": "*",
     "eslint": "*",
     "eslint-config-airbnb": "*",
-    "eslint-plugin-import": "*"
+    "eslint-plugin-import": "*",
+    "hbs": "*"
   },
   "dependencies": {
     "axios": "*",

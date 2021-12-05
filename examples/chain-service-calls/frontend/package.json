@@ -27,6 +27,7 @@
     "express": "*",
     "express-handlebars": "*",
     "express-session": "*",
+    "hbs": "*",
     "jsonwebtoken": "*",
     "keycloak-connect": "*",
     "path": "*"

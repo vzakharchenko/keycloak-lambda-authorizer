@@ -29,6 +29,7 @@
     "express-session": "*",
     "jsonwebtoken": "*",
     "keycloak-connect": "*",
-    "path": "*"
+    "path": "*",
+    "hbs": "*"
   }
 }

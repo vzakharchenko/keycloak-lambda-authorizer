@@ -6,7 +6,6 @@
 - [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=vzakharchenko_keycloak-lambda-authorizer&metric=bugs)](https://sonarcloud.io/dashboard?id=vzakharchenko_keycloak-lambda-authorizer)
 - [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=vzakharchenko_keycloak-lambda-authorizer&metric=sqale_index)](https://sonarcloud.io/dashboard?id=vzakharchenko_keycloak-lambda-authorizer)
 - [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=vzakharchenko_keycloak-lambda-authorizer&metric=security_rating)](https://sonarcloud.io/dashboard?id=vzakharchenko_keycloak-lambda-authorizer)
-- [![donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://secure.wayforpay.com/button/b18610f33a01c)
 
 
 # Description

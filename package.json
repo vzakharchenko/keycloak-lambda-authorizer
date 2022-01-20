@@ -43,7 +43,7 @@
     "@babel/plugin-transform-runtime": "^7.16.10",
     "@babel/polyfill": "^7.12.1",
     "@babel/runtime": "^7.16.7",
-    "@shopify/eslint-plugin": "^41.0.1",
+    "@shopify/eslint-plugin": "40.4.0",
     "@types/cookie": "^0.4.1",
     "@types/cookie-parser": "^1.4.2",
     "@types/jest": "^27.4.0",

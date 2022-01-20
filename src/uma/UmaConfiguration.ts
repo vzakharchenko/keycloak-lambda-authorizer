@@ -1,3 +1,5 @@
+/* eslint-disable babel/camelcase
+*/
 import {AdapterContent, RequestContent} from '../Options';
 import {getKeycloakUrl} from '../utils/KeycloakUtils';
 
@@ -24,11 +26,12 @@ export interface UmaConfiguration {
 }
 
 export class DefaultUmaConfiguration implements UmaConfiguration {
-  options: AdapterContent;
-
   constructor(options: AdapterContent) {
     this.options = options;
   }
+
+  options: AdapterContent;
+
 
   async getUma2Configuration(requestContent:RequestContent): Promise<UMAResponse> {
     const keycloakJson = await this.options.keycloakJson(this.options, requestContent);

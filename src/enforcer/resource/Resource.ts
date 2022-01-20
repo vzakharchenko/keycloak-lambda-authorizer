@@ -8,11 +8,12 @@ export interface ResourceChecker {
 }
 
 export class DefaultResourceChecker implements ResourceChecker {
-  options:AdapterContent;
-
   constructor(options: AdapterContent) {
     this.options = options;
   }
+
+  options:AdapterContent;
+
 
   buildUri(resourceObject:SecurityResource):string {
     return Object.entries(resourceObject).map(([key, value]) => `${key}=${value}`).join('&');

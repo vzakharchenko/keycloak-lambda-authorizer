@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment
+/* eslint-disable babel/camelcase, @typescript-eslint/ban-ts-comment
 */
 import {AdapterCache} from './cache/AdapterCache';
 import {RestCalls} from './utils/restCalls';

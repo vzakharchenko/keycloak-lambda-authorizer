@@ -1,4 +1,4 @@
-/* eslint-disable require-await, @typescript-eslint/ban-ts-comment, no-empty-function, @typescript-eslint/no-empty-function
+/* eslint-disable require-await, babel/camelcase, @typescript-eslint/ban-ts-comment, no-empty-function, @typescript-eslint/no-empty-function
  */
 // @ts-ignore
 import KeyCloakCerts from 'get-keycloak-public-key';

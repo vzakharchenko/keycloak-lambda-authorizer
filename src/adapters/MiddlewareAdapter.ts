@@ -10,13 +10,14 @@ export interface MiddlewareAdapter {
 }
 
 export class DefaultMiddlewareAdapter implements MiddlewareAdapter {
+  constructor(options: AdapterContent) {
+    this.options = options;
+  }
+
   options:AdapterContent;
 
   jwksRoute = new RegExp('(^)(\\/|)(/service/jwks)(/$|(\\?|$))', 'g');
 
-  constructor(options: AdapterContent) {
-    this.options = options;
-  }
 
   isJwksRoute(req:any):boolean {
     return (req.baseUrl || req.originalUrl).match(this.jwksRoute);

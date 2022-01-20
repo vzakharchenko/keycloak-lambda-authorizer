@@ -6,11 +6,12 @@ import {decodeToken, verifyToken} from '../utils/TokenUtils';
 import {SecurityAdapter} from './SecurityAdapter';
 
 export class DefaultAdapter implements SecurityAdapter {
-  options: AdapterContent;
-
   constructor(options: AdapterContent) {
     this.options = options;
   }
+
+  options: AdapterContent;
+
 
   async refreshToken(tokenJson: TokenJson|RefreshContext, enforcer?:EnforcerFunction): Promise<RefreshContext|null> {
     let refreshContext:RefreshContext;

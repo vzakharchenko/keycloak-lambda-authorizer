@@ -11,6 +11,13 @@ export interface EnforcerAction {
 }
 
 export class DefaultEnforcer implements EnforcerAction {
+  constructor(options: AdapterContent) {
+    this.options = options;
+    this.realmEnforcer = new RealmRoleEnforcer(options);
+    this.clientEnforcer = new ClientRoleEnforcer(options);
+    this.resourceEnforcer = new ResourceEnforcer(options);
+  }
+
   options: AdapterContent;
 
   realmEnforcer: EnforcerAction;
@@ -19,12 +26,6 @@ export class DefaultEnforcer implements EnforcerAction {
 
   resourceEnforcer: EnforcerAction;
 
-  constructor(options: AdapterContent) {
-    this.options = options;
-    this.realmEnforcer = new RealmRoleEnforcer(options);
-    this.clientEnforcer = new ClientRoleEnforcer(options);
-    this.resourceEnforcer = new ResourceEnforcer(options);
-  }
 
   async enforce(requestContent: RequestContent, enforcerFunc:EnforcerFunc): Promise<void> {
     const enforcer = await enforcerFunc(this.options, requestContent);

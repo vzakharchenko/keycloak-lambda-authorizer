@@ -5,11 +5,12 @@ import {
 import {EnforcerAction} from './Enforcer';
 
 export class ResourceEnforcer implements EnforcerAction {
-  options:AdapterContent;
-
   constructor(options: AdapterContent) {
     this.options = options;
   }
+
+  options:AdapterContent;
+
 
   async enforce(requestContent:RequestContent, enforcerFunc:EnforcerFunc): Promise<void> {
     const enforcer = await enforcerFunc(this.options, requestContent);

@@ -103,7 +103,6 @@ export class DummyClientAuthorization implements ClientAuthorization {
 
   async getTokenByCode(requestContent: RequestContent, code: string, host: string): Promise<TokenJson> {
     // @ts-ignore
-    // eslint-disable-next-line babel/camelcase
     return {access_token: this.token, refresh_token: this.token};
   }
 

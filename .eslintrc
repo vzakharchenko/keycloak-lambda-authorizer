@@ -28,6 +28,6 @@
     "no-unused-vars": 0,
     "@typescript-eslint/no-explicit-any": 0,
     "id-length": 0,
-    "no-return-await": 0
+    "no-return-await": 0,
   }
 }

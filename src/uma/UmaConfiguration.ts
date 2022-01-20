@@ -1,5 +1,3 @@
-/* eslint-disable babel/camelcase
-*/
 import {AdapterContent, RequestContent} from '../Options';
 import {getKeycloakUrl} from '../utils/KeycloakUtils';
 

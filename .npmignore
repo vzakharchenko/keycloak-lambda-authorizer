@@ -25,3 +25,4 @@ __tests__
 keycloak-cloudfront-dynamodb
 package-lock.json
 /src
+/examples

@@ -42,11 +42,12 @@ export interface ClientAuthorization {
 }
 
 export class DefaultClientAuthorization implements ClientAuthorization {
-  options:AdapterContent;
-
   constructor(options: AdapterContent) {
     this.options = options;
   }
+
+  options:AdapterContent;
+
 
   async clientAuthentication0(requestContent:RequestContent, token?:string): Promise<any> {
     const parsedToken = token ? JSON.parse(token) : null;

@@ -1,4 +1,4 @@
-/* eslint-disable require-await, @typescript-eslint/ban-ts-comment
+/* eslint-disable require-await, @typescript-eslint/ban-ts-comment, babel/camelcase
  */
 
 import {RequestContent} from "../Options";

@@ -1,4 +1,4 @@
-/* eslint-disable require-await, @typescript-eslint/ban-ts-comment
+/* eslint-disable require-await, babel/camelcase, @typescript-eslint/ban-ts-comment
  */
 
 

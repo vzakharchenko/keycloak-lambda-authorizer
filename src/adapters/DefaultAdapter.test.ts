@@ -75,6 +75,7 @@ describe('DefaultAdapter tests', () => {
       enforcer: new DummyEnforcerAction(),
       clientAuthorization: new DummyClientAuthorization({}),
       // @ts-ignore
+      // eslint-disable-next-line babel/camelcase
     }).refreshToken({access_token: {}}, {});
     expect(ret).toEqual({
     });

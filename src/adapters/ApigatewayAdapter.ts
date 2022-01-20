@@ -18,14 +18,14 @@ export interface ApigatewayAdapter {
 }
 
 export class DefaultApigatewayAdapter implements ApigatewayAdapter {
-  options: AdapterContent;
-
-  securityAdapter:SecurityAdapter;
-
   constructor(options: AdapterContent) {
     this.options = options;
     this.securityAdapter = options.securityAdapter;
   }
+
+  options: AdapterContent;
+
+  securityAdapter:SecurityAdapter;
 
 
   getAuthHeader(awsEvent: AwsEvent) {

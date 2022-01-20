@@ -5,11 +5,12 @@ export interface ServiceAccount {
 }
 
 export class DefaultServiceAccount implements ServiceAccount {
-  options:AdapterContent;
-
   constructor(options: AdapterContent) {
     this.options = options;
   }
+
+  options:AdapterContent;
+
 
   async getServiceAccountToken(requestContent?:RequestContext): Promise<string> {
     const serviceAccountToken = await this.options

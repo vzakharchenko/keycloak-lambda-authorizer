@@ -25,8 +25,6 @@ import {HTTPMethod, RestCalls} from "./restCalls";
 export type GetFunc =(region: string, key: string)=>string|undefined
 
 export class DummyCache implements AdapterCache {
-  value:GetFunc;
-
   constructor(value?: string| GetFunc) {
     if (!value) {
       // @ts-ignore
@@ -36,6 +34,9 @@ export class DummyCache implements AdapterCache {
           : value;
     }
   }
+
+  value:GetFunc;
+
 
   get(region: string, key: string): string | undefined {
     return this.value(region, key);
@@ -49,12 +50,12 @@ export class DummyCache implements AdapterCache {
 
 export class DummyRestCalls implements RestCalls {
 
-  resp?:string;
-
-
   constructor(resp?: string) {
     this.resp = resp;
   }
+
+  resp?:string;
+
 
   async fetchData(url: string, method?: HTTPMethod, headers?: any): Promise<string> {
     return this.resp || '{}';
@@ -67,13 +68,14 @@ export class DummyRestCalls implements RestCalls {
 }
 
 export class DummyClientAuthorization implements ClientAuthorization {
-  token?:any;
-  stringValue?:string;
-
   constructor(token?: any, stringValue?:string) {
     this.token = token;
     this.stringValue = stringValue;
   }
+
+  token?:any;
+  stringValue?:string;
+
 
   async clientAuthentication(requestContent: RequestContent): Promise<any> {
     return this.token;
@@ -103,6 +105,7 @@ export class DummyClientAuthorization implements ClientAuthorization {
 
   async getTokenByCode(requestContent: RequestContent, code: string, host: string): Promise<TokenJson> {
     // @ts-ignore
+    // eslint-disable-next-line babel/camelcase
     return {access_token: this.token, refresh_token: this.token};
   }
 
@@ -128,11 +131,12 @@ export class DummyResourceChecker implements ResourceChecker {
 }
 
 export class DummyUmaConfiguration implements UmaConfiguration {
-  umaResponse?:UMAResponse;
-
   constructor(umaResponse?: UMAResponse) {
     this.umaResponse = umaResponse;
   }
+
+  umaResponse?:UMAResponse;
+
 
   async getUma2Configuration(requestContent: RequestContent): Promise<UMAResponse> {
     // @ts-ignore
@@ -142,11 +146,12 @@ export class DummyUmaConfiguration implements UmaConfiguration {
 }
 
 export class DummyServiceAccount implements ServiceAccount {
-  accessToken:string;
-
   constructor(accessToken: string) {
     this.accessToken = accessToken;
   }
+
+  accessToken:string;
+
 
   async getServiceAccountToken(requestContent: RequestContent): Promise<string> {
     return this.accessToken;
@@ -162,11 +167,12 @@ export class DummyEnforcerAction implements EnforcerAction {
 }
 
 export class DummySecurityAdapter implements SecurityAdapter {
-  requestContent?:RequestContent;
-
   constructor(requestContent?: RequestContent) {
     this.requestContent = requestContent;
   }
+
+  requestContent?:RequestContent;
+
 
   async validate(request: string | RequestContent, enforcer?: EnforcerFunction): Promise<RequestContent> {
     return this.requestContent || {token: {payload: {}, header: {alg: 'alg', kid: '1'}, tokenString: 'JWT'}, tokenString: 'JWT'};
@@ -189,11 +195,12 @@ export class DummySecurityAdapter implements SecurityAdapter {
 
 export class DummyJWKS implements JWKS {
 
-  jWKSType?:JWKSType;
-
   constructor(jWKSType?: JWKSType) {
     this.jWKSType = jWKSType;
   }
+
+  jWKSType?:JWKSType;
+
 
   json(publicKey: RSAKey): JWKSType {
     return this.jWKSType || {keys: [{test: 'test'}]};

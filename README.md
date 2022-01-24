@@ -453,5 +453,3 @@ async function handler(request,response) {
 ...
 }
 ```
-
-# If you find these useful, please [Donate](https://secure.wayforpay.com/button/b18610f33a01c)!

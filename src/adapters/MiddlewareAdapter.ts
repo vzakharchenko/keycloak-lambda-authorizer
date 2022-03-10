@@ -28,7 +28,7 @@ export class DefaultMiddlewareAdapter implements MiddlewareAdapter {
     if (!tokenString) {
       throw new Error('Expected \'headers.authorization\' parameter to be set');
     }
-    const match = tokenString.match(/^Bearer (.*)$/);
+    const match = tokenString.match(/^Bearer (.*)$/i);
     if (!match || match.length < 2) {
       throw new Error(`Invalid Authorization token - '${tokenString}' does not match 'Bearer .*'`);
     }

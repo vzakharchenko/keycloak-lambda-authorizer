@@ -29,6 +29,21 @@ describe('MiddlewareAdapter tests', () => {
     }
   });
 
+  test('MiddlewareAdapter case-insensitive authorization scheme test', async () => {
+    let next = false;
+    // @ts-ignore
+    await new DefaultMiddlewareAdapter({securityAdapter: new DummySecurityAdapter()}).middleware()({
+      headers: {
+        authorization: "bearer JWT",
+      },
+    }, {}, () => {
+      next = true;
+    });
+    if (!next) {
+      throw new Error('test');
+    }
+  });
+
   test('MiddlewareAdapter test 2', async () => {
     let next = false;
     // @ts-ignore

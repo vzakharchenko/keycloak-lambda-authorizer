@@ -38,7 +38,7 @@ export class DefaultApigatewayAdapter implements ApigatewayAdapter {
     if (!tokenString) {
       throw new Error('Expected \'event.authorizationToken\' parameter to be set');
     }
-    const match = tokenString.match(/^Bearer (.*)$/);
+    const match = tokenString.match(/^Bearer (.*)$/i);
     if (!match || match.length < 2) {
       throw new Error(`Invalid Authorization token - '${tokenString}' does not match 'Bearer .*'`);
     }

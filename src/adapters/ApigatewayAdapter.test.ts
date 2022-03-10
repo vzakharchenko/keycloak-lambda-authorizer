@@ -34,6 +34,26 @@ describe('ApigatewayAdapter tests', () => {
     });
   });
 
+  test('validate authentication scheme is case-insensitive test', async () => {
+    // @ts-ignore
+    const ret = await new DefaultApigatewayAdapter({securityAdapter: new DummySecurityAdapter()}).validate({
+      headers: {
+        Authorization: "bearer JWT",
+      },
+    });
+    expect(ret).toEqual({
+      token: {
+        header: {
+          alg: "alg",
+          kid: "1",
+        },
+        payload: {},
+        tokenString: "JWT",
+      },
+      tokenString: "JWT",
+    });
+  });
+
   test('validate authorizationToken test', async () => {
     // @ts-ignore
     const ret = await new DefaultApigatewayAdapter({securityAdapter: new DummySecurityAdapter()}).validate({
